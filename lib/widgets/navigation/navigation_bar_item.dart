@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-///底部导航栏按钮
+/// 底部导航栏按钮
 class NavigationBarItem extends StatefulWidget {
   const NavigationBarItem({super.key, required this.builder});
 

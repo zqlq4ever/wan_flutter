@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'navigation_bar_item.dart';
 
-///底部导航栏组件
+/// 底部导航栏组件
 class NavigationBarWidget extends StatefulWidget {
   NavigationBarWidget({
     super.key,
@@ -18,8 +18,6 @@ class NavigationBarWidget extends StatefulWidget {
     this.bottomBarIconWidth,
     this.bottomBarIconHeight,
   }) {
-    // assert(tabItems.length != tabLabels.length && tabItems.length!= tabIcons.length&& tabItems
-    //     .length!= tabActiveIcon.length);
     if (tabItems.length != tabLabels.length &&
         tabItems.length != tabIcons.length &&
         tabItems.length != tabActiveIcons.length) {
@@ -63,61 +61,59 @@ class NavigationBarWidget extends StatefulWidget {
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
   @override
-  void initState() {
-    super.initState();
-    //第一次进入默认调用一次
-    // widget.onItemChange?.call(widget.currentIndex);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        //tab页面
-        body: IndexedStack(index: widget.currentIndex, children: widget.tabItems),
-        //底部导航栏
-        bottomNavigationBar: Theme(
-          data: widget.themeData ??
-              Theme.of(context).copyWith(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-              ),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.white,
-            type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
-            currentIndex: widget.currentIndex,
-            onTap: (index) {
-              //重复事件不处理
-              if (widget.currentIndex == index) {
-                return;
-              }
-              //点击切换page事件
-              widget.onItemChange?.call(index);
-              widget.currentIndex = index;
-              setState(() {});
-            },
-            items: _barItemList(),
-          ),
-        ));
+      backgroundColor: Colors.white,
+      //  tab 页面
+      body: IndexedStack(index: widget.currentIndex, children: widget.tabItems),
+      //  底部导航栏
+      bottomNavigationBar: Theme(
+        data: widget.themeData ??
+            Theme.of(context).copyWith(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
+          currentIndex: widget.currentIndex,
+          items: _barItemList(),
+          onTap: (index) {
+            //  重复事件不处理
+            if (widget.currentIndex == index) {
+              return;
+            }
+            //  点击切换 page 事件
+            widget.onItemChange?.call(index);
+            widget.currentIndex = index;
+            setState(() {});
+          },
+        ),
+      ),
+    );
   }
 
-  ///底部导航栏集合
+  /// 底部导航栏集合
   List<BottomNavigationBarItem> _barItemList() {
     List<BottomNavigationBarItem> items = [];
+
     for (var i = 0; i < widget.tabItems.length; i++) {
-      items.add(BottomNavigationBarItem(
-          activeIcon: NavigationBarItem(
-              builder: (_) => Image.asset(
-                    widget.tabActiveIcons[i],
-                    width: widget.bottomBarIconWidth ?? 32.w,
-                    height: widget.bottomBarIconHeight ?? 32.w,
-                  )),
-          icon: Image.asset(
-            widget.tabIcons[i],
-            width: widget.bottomBarIconWidth ?? 32.w,
-            height: widget.bottomBarIconHeight ?? 32.w,
+      var item = BottomNavigationBarItem(
+        activeIcon: NavigationBarItem(
+          builder: (_) => Image.asset(
+            widget.tabActiveIcons[i],
+            width: widget.bottomBarIconWidth ?? 28.w,
+            height: widget.bottomBarIconHeight ?? 28.w,
           ),
-          label: widget.tabLabels[i]));
+        ),
+        icon: Image.asset(
+          widget.tabIcons[i],
+          width: widget.bottomBarIconWidth ?? 28.w,
+          height: widget.bottomBarIconHeight ?? 28.w,
+        ),
+        label: widget.tabLabels[i],
+      );
+      items.add(item);
     }
     return items;
   }

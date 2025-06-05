@@ -5,7 +5,7 @@ import 'package:wan_android_flutter/network/dio_util.dart';
 import 'package:wan_android_flutter/repository/url_path_contants.dart';
 
 void main() async {
-  DioInstance.instance.initDio(baseUrl: UrlPathConstants.WANANDROID_HOST);
+  DioInstance.instance.initDio(baseUrl: UrlPathConstants.hostWanandroid);
   await ScreenUtil.ensureScreenSize();
   runApp(const WanApp());
 }

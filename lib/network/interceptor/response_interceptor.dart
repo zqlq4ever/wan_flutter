@@ -14,7 +14,7 @@ class RspInterceptor extends Interceptor {
     }
 
     //  蒲公英的接口不做处理
-    if (response.requestOptions.path.contains(UrlPathConstants.PATH_CHECK_NEW_VERSION)) {
+    if (response.requestOptions.path.contains(UrlPathConstants.pathCheckUpgrade)) {
       handler.next(response);
       return;
     }

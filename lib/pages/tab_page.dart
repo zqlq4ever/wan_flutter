@@ -22,14 +22,14 @@ class _BottomTabState extends State<BottomTabPage> {
     "assets/images/icon_home_grey.png",
     "assets/images/icon_hot_key_grey.png",
     "assets/images/icon_knowledge_grey.png",
-    "assets/images/icon_personal_grey.png"
+    "assets/images/icon_mine_grey.png"
   ];
 
   final List<String> tabActiveIcons = [
     "assets/images/icon_home_selected.png",
     "assets/images/icon_hot_key_selected.png",
     "assets/images/icon_knowledge_selected.png",
-    "assets/images/icon_personal_selected.png"
+    "assets/images/icon_mine_selected.png"
   ];
 
   @override
@@ -56,6 +56,6 @@ class _BottomTabState extends State<BottomTabPage> {
     tabItems.add(const HomeListPage());
     tabItems.add(const HotKeyPage());
     tabItems.add(const KnowledgePage());
-    tabItems.add(const MinePage());
+    tabItems.add(const MineNewPage());
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:wan_android_flutter/repository/api/wan_api.dart';
-import 'package:wan_android_flutter/repository/model/home_banner_model.dart';
+import 'package:wan_android_flutter/repository/model/home_banner_bean.dart';
 
 class BannerLogic {
   //初始化状态数据
@@ -23,7 +23,7 @@ class BannerLogic {
   ///获取Banner列表
   Future getBannerList() async {
     try {
-      List<HomeBannerModel?>? banner = await WanApi.instance.bannerList();
+      List<HomeBannerBean>? banner = await WanApi.instance.getBannerList();
       state.bannerList = banner;
     } catch (error) {
       state.bannerList = [];
@@ -38,5 +38,5 @@ class BannerLogic {
 }
 
 class BannerState {
-  List<HomeBannerModel?>? bannerList = [];
+  List<HomeBannerBean>? bannerList = [];
 }

@@ -16,7 +16,7 @@ class DialogFactory {
   ///[padding]                   内边距
   ///[outsideOnTap]              弹窗外部区域点击事件
   ///[dismissClick]              底部透明消失按钮事件
-  ///[showTransparenceButton]    是否显示底部透明消失按钮
+  ///[showTransparentButton]    是否显示底部透明消失按钮
   ///[touchOutsideCloseKeyboard] 是否点击空白区域关闭软键盘
   ///[child]                     弹窗子布局
   Future showParentDialog(
@@ -30,7 +30,7 @@ class DialogFactory {
       EdgeInsetsGeometry? padding,
       GestureTapCallback? outsideOnTap,
       GestureTapCallback? dismissClick,
-      bool? showTransparenceButton,
+      bool? showTransparentButton,
       bool? touchOutsideCloseKeyboard,
       Color? bodyBgColor,
       required Widget child}) {
@@ -50,13 +50,16 @@ class DialogFactory {
               outsideOnTap: outsideOnTap,
               childWidget: child,
               dismissClick: dismissClick,
-              showTransparenceButton: showTransparenceButton);
+              showTransparentButton: showTransparentButton);
         });
   }
 
-  ///检测新版本弹窗
-  Future showNeedUpdateDialog(
-      {required BuildContext context, GestureTapCallback? dismissClick, GestureTapCallback? confirmClick}) async {
+  /// 检测新版本弹窗
+  Future showNeedUpdateDialog({
+    required BuildContext context,
+    GestureTapCallback? dismissClick,
+    GestureTapCallback? confirmClick,
+  }) async {
     showParentDialog(
         context: context,
         child: TipsCommonDialog(

@@ -35,12 +35,6 @@ class _AboutUsPageState extends State<AboutUsPage> {
 
   String? _version = "";
 
-  Future getVersion() async {
-    var info = await PackageInfo.fromPlatform();
-    _version = info.version;
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
@@ -66,9 +60,9 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 Map<String, String> attributes,
                 element,
               ) {
-                log("AboutUsPage html onLinkTap url=$url");
-                //进入网页
-                RouteUtils.push(
+                log("AboutUsPage html onLinkTap url= $url");
+                //  进入网页
+                RouteUtil.push(
                   context,
                   WebViewPage(
                     loadResource: url ?? "",
@@ -80,5 +74,11 @@ class _AboutUsPageState extends State<AboutUsPage> {
             )
           ]),
         )));
+  }
+
+  Future getVersion() async {
+    var info = await PackageInfo.fromPlatform();
+    _version = info.version;
+    setState(() {});
   }
 }

@@ -11,7 +11,7 @@ import '../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
-///热点搜索页面
+/// 热索页面
 class HotKeyPage extends StatefulWidget {
   const HotKeyPage({super.key});
 
@@ -22,48 +22,49 @@ class HotKeyPage extends StatefulWidget {
 }
 
 class _HotKeyPageState extends State<HotKeyPage> {
-  var model = HotCommonViewModel();
+  var vm = HotCommonViewModel();
   late RefreshController _refreshController;
 
   @override
   void initState() {
     _refreshController = RefreshController(initialRefresh: false);
     super.initState();
-    model.getData();
+    vm.getData();
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) {
-        return model;
-      },
+      create: (context) => vm,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: SmartRefreshWidget(
             controller: _refreshController,
-            //禁止上拉
+            //  禁止上拉
             enablePullUp: false,
             onRefresh: () {
-              //刷新回调
-              model.getData(complete: () {
-                //结束刷新
+              //  刷新回调
+              vm.getData(complete: () {
+                //  结束刷新
                 _refreshController.refreshCompleted();
               });
             },
             child: SingleChildScrollView(
               child: Column(children: [
                 _titleWidget("搜索热词", true, onTap: () {
-                  RouteUtils.push(context, const SearchPage());
+                  RouteUtil.push(context, const SearchPage());
                 }),
                 SizedBox(height: 20.h),
-                //搜索热词列表
+
+                //  搜索热词列表
                 _searchHotKeyListView(),
                 SizedBox(height: 20.h),
+
                 _titleWidget("常用网站", false),
                 SizedBox(height: 20.h),
-                //常用网站列表
+
+                //  常用网站列表
                 _commonWebsiteListView(),
                 SizedBox(height: 20.h),
               ]),
@@ -76,7 +77,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
 
   Widget _titleWidget(String title, bool search, {GestureTapCallback? onTap}) {
     return Column(children: [
-      Container(width: double.infinity, height: 0.5.h, color: Colors.black12),
+      Container(width: double.infinity, height: 0.5.h, color: Colors.teal),
       Container(
         color: Colors.white,
         padding: EdgeInsets.only(left: 15.w, right: 10.w),
@@ -84,45 +85,54 @@ class _HotKeyPageState extends State<HotKeyPage> {
         width: double.infinity,
         height: 45.h,
         child: search
-            ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                normalText(title),
-                GestureDetector(
-                  onTap: onTap,
-                  child: Image.asset(
-                    "assets/images/icon_search.png",
-                    width: 30.r,
-                    height: 30.r,
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(color: Colors.teal, fontSize: 15.sp),
                   ),
-                )
-              ])
-            : normalText(title),
+                  GestureDetector(
+                    onTap: onTap,
+                    child: Image.asset(
+                      "assets/images/icon_search.png",
+                      width: 30.r,
+                      height: 30.r,
+                    ),
+                  )
+                ],
+              )
+            : Text(
+                title,
+                style: TextStyle(color: Colors.teal, fontSize: 15.sp),
+              ),
       ),
       Container(width: double.infinity, height: 0.5.h, color: Colors.black12)
     ]);
   }
 
-  ///搜索热词列表
+  /// 搜索热词列表
   Widget _searchHotKeyListView() {
     return Consumer<HotCommonViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
             var name = value.hotKeyList[index].name;
             return _item(name, onTap: () {
-              RouteUtils.push(context, SearchPage(keyWord: name));
+              RouteUtil.push(context, SearchPage(keyWord: name));
             });
           },
           itemCount: value.hotKeyList.length);
     });
   }
 
-  ///常用网站列表
+  /// 常用网站列表
   Widget _commonWebsiteListView({GestureTapCallback? itemClick}) {
     return Consumer<HotCommonViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
             return _item(value.websiteList[index].name, onTap: () {
               //进入网页
-              RouteUtils.push(
+              RouteUtil.push(
                 context,
                 WebViewPage(
                     loadResource: value.websiteList[index].link ?? "",
@@ -136,25 +146,27 @@ class _HotKeyPageState extends State<HotKeyPage> {
     });
   }
 
-  ///通用网格布局
+  /// 通用网格布局
   Widget _gridview<T>({required NullableIndexedWidgetBuilder itemBuilder, int? itemCount}) {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 15.w),
-        child: GridView.builder(
-            //禁止滑动
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                mainAxisSpacing: 10.r, //主轴间隔
-                crossAxisSpacing: 10.r, //横轴间隔
-                maxCrossAxisExtent: 120.0, //最大横轴范围
-                childAspectRatio: 2.0 //宽高比为2
-                ),
-            itemBuilder: itemBuilder,
-            itemCount: itemCount));
+      margin: EdgeInsets.symmetric(horizontal: 15.w),
+      child: GridView.builder(
+        //  禁止滑动
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          mainAxisSpacing: 10.r, //主轴间隔
+          crossAxisSpacing: 10.r, //横轴间隔
+          maxCrossAxisExtent: 120.0, //最大横轴范围
+          childAspectRatio: 2.0, //宽高比为2
+        ),
+        itemBuilder: itemBuilder,
+        itemCount: itemCount,
+      ),
+    );
   }
 
-  ///通用网格item
+  /// 通用网格 item
   Widget _item(String? title, {GestureTapCallback? onTap}) {
     return Container(
       decoration: BoxDecoration(

@@ -69,7 +69,7 @@ class _MyCollectsPageState extends State<MyCollectsPage> {
                             model.cancelCollect(index, "${list?[index].id}");
                           }, itemClick: () {
                             //进入网页
-                            RouteUtils.push(
+                            RouteUtil.push(
                                 context,
                                 WebViewPage(
                                     loadResource: list?[index].link ?? "",

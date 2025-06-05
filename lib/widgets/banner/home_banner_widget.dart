@@ -64,6 +64,7 @@ class _BannerWidgetState extends State<BannerWidget> {
           if (snapshot.data?.bannerList == null || snapshot.data?.bannerList?.isEmpty == true) {
             return SizedBox(height: 20.h);
           }
+
           return Container(
               width: double.infinity,
               height: 150.h,
@@ -79,8 +80,9 @@ class _BannerWidgetState extends State<BannerWidget> {
                 // control: SwiperControl(size: 5.r),
                 autoplayDisableOnInteraction: false,
                 onTap: (int index) {
-                  var url = snapshot.data?.bannerList?[index]?.url ?? "";
-                  var title = snapshot.data?.bannerList?[index]?.title ?? "";
+                  var banner = snapshot.data?.bannerList?[index];
+                  var url = banner?.url ?? "";
+                  var title = banner?.title ?? "";
                   log("BannerWidget banner点击 地址=$url");
                   widget.itemClick?.call(title, url);
                 },

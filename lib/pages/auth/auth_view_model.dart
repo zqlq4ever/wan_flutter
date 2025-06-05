@@ -24,7 +24,7 @@ class AuthViewModel with ChangeNotifier {
 
     UserInfoModel? userInfo = await WanApi.instance.login(inputUserName, inputPassword);
     if (userInfo?.username != null) {
-      SpUtils.saveString(Constants.SP_USER_NAME, userInfo?.username ?? "");
+      SpUtil.saveString(Constants.spUserName, userInfo?.username ?? "");
       return true;
     } else {
       showToast("登录异常");
@@ -47,7 +47,12 @@ class AuthViewModel with ChangeNotifier {
       showToast("请再次输入密码");
       return false;
     }
-    UserInfoModel? userInfo = await WanApi.instance.register(inputUserName, inputPassword, inputPasswordTwice);
+
+    UserInfoModel? userInfo = await WanApi.instance.register(
+      inputUserName,
+      inputPassword,
+      inputPasswordTwice,
+    );
     if (userInfo?.username != null) {
       return true;
     } else {

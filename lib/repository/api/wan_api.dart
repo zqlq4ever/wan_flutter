@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:wan_android_flutter/repository/model/home_banner_model.dart';
+import 'package:wan_android_flutter/repository/model/home_banner_bean.dart';
 import 'package:wan_android_flutter/repository/model/home_list_model.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_detail_list_model.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
@@ -33,34 +33,34 @@ class WanApi {
 
   /// 获取置顶文章列表
   Future<HomeTopListModel> topHomeList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.PATH_TOP_ARTICLE);
+    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathTopArticle);
     return HomeTopListModel.fromJson(response.data);
   }
 
   /// 获取首页 banner 数据
-  Future<List<HomeBannerModel?>?> bannerList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.PATH_BANNER_ARTICLE);
+  Future<List<HomeBannerBean>?>? getBannerList() async {
+    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathBanner);
     var model = HomeBannerListModel.fromJson(response.data);
-    return model.bannerList;
+    return model.list;
   }
 
   /// 获取搜索热词
   Future<List<SearchHotKeyModel>?> searchHotKeys() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.PATH_HOT_KEY);
+    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathHotkey);
     var model = SearchHotKeyListModel.fromJson(response.data);
     return model.list;
   }
 
   /// 获取常用网站
   Future<List<CommonWebsiteModel>?> commonWebsiteList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.PATH_WEBSITE);
+    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathWebsite);
     var model = CommonWebsiteListModel.fromJson(response.data);
     return model.list;
   }
 
   /// 知识体系列表
   Future<List<KnowledgeModel?>?> knowledgeList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.PATH_TREE);
+    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathTree);
     var model = KnowledgeListModel.fromJson(response.data);
     return model.list;
   }
@@ -78,7 +78,7 @@ class WanApi {
   /// 登录
   Future<UserInfoModel?> login(String? name, String? pwd) async {
     Response response = await DioInstance.instance.post(
-      path: UrlPathConstants.PATH_LOGIN,
+      path: UrlPathConstants.pathLogin,
       queryParameters: {
         "username": name,
         "password": pwd,
@@ -90,7 +90,7 @@ class WanApi {
   /// 注册
   Future<UserInfoModel?> register(String? name, String? pwd, String? pwdTwice) async {
     Response response = await DioInstance.instance.post(
-      path: "user/register",
+      path: UrlPathConstants.pathRegister,
       queryParameters: {
         "username": name,
         "password": pwd,
@@ -102,7 +102,7 @@ class WanApi {
 
   /// 登出
   Future<bool> logout() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.PATH_LOGOUT);
+    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathLogout);
     if (response.data != null && response.data == true) {
       return true;
     }
@@ -140,7 +140,7 @@ class WanApi {
   /// 搜索
   Future<List<SearchListItemModel>?> search({required String keyWord}) async {
     Response rsp = await DioInstance.instance.post(
-      path: UrlPathConstants.PATH_QUERY_ARTICLE,
+      path: UrlPathConstants.pathQueryArticle,
       queryParameters: {"k": keyWord},
     );
     SearchListModel? model = SearchListModel.fromJson(rsp.data);
@@ -152,16 +152,16 @@ class WanApi {
 
   /// 检查 app 新版本
   Future<AppCheckUpdateModel?> checkUpdate() async {
-    DioInstance.instance.changeBaseUrl(UrlPathConstants.PGYER_HOST);
+    DioInstance.instance.changeBaseUrl(UrlPathConstants.hostPgyer);
     Response response = await DioInstance.instance.post(
-      path: UrlPathConstants.PATH_CHECK_NEW_VERSION,
+      path: UrlPathConstants.pathCheckUpgrade,
       queryParameters: {
         "_api_key": "57c543d258a34f8565748561de50b6e6",
         "appKey": "2639f784ce9ee850532074b7b0534e62",
       },
     );
 
-    DioInstance.instance.changeBaseUrl(UrlPathConstants.WANANDROID_HOST);
+    DioInstance.instance.changeBaseUrl(UrlPathConstants.hostWanandroid);
 
     return AppCheckUpdateModel.fromJson(response.data);
   }

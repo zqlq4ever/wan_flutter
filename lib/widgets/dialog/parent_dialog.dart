@@ -34,7 +34,7 @@ class ParentDialog extends Dialog {
   final GestureTapCallback? dismissClick;
 
   //是否显示底部透明消失按钮
-  final bool? showTransparenceButton;
+  final bool? showTransparentButton;
 
   //是否点击空白区域关闭软键盘
   final bool? touchOutsideCloseKeyboard;
@@ -54,7 +54,7 @@ class ParentDialog extends Dialog {
       this.outsideOnTap,
       required this.childWidget,
       this.dismissClick,
-      this.showTransparenceButton,
+      this.showTransparentButton,
       this.touchOutsideCloseKeyboard,
       super.key});
 
@@ -72,7 +72,7 @@ class ParentDialog extends Dialog {
             },
             child: GestureDetector(
                 onTap: () {
-                  //有软键盘也隐藏软键盘
+                  //  有软键盘也隐藏软键盘
                   if (touchOutsideCloseKeyboard == true) {
                     FocusScope.of(context).unfocus();
                   }
@@ -88,7 +88,7 @@ class ParentDialog extends Dialog {
 
   ///如果显示底部透明按钮需要 showTransparenceButton=true
   Widget _showDialogBody(BuildContext context) {
-    if (showTransparenceButton == true) {
+    if (showTransparentButton == true) {
       return ListView(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -118,7 +118,7 @@ class ParentDialog extends Dialog {
         child: GestureDetector(
             onTap: () {
               Navigator.pop(context);
-              if (dismissClick != null && showTransparenceButton == true) {
+              if (dismissClick != null && showTransparentButton == true) {
                 dismissClick?.call();
               }
             },

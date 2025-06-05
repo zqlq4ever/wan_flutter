@@ -66,7 +66,7 @@ class _DetailTabChildPageState extends State<DetailTabChildPage> {
                     itemBuilder: (context, index) {
                       return _item(value.detailList[index], onTap: () {
                         //进入网页
-                        RouteUtils.push(
+                        RouteUtil.push(
                           context,
                           WebViewPage(
                               loadResource: value.detailList[index].link ?? "",

@@ -67,7 +67,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
   Widget knowledgeItem(KnowledgeModel? item) {
     return GestureDetector(
       onTap: () {
-        RouteUtils.push(context, KnowledgeDetailsTabPage(params: model.generalParams(item?.children)));
+        RouteUtil.push(context, KnowledgeDetailsTabPage(params: model.generalParams(item?.children)));
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),

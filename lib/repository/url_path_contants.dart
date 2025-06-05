@@ -1,34 +1,37 @@
 class UrlPathConstants {
   //  玩 Android 域名
-  static const String WANANDROID_HOST = "https://www.wanandroid.com/";
+  static const String hostWanandroid = "https://www.wanandroid.com/";
 
   //  获取置顶文章列表
-  static const String PATH_TOP_ARTICLE = "article/top/json";
+  static const String pathTopArticle = "article/top/json";
 
   //  首页 banner
-  static const String PATH_BANNER_ARTICLE = "banner/json";
+  static const String pathBanner = "banner/json";
 
   //  获取搜索热词
-  static const String PATH_HOT_KEY = "hotkey/json";
+  static const String pathHotkey = "hotkey/json";
 
   //  常用网站
-  static const String PATH_WEBSITE = "friend/json";
+  static const String pathWebsite = "friend/json";
 
   //  知识体系
-  static const String PATH_TREE = "tree/json";
+  static const String pathTree = "tree/json";
 
   //  登录
-  static const String PATH_LOGIN = "/user/login";
+  static const String pathLogin = "/user/login";
+
+  //  注册
+  static const String pathRegister = "user/register";
 
   //  登出
-  static const String PATH_LOGOUT = "user/logout/json";
+  static const String pathLogout = "user/logout/json";
 
   //  搜索文章
-  static const String PATH_QUERY_ARTICLE = "article/query/0/json";
+  static const String pathQueryArticle = "article/query/0/json";
 
   //  蒲公英域名
-  static const String PGYER_HOST = "https://www.pgyer.com/";
+  static const String hostPgyer = "https://www.pgyer.com/";
 
   //  检测更新
-  static const String PATH_CHECK_NEW_VERSION = "apiv2/app/check";
+  static const String pathCheckUpgrade = "apiv2/app/check";
 }

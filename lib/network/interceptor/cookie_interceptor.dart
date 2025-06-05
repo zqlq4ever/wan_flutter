@@ -9,7 +9,7 @@ import 'package:wan_android_flutter/utils/sp_utils.dart';
 class CookieInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    SpUtils.getStringList(Constants.SP_COOKIE_LIST).then((cookieList) {
+    SpUtil.getStringList(Constants.spCookieList).then((cookieList) {
       // 取出缓存的cookie直接赋值给请求头的cookieHeader,注意不是setCookieHeader
       options.headers[HttpHeaders.cookieHeader] = cookieList;
       // options.headers[HttpHeaders.setCookieHeader] = cookieList;
@@ -31,7 +31,7 @@ class CookieInterceptor extends Interceptor {
           log("获取返回头 cookie：${cookie.toString()}");
         }
       }
-      SpUtils.saveStringList(Constants.SP_COOKIE_LIST, cookieList);
+      SpUtil.saveStringList(Constants.spCookieList, cookieList);
     }
 
     // log("获取返回头：${response.headers.toString()}");

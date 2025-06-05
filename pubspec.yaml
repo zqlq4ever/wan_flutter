@@ -42,12 +42,17 @@ dependencies:
   flutter_html: ^3.0.0
   # 下拉刷新上拉加载
   pull_to_refresh: ^2.0.0
+  # 图片选择插件 https://github.com/flutter/packages/tree/main/packages/image_picker
+  image_picker: ^1.1.2
+  webview_flutter: 4.8.0
+  # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
+  keyboard_actions: ^4.2.0
 
   get: ^4.7.2
+  flutter_localization: ^0.3.2
 
 
   # https://juejin.cn/post/7508945084487401526#heading-19 推荐的框架
-  fluttertoast: ^8.2.12
   extended_image: ^10.0.1
   event_bus: ^2.0.1
   uuid: ^4.5.1

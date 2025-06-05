@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'http_method.dart';
 import 'interceptor/cookie_interceptor.dart';
 import 'interceptor/print_log_interceptor.dart';
-import 'interceptor/rsp_interceptor.dart';
+import 'interceptor/response_interceptor.dart';
 
 class DioInstance {
   static DioInstance? _instance;

@@ -14,51 +14,50 @@ import '../../route/RoutePath.dart';
 import '../../widgets/common_styles.dart';
 import '../../widgets/dialog/dialog_factory.dart';
 
-///我的页面
-class MinePage extends StatefulWidget {
-  const MinePage({super.key});
+/// 我的页面
+class MineNewPage extends StatefulWidget {
+  const MineNewPage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _MinePageState();
-  }
+  State<StatefulWidget> createState() => _MineNewPageState();
 }
 
-class _MinePageState extends State<MinePage> {
-  var model = MineViewModel();
+class _MineNewPageState extends State<MineNewPage> {
+  var vm = MineViewModel();
 
   @override
   void initState() {
     super.initState();
-    model.initData();
+    vm.initData();
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) {
-          return model;
-        },
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: null,
-            body: SafeArea(
-                child: Column(children: [
-              //用户信息区域
-              _userArea(children: _userHead(onTap: () {
-                //点击头像或者用户名
-                if (model.shouldLogin == true) {
-                  log("点击头像或者用户名去登录");
-                  RouteUtils.pushForNamed(context, RoutePath.login);
-                }
-              })),
+      create: (context) => vm,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: null,
+        body: SafeArea(
+          child: Column(
+            children: [
+              //  用户信息区域
+              _userArea(
+                children: _userHead(onTap: () {
+                  //  点击头像或者用户名
+                  if (vm.shouldLogin == true) {
+                    log("点击头像或者用户名去登录");
+                    RouteUtil.pushForNamed(context, RoutePath.login);
+                  }
+                }),
+              ),
               _commonItem(
                   title: "我的收藏",
                   onTap: () {
-                    if (model.shouldLogin == true) {
-                      RouteUtils.push(context, const LoginPage());
+                    if (vm.shouldLogin == true) {
+                      RouteUtil.push(context, const LoginPage());
                     } else {
-                      RouteUtils.push(context, const MyCollectsPage());
+                      RouteUtil.push(context, const MyCollectsPage());
                     }
                   }),
               Selector<MineViewModel, bool>(builder: (context, value, child) {
@@ -75,39 +74,23 @@ class _MinePageState extends State<MinePage> {
               _commonItem(
                   title: "关于我们",
                   onTap: () {
-                    RouteUtils.push(context, const AboutUsPage());
+                    RouteUtil.push(context, const AboutUsPage());
                   }),
               _logoutButton(() {
-                model.logout();
+                vm.logout();
               })
-            ]))));
-  }
-
-  ///检查更新
-  void checkAppUpdate() {
-    model.checkUpdate().then((url) {
-      if (url != null && url.isNotEmpty == true) {
-        DialogFactory.instance.showNeedUpdateDialog(
-            context: context,
-            dismissClick: () {
-              //是否显示更新红点
-              model.shouldShowUpdateDot();
-            },
-            confirmClick: () {
-              //跳转到外部浏览器打开
-              model.jumpToOutLink(url);
-            });
-      } else {
-        showToast("已是最新版本");
-      }
-    });
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _userArea({required List<Widget> children}) {
     return Container(
       width: double.infinity,
       height: 200.h,
-      color: Colors.teal,
+      color: Colors.white10,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: children,
@@ -115,77 +98,113 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  List<Widget> _userHead({GestureTapCallback? onTap}) {
+  List<Widget> _userHead({
+    GestureTapCallback? onTap,
+  }) {
     return [
       GestureDetector(
         onTap: onTap,
         child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(40.r)),
-            child: Image.asset(
-              "assets/images/logo.png",
-              width: 80.r,
-              height: 80.r,
-            )),
+          borderRadius: BorderRadius.all(Radius.circular(40.r)),
+          child: Image.asset(
+            "assets/images/logo.png",
+            width: 80.r,
+            height: 80.r,
+          ),
+        ),
       ),
       SizedBox(
         height: 5.h,
       ),
       GestureDetector(
-          onTap: onTap,
-          child: Selector<MineViewModel, String?>(builder: (context, value, child) {
-            return Text(value ?? "", style: whiteTextStyle14);
-          }, selector: (context, value) {
+        onTap: onTap,
+        child: Selector<MineViewModel, String?>(
+          builder: (context, value, child) {
+            return Text(value ?? "", style: titleTextStyle15);
+          },
+          selector: (context, value) {
             return value.userName;
-          }))
+          },
+        ),
+      )
     ];
   }
 
   Widget _commonItem({required String title, GestureTapCallback? onTap, bool? showRedDot}) {
     return GestureDetector(
-        onTap: onTap,
-        child: Container(
-            padding: EdgeInsets.only(right: 5.w),
-            margin: EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black38, width: 0.5.r),
-                borderRadius: BorderRadius.all(Radius.circular(5.r))),
-            width: double.infinity,
-            height: 45.h,
-            child: Row(children: [
-              //不显示红点需要填充一个边距
-              if (showRedDot != true) SizedBox(width: 10.w),
-              //显示红点
-              if (showRedDot == true)
-                Container(
-                  margin: EdgeInsets.only(left: 3.w, right: 4.w),
-                  width: 3.r,
-                  height: 3.r,
-                  decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(1.5.r))),
-                ),
-              Expanded(child: Text(title, style: blackTextStyle13)),
-              Image.asset("assets/images/img_arrow_right.png", width: 20.r, height: 20.r)
-            ])));
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.only(right: 5.w),
+        margin: EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black38, width: 0.5.r),
+          borderRadius: BorderRadius.all(Radius.circular(5.r)),
+        ),
+        width: double.infinity,
+        height: 45.h,
+        child: Row(
+          children: [
+            //  不显示红点需要填充一个边距
+            if (showRedDot != true) SizedBox(width: 10.w),
+            //  显示红点
+            if (showRedDot == true)
+              Container(
+                margin: EdgeInsets.only(left: 3.w, right: 4.w),
+                width: 3.r,
+                height: 3.r,
+                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(1.5.r))),
+              ),
+            Expanded(child: Text(title, style: blackTextStyle13)),
+            Image.asset("assets/images/img_arrow_right.png", width: 20.r, height: 20.r)
+          ],
+        ),
+      ),
+    );
   }
 
-  ///退出登录按钮
+  /// 退出登录按钮
   Widget _logoutButton(GestureTapCallback? onTap) {
     return Selector<MineViewModel, bool>(builder: (context, value, child) {
       return !value
           ? GestureDetector(
               onTap: onTap,
               child: Container(
-                  width: double.infinity,
-                  height: 40.h,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(left: 40.w, right: 40.w, top: 100.h),
-                  decoration: BoxDecoration(color: Colors.teal, borderRadius: BorderRadius.all(Radius.circular(20.r))),
-                  child: Text(
-                    "退出登录",
-                    style: whiteTextStyle14,
-                  )))
+                width: double.infinity,
+                height: 40.h,
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(left: 40.w, right: 40.w, top: 100.h),
+                decoration: BoxDecoration(color: Colors.teal, borderRadius: BorderRadius.all(Radius.circular(20.r))),
+                child: Text(
+                  "退出登录",
+                  style: whiteTextStyle14,
+                ),
+              ),
+            )
           : const SizedBox();
     }, selector: (context, m) {
       return m.shouldLogin ?? false;
+    });
+  }
+
+  /// 检查更新
+  void checkAppUpdate() {
+    vm.checkUpdate().then((url) {
+      if (url == null || url.isEmpty) {
+        showToast("已是最新版本");
+        return;
+      }
+
+      DialogFactory.instance.showNeedUpdateDialog(
+          context: context,
+          dismissClick: () {
+            //  是否显示更新红点
+            vm.shouldShowUpdateDot();
+          },
+          confirmClick: () {
+            //  跳转到外部浏览器打开
+            var testUrl = "https://www.baidu.com/?by=history&from=kkframenew";
+            vm.jumpToOutLink(testUrl);
+          });
     });
   }
 }

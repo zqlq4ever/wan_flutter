@@ -16,7 +16,7 @@ class MineViewModel with ChangeNotifier {
   bool needUpdate = false;
 
   Future initData() async {
-    String? name = await SpUtils.getString(Constants.SP_USER_NAME);
+    String? name = await SpUtil.getString(Constants.spUserName);
     log("MineViewModel $name");
     if (name == null || name.isEmpty == true) {
       userName = "未登录";
@@ -32,61 +32,62 @@ class MineViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  ///退出登录
+  /// 退出登录
   Future logout() async {
     var success = await WanApi.instance.logout();
     if (success) {
       userName = "未登录";
       shouldLogin = true;
       //清除缓存
-      SpUtils.remove(Constants.SP_USER_NAME);
+      SpUtil.remove(Constants.spUserName);
       notifyListeners();
     } else {
       showToast("网络异常");
     }
   }
 
+  // 显示红点
   Future shouldShowUpdateDot() async {
     var packInfo = await PackageInfo.fromPlatform();
-    //获取当前app的版本code
+    //  获取当前 app 的版本 code
     String versionCode = packInfo.buildNumber;
-    //获取保存的新版本code
-    String newVerCode = await SpUtils.getString(Constants.SP_NEW_APP_VERSION);
+    //  获取保存的新版本 code
+    String newVerCode = await SpUtil.getString(Constants.spNewAppVersion);
     if ((int.tryParse(versionCode) ?? 0) >= (int.tryParse(newVerCode) ?? 0)) {
-      //当前已是最新版本
+      //  当前已是最新版本
       needUpdate = false;
     } else {
-      //有新版本，显示红点
+      //  有新版本，显示红点
       needUpdate = true;
     }
   }
 
-  ///检查更新
+  /// 检查更新
   Future<String?> checkUpdate() async {
     var packInfo = await PackageInfo.fromPlatform();
-    //获取当前app的版本code
+    //  获取当前 app 的版本 code
     String versionCode = packInfo.buildNumber;
 
     AppCheckUpdateModel? model = await WanApi.instance.checkUpdate();
-    //线上版本的code
+    //  线上版本的 code
     String onlineAppVerCode = model?.data?.buildVersionNo ?? "0";
     try {
-      //如果当前版本小于线上版本，需要更新
+      //  如果当前版本小于线上版本，需要更新
       if ((int.tryParse(versionCode) ?? 0) < ((int.tryParse(onlineAppVerCode) ?? 0))) {
-        SpUtils.saveString(Constants.SP_NEW_APP_VERSION, onlineAppVerCode);
+        SpUtil.saveString(Constants.spNewAppVersion, onlineAppVerCode);
         return model?.data?.downloadURL;
       } else {
-        SpUtils.saveString(Constants.SP_NEW_APP_VERSION, versionCode);
+        SpUtil.saveString(Constants.spNewAppVersion, versionCode);
         return null;
       }
     } catch (e) {
-      log("checkUpdate error=$e");
-      SpUtils.saveString(Constants.SP_NEW_APP_VERSION, versionCode);
+      log("checkUpdate error = $e");
+      SpUtil.saveString(Constants.spNewAppVersion, versionCode);
       return null;
     }
   }
 
-  ///跳转到外部浏览器打开
+  /// 跳转到外部浏览器打开
   Future jumpToOutLink(String? url) async {
     final uri = Uri.parse(url ?? "");
     if (await canLaunchUrl(uri)) {

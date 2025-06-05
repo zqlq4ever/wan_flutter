@@ -19,7 +19,7 @@ class Routes {
       case RoutePath.tab:
         return pageRoute(const BottomTabPage(), settings: settings);
       //知识体系明细页面
-      case RoutePath.knowledge_details:
+      case RoutePath.knowledgeDetails:
         return pageRoute(const KnowledgeDetailsTabPage(), settings: settings);
       //登录
       case RoutePath.login:
@@ -28,13 +28,13 @@ class Routes {
       case RoutePath.register:
         return pageRoute(const RegisterPage(), settings: settings);
       //我的收藏页面
-      case RoutePath.my_collects:
+      case RoutePath.myCollects:
         return pageRoute(const MyCollectsPage(), settings: settings);
       //显示网页资源的页面
-      case RoutePath.web_view:
+      case RoutePath.webviewPage:
         return pageRoute(WebViewPage(loadResource: "", webViewType: WebViewType.URL), settings: settings);
       //关于我们
-      case RoutePath.about_us:
+      case RoutePath.aboutUs:
         return pageRoute(const AboutUsPage(), settings: settings);
       //搜索页
       case RoutePath.search:

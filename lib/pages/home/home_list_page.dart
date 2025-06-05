@@ -66,7 +66,7 @@ class _HomeListPageState extends State<HomeListPage> {
                       controller: bannerController,
                       itemClick: (title, url) {
                         //进入网页
-                        RouteUtils.push(
+                        RouteUtil.push(
                           context,
                           WebViewPage(loadResource: url, webViewType: WebViewType.URL, showTitle: true, title: title),
                         );
@@ -83,7 +83,7 @@ class _HomeListPageState extends State<HomeListPage> {
                                 item: item,
                                 onItemClick: () {
                                   //进入网页
-                                  RouteUtils.push(
+                                  RouteUtil.push(
                                       context,
                                       WebViewPage(
                                           loadResource: item?.link ?? "",

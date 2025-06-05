@@ -34,7 +34,7 @@ class WanApp extends StatelessWidget {
         builder: (context, child) {
           return MaterialApp(
             theme: ThemeData(useMaterial3: true),
-            navigatorKey: RouteUtils.navigatorKey,
+            navigatorKey: RouteUtil.navigatorKey,
             onGenerateRoute: Routes.generateRoute,
             initialRoute: RoutePath.tab,
           );
