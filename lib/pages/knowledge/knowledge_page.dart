@@ -22,11 +22,9 @@ class KnowledgePage extends StatefulWidget {
 
 class _KnowledgePageState extends State<KnowledgePage> {
   var model = KnowledgeViewModel();
-  late RefreshController _refreshController;
 
   @override
   void initState() {
-    _refreshController = RefreshController();
     super.initState();
     model.getKnowledgeList();
   }
@@ -34,22 +32,16 @@ class _KnowledgePageState extends State<KnowledgePage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) {
-          return model;
-        },
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            body: SafeArea(
-                child: SmartRefreshWidget(
-                    enablePullUp: false,
-                    onRefresh: () {
-                      model.getKnowledgeList().then((value) {
-                        //关闭刷新
-                        _refreshController.refreshCompleted();
-                      });
-                    },
-                    controller: _refreshController,
-                    child: knowledgeListview()))));
+      create: (context) {
+        return model;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: knowledgeListview(),
+        ),
+      ),
+    );
   }
 
   Widget knowledgeListview() {

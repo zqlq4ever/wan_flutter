@@ -96,7 +96,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                               child: CircularProgressIndicator(),
                             );
                           },
-                          imageUrl: snapshot.data?.bannerList?[index]?.imagePath ?? ""));
+                          imageUrl: snapshot.data?.bannerList?[index].imagePath ?? ""));
                 },
                 itemCount: snapshot.data?.bannerList?.length ?? 0,
               ));

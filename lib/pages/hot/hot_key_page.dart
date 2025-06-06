@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_android_flutter/pages/hot/hot_common_view_model.dart';
 import 'package:wan_android_flutter/pages/search/search_page.dart';
 
 import '../../route/RouteUtils.dart';
 import '../../widgets/common_styles.dart';
-import '../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
@@ -23,11 +21,9 @@ class HotKeyPage extends StatefulWidget {
 
 class _HotKeyPageState extends State<HotKeyPage> {
   var vm = HotCommonViewModel();
-  late RefreshController _refreshController;
 
   @override
   void initState() {
-    _refreshController = RefreshController(initialRefresh: false);
     super.initState();
     vm.getData();
   }
@@ -39,36 +35,24 @@ class _HotKeyPageState extends State<HotKeyPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: SmartRefreshWidget(
-            controller: _refreshController,
-            //  禁止上拉
-            enablePullUp: false,
-            onRefresh: () {
-              //  刷新回调
-              vm.getData(complete: () {
-                //  结束刷新
-                _refreshController.refreshCompleted();
-              });
-            },
-            child: SingleChildScrollView(
-              child: Column(children: [
-                _titleWidget("搜索热词", true, onTap: () {
-                  RouteUtil.push(context, const SearchPage());
-                }),
-                SizedBox(height: 20.h),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              _titleWidget("搜索热词", true, onTap: () {
+                RouteUtil.push(context, const SearchPage());
+              }),
+              SizedBox(height: 20.h),
 
-                //  搜索热词列表
-                _searchHotKeyListView(),
-                SizedBox(height: 20.h),
+              //  搜索热词列表
+              _searchHotKeyListView(),
+              SizedBox(height: 20.h),
 
-                _titleWidget("常用网站", false),
-                SizedBox(height: 20.h),
+              _titleWidget("常用网站", false),
+              SizedBox(height: 20.h),
 
-                //  常用网站列表
-                _commonWebsiteListView(),
-                SizedBox(height: 20.h),
-              ]),
-            ),
+              //  常用网站列表
+              _commonWebsiteListView(),
+              SizedBox(height: 20.h),
+            ]),
           ),
         ),
       ),

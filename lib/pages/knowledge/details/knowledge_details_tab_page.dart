@@ -7,7 +7,7 @@ import 'package:wan_android_flutter/pages/knowledge/details/detail_tab_child_pag
 import '../../../repository/model/knowledge_detail_param.dart';
 import 'knowledge_details_view_model.dart';
 
-///知识体系明细tab指示器页面
+/// 知识体系明细 tab 指示器页面
 class KnowledgeDetailsTabPage extends StatefulWidget {
   final List<KnowledgeDetailParam>? params;
 
@@ -38,24 +38,29 @@ class _KnowledgeDetailsTabPageState extends State<KnowledgeDetailsTabPage> with 
         return model;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-              title: TabBar(
+          title: TabBar(
+            dividerHeight: 0,
             controller: controller,
             tabs: model.tabList,
             isScrollable: true,
             labelColor: Colors.deepOrange,
             indicatorColor: Colors.green,
-          )),
-          body: SafeArea(
-              child: TabBarView(
+          ),
+        ),
+        body: SafeArea(
+          child: TabBarView(
             controller: controller,
             children: children(),
-          ))),
+          ),
+        ),
+      ),
     );
   }
 
-  ///根据传进来的数据生成对应数量的tabPage
+  /// 根据传进来的数据生成对应数量的tabPage
   List<Widget> children() {
     return widget.params?.map((e) {
           return DetailTabChildPage(id: e.id);

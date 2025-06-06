@@ -11,7 +11,7 @@ import '../../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../../widgets/web/webview_page.dart';
 import '../../../widgets/web/webview_widget.dart';
 
-///知识体系明细tab页签页面
+/// 知识体系明细 tab 页签页面
 class DetailTabChildPage extends StatefulWidget {
   final String? id;
 
@@ -65,7 +65,7 @@ class _DetailTabChildPageState extends State<DetailTabChildPage> {
                     itemCount: value.detailList.length,
                     itemBuilder: (context, index) {
                       return _item(value.detailList[index], onTap: () {
-                        //进入网页
+                        //  进入网页
                         RouteUtil.push(
                           context,
                           WebViewPage(

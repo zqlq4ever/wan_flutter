@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wan_android_flutter/widgets/common_styles.dart';
+import 'package:wan_android_flutter/widgets/loading.dart';
 import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
 
-///显示网页资源的页面
+/// 显示网页资源的页面
 class WebViewPage extends StatefulWidget {
-  WebViewPage({
+  const WebViewPage({
     super.key,
     required this.loadResource,
     required this.webViewType,
@@ -50,13 +50,19 @@ class _WebViewPageState extends State<WebViewPage> {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    Loading.dismissAll();
+  }
+
   Widget _buildAppBarTitle(bool? showTitle, String? title) {
     var show = showTitle ?? false;
     return show
-        ? Html(data: title ?? "", style: {
-            //整体样式使用 html
-            "html": Style(fontSize: FontSize(15.sp))
-          })
+        ? Text(
+            title ?? "",
+            style: titleTextStyle15,
+          )
         : const SizedBox.shrink();
   }
 

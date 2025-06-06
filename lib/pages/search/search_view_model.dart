@@ -6,7 +6,7 @@ import '../../repository/model/search_list_model.dart';
 class SearchViewModel with ChangeNotifier {
   List<SearchListItemModel>? dataList = [];
 
-  Future searchList(String? keyWord) async {
+  Future searchList([String? keyWord = ""]) async {
     List<SearchListItemModel>? list = await WanApi.instance.search(keyWord: keyWord ?? "");
     if (list?.isNotEmpty == true) {
       dataList = list ?? [];

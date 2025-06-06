@@ -37,10 +37,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) {
-        return vm;
-      },
+      create: (context) => vm,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
@@ -52,10 +51,10 @@ class _SearchPageState extends State<SearchPage> {
                   }
                   vm.searchList(value);
                 },
-                onTapCancel: () {
+                onTapReset: () {
                   //  清空
-                  _editController?.clear();
-                  vm.clearList();
+                  _editController?.text = "";
+                  vm.searchList();
                 },
                 onTapFinish: () {
                   //  退出
@@ -65,12 +64,14 @@ class _SearchPageState extends State<SearchPage> {
               _searchResultsView(
                 onItemTap: (item) {
                   RouteUtil.push(
-                      context,
-                      WebViewPage(
-                          loadResource: item?.link ?? "",
-                          title: item?.title,
-                          showTitle: true,
-                          webViewType: WebViewType.URL));
+                    context,
+                    WebViewPage(
+                      loadResource: item?.link ?? "",
+                      title: item?.title,
+                      showTitle: true,
+                      webViewType: WebViewType.URL,
+                    ),
+                  );
                 },
               )
             ],
@@ -82,14 +83,14 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _searchBar({
     ValueChanged<String>? onSubmitted,
-    GestureTapCallback? onTapCancel,
+    GestureTapCallback? onTapReset,
     GestureTapCallback? onTapFinish,
   }) {
     return Container(
-        color: Colors.white10,
+        color: Colors.white,
         height: 50.h,
         child: Row(children: [
-          SizedBox(width: 5.w),
+          SizedBox(width: 10.w),
           GestureDetector(
             onTap: onTapFinish,
             child: Image.asset(
@@ -115,8 +116,8 @@ class _SearchPageState extends State<SearchPage> {
           ),
           SizedBox(width: 10.w),
           GestureDetector(
-            onTap: onTapCancel,
-            child: Text("清空", style: titleTextStyle15),
+            onTap: onTapReset,
+            child: Text("重置", style: titleTextStyle15),
           ),
           SizedBox(width: 15.w)
         ]));
@@ -125,15 +126,13 @@ class _SearchPageState extends State<SearchPage> {
   OutlineInputBorder _inputBorder() {
     return OutlineInputBorder(
       borderSide: const BorderSide(color: Colors.grey),
-      borderRadius: BorderRadius.all(
-        Radius.circular(15.r),
-      ),
+      borderRadius: BorderRadius.all(Radius.circular(8.r)),
     );
   }
 
   InputDecoration _inputDecoration() {
     return InputDecoration(
-      contentPadding: EdgeInsets.only(left: 10.w),
+      contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
       fillColor: Colors.white,
       filled: true,
       enabledBorder: _inputBorder(),
@@ -142,8 +141,11 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _searchResultsView({ValueChanged<SearchListItemModel?>? onItemTap}) {
+  Widget _searchResultsView({
+    ValueChanged<SearchListItemModel?>? onItemTap,
+  }) {
     return Selector<SearchViewModel, List<SearchListItemModel>?>(
+      selector: (context, vm) => vm.dataList,
       builder: (context, value, child) {
         return Expanded(
           child: ListView.builder(
@@ -157,13 +159,13 @@ class _SearchPageState extends State<SearchPage> {
           ),
         );
       },
-      selector: (context, vm) {
-        return vm.dataList;
-      },
     );
   }
 
-  Widget _resultItem(SearchListItemModel? item, {GestureTapCallback? onItemTap}) {
+  Widget _resultItem(
+    SearchListItemModel? item, {
+    GestureTapCallback? onItemTap,
+  }) {
     return GestureDetector(
       onTap: onItemTap,
       child: Container(
