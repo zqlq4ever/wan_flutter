@@ -11,6 +11,7 @@ TextStyle whiteTextStyle15 = TextStyle(color: Colors.white, fontSize: 15.sp);
 TextStyle titleTextStyle15 = TextStyle(color: Colors.black, fontSize: 15.sp);
 //黑色字体13号
 TextStyle blackTextStyle13 = TextStyle(fontSize: 13.sp, color: Colors.black);
+
 //普通字体，只做判空处理
 Text normalText(String? text) {
   return Text(
@@ -72,16 +73,20 @@ Widget outlineWhiteButton(String title, {GestureTapCallback? onTap}) {
       ));
 }
 
-//收藏按钮
-Widget collectImage(bool? collect, {GestureTapCallback? onTap}) {
+//  收藏按钮
+Widget collectImage(
+  bool? collect, {
+  GestureTapCallback? onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Image.asset(
-        collect == true
-            ? "assets/images/img_collect"
-                ".png"
-            : "assets/images/img_collect_grey.png",
-        width: 25.r,
-        height: 25.r),
+      collect == true
+          ? "assets/images/icon_collect_selected"
+              ".png"
+          : "assets/images/icon_collect_normal.png",
+      width: 25.r,
+      height: 25.r,
+    ),
   );
 }

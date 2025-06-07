@@ -40,18 +40,18 @@ class _HotKeyPageState extends State<HotKeyPage> {
               _titleWidget("搜索热词", true, onTap: () {
                 RouteUtil.push(context, const SearchPage());
               }),
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
 
               //  搜索热词列表
               _searchHotKeyListView(),
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
 
               _titleWidget("常用网站", false),
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
 
               //  常用网站列表
               _commonWebsiteListView(),
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
             ]),
           ),
         ),
@@ -59,40 +59,44 @@ class _HotKeyPageState extends State<HotKeyPage> {
     );
   }
 
-  Widget _titleWidget(String title, bool search, {GestureTapCallback? onTap}) {
-    return Column(children: [
-      Container(width: double.infinity, height: 0.5.h, color: Colors.teal),
-      Container(
-        color: Colors.white,
-        padding: EdgeInsets.only(left: 15.w, right: 10.w),
-        alignment: Alignment.centerLeft,
-        width: double.infinity,
-        height: 45.h,
-        child: search
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(color: Colors.teal, fontSize: 15.sp),
+  Widget _titleWidget(
+    String title,
+    bool search, {
+    GestureTapCallback? onTap,
+  }) {
+    return Container(
+      width: double.infinity,
+      height: 50.h,
+      padding: EdgeInsets.only(left: 15.w, right: 15.w),
+      alignment: Alignment.centerLeft,
+      child: search
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _titleText(title),
+                GestureDetector(
+                  onTap: onTap,
+                  child: Image.asset(
+                    "assets/images/icon_search.png",
+                    width: 30.r,
+                    height: 30.r,
                   ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Image.asset(
-                      "assets/images/icon_search.png",
-                      width: 30.r,
-                      height: 30.r,
-                    ),
-                  )
-                ],
-              )
-            : Text(
-                title,
-                style: TextStyle(color: Colors.teal, fontSize: 15.sp),
-              ),
+                )
+              ],
+            )
+          : _titleText(title),
+    );
+  }
+
+  Text _titleText(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        color: Colors.teal,
+        fontSize: 16.sp,
+        fontWeight: FontWeight.bold,
       ),
-      Container(width: double.infinity, height: 0.5.h, color: Colors.black12)
-    ]);
+    );
   }
 
   /// 搜索热词列表
@@ -101,9 +105,12 @@ class _HotKeyPageState extends State<HotKeyPage> {
       return _gridview(
           itemBuilder: (context, index) {
             var name = value.hotKeyList[index].name;
-            return _item(name, onTap: () {
-              RouteUtil.push(context, SearchPage(keyWord: name));
-            });
+            return _item(
+              name,
+              onTap: () {
+                RouteUtil.push(context, SearchPage(keyWord: name));
+              },
+            );
           },
           itemCount: value.hotKeyList.length);
     });
@@ -151,18 +158,23 @@ class _HotKeyPageState extends State<HotKeyPage> {
   }
 
   /// 通用网格 item
-  Widget _item(String? title, {GestureTapCallback? onTap}) {
+  Widget _item(
+    String? title, {
+    GestureTapCallback? onTap,
+  }) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black12),
         borderRadius: BorderRadius.all(
-          Radius.circular(15.r),
+          Radius.circular(10.r),
         ),
       ),
       alignment: Alignment.center,
-      padding: EdgeInsets.only(top: 5.h, bottom: 5.h, left: 5.w, right: 5.w),
+      padding: const EdgeInsets.all(5.0),
       child: InkWell(
           onTap: onTap,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           child: Text(
             title ?? "",
             textAlign: TextAlign.center,

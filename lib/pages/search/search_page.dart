@@ -95,8 +95,8 @@ class _SearchPageState extends State<SearchPage> {
             onTap: onTapFinish,
             child: Image.asset(
               "assets/images/icon_back.png",
-              width: 30.r,
-              height: 30.r,
+              width: 20.r,
+              height: 20.r,
             ),
           ),
           SizedBox(width: 10.w),

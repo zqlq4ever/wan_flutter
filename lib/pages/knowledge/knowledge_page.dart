@@ -48,7 +48,6 @@ class _KnowledgePageState extends State<KnowledgePage> {
     return Consumer<KnowledgeViewModel>(builder: (context, value, child) {
       return ListView.builder(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
           itemCount: value.list?.length ?? 0,
           itemBuilder: (context, index) {
             return knowledgeItem(value.list?[index]);
@@ -59,14 +58,22 @@ class _KnowledgePageState extends State<KnowledgePage> {
   Widget knowledgeItem(KnowledgeModel? item) {
     return GestureDetector(
       onTap: () {
-        RouteUtil.push(context, KnowledgeDetailsTabPage(params: model.generalParams(item?.children)));
+        RouteUtil.push(
+          context,
+          KnowledgeDetailsTabPage(
+            params: model.generalParams(item?.children),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
         padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black12, width: 0.5.r),
-            borderRadius: BorderRadius.all(Radius.circular(5.r))),
+          border: Border.all(color: Colors.black12, width: 0.5.r),
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.r),
+          ),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -76,7 +83,11 @@ class _KnowledgePageState extends State<KnowledgePage> {
                 children: [
                   Text(
                     item?.name ?? "",
-                    style: titleTextStyle15,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 15.sp,
+                    ),
                   ),
                   SizedBox(height: 10.h),
                   Text(model.generalChildNames(item?.children)),

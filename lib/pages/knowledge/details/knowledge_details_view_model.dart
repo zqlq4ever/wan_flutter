@@ -14,7 +14,7 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
   //页码
   int _pageCount = 0;
 
-  ///初始化tab列表
+  /// 初始化 tab 列表
   void initTabs(List<KnowledgeDetailParam>? params) {
     if (params?.isNotEmpty == true) {
       params?.forEach((item) {
@@ -23,7 +23,7 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
     }
   }
 
-  ///知识体系明细列表数据
+  /// 知识体系明细列表数据
   Future getDetailList(String? id, bool loadMore) async {
     Loading.showLoading();
     if (loadMore) {

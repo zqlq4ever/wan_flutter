@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +14,7 @@ import '../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
-///首页文章列表页面
+/// 首页文章列表页面
 class HomeListPage extends StatefulWidget {
   const HomeListPage({super.key});
 
@@ -46,22 +48,25 @@ class _HomeListPageState extends State<HomeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) {
-      return model;
-    }, builder: (BuildContext context, Widget? child) {
-      return Scaffold(
+    return ChangeNotifierProvider(
+      create: (context) {
+        return model;
+      },
+      builder: (BuildContext context, Widget? child) {
+        return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
-              child: SmartRefreshWidget(
-                  controller: _refreshController,
-                  onLoading: () {
-                    refreshOrLoad(true);
-                  },
-                  onRefresh: () {
-                    refreshOrLoad(false);
-                  },
-                  child: SingleChildScrollView(
-                      child: Column(children: [
+            child: SmartRefreshWidget(
+              controller: _refreshController,
+              onLoading: () {
+                refreshOrLoad(true);
+              },
+              onRefresh: () {
+                refreshOrLoad(false);
+              },
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
                     BannerWidget(
                       controller: bannerController,
                       itemClick: (title, url) {
@@ -74,6 +79,7 @@ class _HomeListPageState extends State<HomeListPage> {
                     ),
                     Consumer<HomeViewModel>(builder: (context, value, child) {
                       return ListView.builder(
+                          padding: const EdgeInsets.all(16),
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: value.listData?.length ?? 0,
@@ -84,12 +90,13 @@ class _HomeListPageState extends State<HomeListPage> {
                                 onItemClick: () {
                                   //进入网页
                                   RouteUtil.push(
-                                      context,
-                                      WebViewPage(
-                                          loadResource: item?.link ?? "",
-                                          webViewType: WebViewType.URL,
-                                          showTitle: true,
-                                          title: item?.title));
+                                    context,
+                                    WebViewPage(
+                                        loadResource: item?.link ?? "",
+                                        webViewType: WebViewType.URL,
+                                        showTitle: true,
+                                        title: item?.title),
+                                  );
                                 },
                                 imageClick: () {
                                   if (item?.collect == true) {
@@ -102,32 +109,51 @@ class _HomeListPageState extends State<HomeListPage> {
                                 });
                           });
                     })
-                  ])))));
-    });
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
-  ///列表item
-  Widget _listItem({HomeListItemData? item, GestureTapCallback? onItemClick, GestureTapCallback? imageClick}) {
+  /// 列表 item
+  Widget _listItem({
+    HomeListItemData? item,
+    GestureTapCallback? onItemClick,
+    GestureTapCallback? imageClick,
+  }) {
+    int randomNumber = Random().nextInt(10000);
+    String imageUrl = 'https://picsum.photos/300/400?random=$randomNumber';
     return GestureDetector(
-        onTap: onItemClick,
+      onTap: onItemClick,
+      child: Card(
+        margin: EdgeInsets.only(bottom: 16.h),
+        color: Colors.white,
+        elevation: 1,
         child: Container(
-            margin: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.h, bottom: 5.h),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5.r)), border: Border.all(color: Colors.black26)),
-            width: double.infinity,
-            padding: EdgeInsets.all(15.r),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          width: double.infinity,
+          padding: EdgeInsets.all(15.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Row(children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(25.r),
-                    child: Image.asset("assets/images/luoxiaohei.png", width: 25.r, height: 25.r, fit: BoxFit.fill)),
+                  borderRadius: BorderRadius.circular(25.r),
+                  child: Image.network(
+                    imageUrl,
+                    width: 25.r,
+                    height: 25.r,
+                    fit: BoxFit.fill,
+                  ),
+                ),
                 SizedBox(width: 5.w),
                 normalText(item?.author),
                 const Expanded(child: SizedBox()),
                 normalText(item?.niceShareDate),
-                SizedBox(
-                  width: 10.w,
-                ),
+                SizedBox(width: 10.w),
                 Text(
                   item?.type == 1 ? "置顶" : "",
                   style: TextStyle(
@@ -145,12 +171,16 @@ class _HomeListPageState extends State<HomeListPage> {
               SizedBox(height: 5.h),
               Row(children: [
                 Text(
-                  item?.chapterName ?? "",
+                  "${item?.superChapterName ?? ""} . ${item?.chapterName ?? ""}",
                   style: TextStyle(fontSize: 13.sp, color: Colors.green),
                 ),
                 const Expanded(child: SizedBox()),
                 collectImage(item?.collect, onTap: imageClick)
               ])
-            ])));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
