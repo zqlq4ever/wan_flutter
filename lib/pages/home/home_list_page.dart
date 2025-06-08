@@ -1,9 +1,10 @@
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/home/home_view_model.dart';
 import 'package:wan_android_flutter/route/RouteUtils.dart';
@@ -15,109 +16,79 @@ import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
 /// 首页文章列表页面
-class HomeListPage extends StatefulWidget {
-  const HomeListPage({super.key});
+class HomeListPage extends StatelessWidget {
+  final HomeViewModel vm = Get.put(HomeViewModel());
 
-  @override
-  State<StatefulWidget> createState() {
-    return _HomeListPageState();
-  }
-}
-
-class _HomeListPageState extends State<HomeListPage> {
-  var model = HomeViewModel();
-  BannerController? bannerController = BannerController();
-  late RefreshController _refreshController;
-
-  @override
-  void initState() {
-    _refreshController = RefreshController(initialRefresh: false);
-    super.initState();
-    model.initDataList(false);
-  }
-
-  void refreshOrLoad(bool loadMore) {
-    model.initDataList(loadMore, complete: (loadMore) {
-      if (loadMore) {
-        _refreshController.loadComplete();
-      } else {
-        _refreshController.refreshCompleted();
-      }
-    });
-  }
+  HomeListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        return model;
-      },
-      builder: (BuildContext context, Widget? child) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: true,
-              controller: _refreshController,
-              onLoading: () {
-                refreshOrLoad(true);
-              },
-              onRefresh: () {
-                refreshOrLoad(false);
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    BannerWidget(
-                      controller: bannerController,
-                      itemClick: (title, url) {
-                        //进入网页
-                        RouteUtil.push(
-                          context,
-                          WebViewPage(loadResource: url, webViewType: WebViewType.URL, showTitle: true, title: title),
-                        );
-                      },
-                    ),
-                    Consumer<HomeViewModel>(builder: (context, value, child) {
-                      return ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: value.listData?.length ?? 0,
-                          itemBuilder: (BuildContext context, int index) {
-                            HomeListItemData? item = value.listData?[index];
-                            return _listItem(
-                                item: item,
-                                onItemClick: () {
-                                  //进入网页
-                                  RouteUtil.push(
-                                    context,
-                                    WebViewPage(
-                                        loadResource: item?.link ?? "",
-                                        webViewType: WebViewType.URL,
-                                        showTitle: true,
-                                        title: item?.title),
-                                  );
-                                },
-                                imageClick: () {
-                                  if (item?.collect == true) {
-                                    //取消收藏
-                                    model.cancelCollect(index, "${item?.id}");
-                                  } else {
-                                    //收藏
-                                    model.collect(index, "${item?.id}");
-                                  }
-                                });
-                          });
-                    })
-                  ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          controller: vm.refreshController,
+          onLoading: () {
+            vm.refreshOrLoad(true);
+          },
+          onRefresh: () {
+            vm.refreshOrLoad(false);
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                BannerWidget(
+                  controller: vm.bannerController,
+                  itemClick: (title, url) {
+                    //进入网页
+                    RouteUtil.push(
+                      context,
+                      WebViewPage(loadResource: url, webViewType: WebViewType.URL, showTitle: true, title: title),
+                    );
+                  },
                 ),
-              ),
+                GetBuilder<HomeViewModel>(
+                  builder: (controller) {
+                    return ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: vm.listData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          HomeListItemData? item = vm.listData[index];
+                          return _listItem(
+                            item: item,
+                            onItemClick: () {
+                              //进入网页
+                              RouteUtil.push(
+                                context,
+                                WebViewPage(
+                                    loadResource: item.link ?? "",
+                                    webViewType: WebViewType.URL,
+                                    showTitle: true,
+                                    title: item.title),
+                              );
+                            },
+                            imageClick: () {
+                              if (item.collect == true) {
+                                //  取消收藏
+                                vm.cancelCollect(index, "${item.id}");
+                              } else {
+                                //  收藏
+                                vm.collect(index, "${item.id}");
+                              }
+                            },
+                          );
+                        });
+                  },
+                ),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -179,7 +150,12 @@ class _HomeListPageState extends State<HomeListPage> {
                   style: TextStyle(fontSize: 13.sp, color: Colors.green),
                 ),
                 const Expanded(child: SizedBox()),
-                collectImage(item?.collect, onTap: imageClick)
+                GetBuilder<HomeViewModel>(
+                    id: item?.id.toString() ?? "",
+                    builder: (controller) {
+                      log("GetBuilder collectImage");
+                      return collectImage(item?.collect, onTap: imageClick);
+                    })
               ])
             ],
           ),

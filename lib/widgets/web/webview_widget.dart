@@ -6,7 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import '../loading.dart';
 
-///需要加载的内容类型
+/// 需要加载的内容类型
 enum WebViewType {
   //html文本
   HTMLTEXT,
@@ -48,78 +48,67 @@ class WebViewWidget extends StatefulWidget {
 }
 
 class _WebViewWidgetState extends State<WebViewWidget> {
-  //webview控制器
+  //  webview 控制器
   late InAppWebViewController webViewController;
   final GlobalKey webViewKey = GlobalKey();
 
   // webview配置
-  InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
-    // 跨平台配置
-    crossPlatform: InAppWebViewOptions(
-      useShouldOverrideUrlLoading: true,
-      mediaPlaybackRequiresUserGesture: false,
-    ),
-    // android平台配置
-    android: AndroidInAppWebViewOptions(
-      //不允许缩放
-      builtInZoomControls: false,
-      //支持HybridComposition
-      useHybridComposition: true,
-    ),
-    // ios平台配置
-    ios: IOSInAppWebViewOptions(
-      allowsInlineMediaPlayback: true,
-    ),
+  InAppWebViewSettings setting = InAppWebViewSettings(
+    useShouldOverrideUrlLoading: true,
+    mediaPlaybackRequiresUserGesture: false,
+    //  不允许缩放
+    builtInZoomControls: false,
+    //  支持 HybridComposition
+    useHybridComposition: true,
+    allowsInlineMediaPlayback: true,
   );
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-        key: webViewKey,
-        initialOptions: options,
-        onWebViewCreated: (controller) {
-          //webview初始化完成之后加载数据
-          webViewController = controller;
+      key: webViewKey,
+      initialSettings: setting,
+      onWebViewCreated: (controller) {
+        //  webview 初始化完成之后加载数据
+        webViewController = controller;
 
-          //是否清除缓存后再加载
-          if (widget.clearCache == true) {
-            controller.clearCache();
+        //  是否清除缓存后再加载
+        if (widget.clearCache == true) {
+          webViewController.clearCache();
+        }
+
+        if (widget.onWebViewCreated == null) {
+          if (widget.webViewType == WebViewType.HTMLTEXT) {
+            webViewController.loadData(data: widget.loadResource);
+          } else if (widget.webViewType == WebViewType.URL) {
+            webViewController.loadUrl(
+              urlRequest: URLRequest(
+                url: WebUri(widget.loadResource),
+              ),
+            );
           }
+        } else {
+          widget.onWebViewCreated?.call(controller);
+        }
 
-          if (widget.onWebViewCreated == null) {
-            if (widget.webViewType == WebViewType.HTMLTEXT) {
-              webViewController.loadData(data: widget.loadResource);
-            } else if (widget.webViewType == WebViewType.URL) {
-              webViewController.loadUrl(urlRequest: URLRequest(url: WebUri(widget.loadResource)));
-            }
-          } else {
-            widget.onWebViewCreated?.call(controller);
-          }
-
-          //注册与js通信回调
-          widget.jsChannelMap?.forEach((handlerName, callback) {
-            webViewController.addJavaScriptHandler(handlerName: handlerName, callback: callback);
-          });
-        },
-        onConsoleMessage: (controller, consoleMessage) {
-          //这里是打印来自于js的conse.log打印
-          log("consoleMessage ====来自于js的打印==== \n $consoleMessage");
-        },
-        onProgressChanged: (InAppWebViewController controller, int progress) {},
-        onLoadStart: (InAppWebViewController controller, Uri? url) {
-          Loading.showLoading(duration: const Duration(seconds: 45));
-        },
-        onLoadError: (InAppWebViewController controller, Uri? url, int code, String message) {
-          Loading.dismissAll();
-        },
-        onLoadStop: (InAppWebViewController controller, Uri? url) {
-          Loading.dismissAll();
-        },
-        onPageCommitVisible: (InAppWebViewController controller, Uri? url) {});
+        //  注册与js通信回调
+        widget.jsChannelMap?.forEach((handlerName, callback) {
+          webViewController.addJavaScriptHandler(handlerName: handlerName, callback: callback);
+        });
+      },
+      onConsoleMessage: (controller, consoleMessage) {
+        //  这里是打印来自于js的 console.log 打印
+        log("consoleMessage ====来自于js的打印==== \n $consoleMessage");
+      },
+      onLoadStart: (InAppWebViewController controller, Uri? url) {
+        Loading.showLoading(duration: const Duration(seconds: 10));
+      },
+      onReceivedError: (InAppWebViewController controller, WebResourceRequest request, WebResourceError error) {
+        Loading.dismissAll();
+      },
+      onLoadStop: (InAppWebViewController controller, Uri? url) {
+        Loading.dismissAll();
+      },
+    );
   }
 }

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/about/about_us_page.dart';
 import 'package:wan_android_flutter/pages/auth/login_page.dart';
 import 'package:wan_android_flutter/pages/mine/mine_view_model.dart';
-import 'package:wan_android_flutter/pages/my_collects/my_collects_page.dart';
+import 'package:wan_android_flutter/pages/my_collects/collection_page.dart';
 import 'package:wan_android_flutter/route/RouteUtils.dart';
 
 import '../../route/RoutePath.dart';
@@ -104,12 +104,12 @@ class _MineNewPageState extends State<MineNewPage> {
     return [
       GestureDetector(
         onTap: onTap,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(40.r)),
-          child: Image.asset(
-            "assets/images/logo.png",
-            width: 80.r,
-            height: 80.r,
+        child: ClipOval(
+          child: Image.network(
+            "https://picsum.photos/100",
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
           ),
         ),
       ),

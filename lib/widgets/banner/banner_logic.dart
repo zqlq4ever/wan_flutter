@@ -5,10 +5,10 @@ import 'package:wan_android_flutter/repository/api/wan_api.dart';
 import 'package:wan_android_flutter/repository/model/home_banner_bean.dart';
 
 class BannerLogic {
-  //初始化状态数据
+  //  初始化状态数据
   final BannerState state = BannerState();
 
-  //获取流控制器
+  //  获取流控制器
   final _controller = StreamController<BannerState>.broadcast(onListen: () {
     log("BannerLogic _controller onListen");
   }, onCancel: () {

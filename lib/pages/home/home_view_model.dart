@@ -1,11 +1,33 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import '../../repository/api/wan_api.dart';
 import '../../repository/model/home_list_model.dart';
+import '../../widgets/banner/home_banner_widget.dart';
 
-class HomeViewModel with ChangeNotifier {
-  List<HomeListItemData>? listData = [];
+class HomeViewModel extends GetxController {
+  BannerController? bannerController = BannerController();
+  late RefreshController refreshController;
+  var listData = <HomeListItemData>[].obs;
   int _pageCount = 0;
+
+  @override
+  void onInit() {
+    super.onInit();
+    refreshController = RefreshController(initialRefresh: false);
+    initDataList(false);
+  }
+
+  void refreshOrLoad(bool loadMore) {
+    initDataList(loadMore, complete: (loadMore) {
+      if (loadMore) {
+        refreshController.loadComplete();
+      } else {
+        refreshController.refreshCompleted();
+      }
+    });
+  }
 
   Future initDataList(bool loadMore, {ValueChanged<bool>? complete}) async {
     //  加载更多
@@ -15,13 +37,13 @@ class HomeViewModel with ChangeNotifier {
       //  重置页码
       _pageCount = 0;
       //  刷新数据
-      listData?.clear();
+      listData.clear();
     }
 
     _getHomeList(loadMore).then((list) {
-      listData?.addAll(list ?? []);
-      notifyListeners();
+      listData.addAll(list ?? []);
       complete?.call(loadMore);
+      update();
     });
   }
 
@@ -43,8 +65,8 @@ class HomeViewModel with ChangeNotifier {
   Future collect(int index, String? id) async {
     bool success = await WanApi.instance.collect(id ?? "");
     if (success) {
-      listData?[index].collect = true;
-      notifyListeners();
+      listData[index].collect = true;
+      update([id ?? ""]);
     }
   }
 
@@ -52,8 +74,8 @@ class HomeViewModel with ChangeNotifier {
   Future cancelCollect(int index, String? id) async {
     bool success = await WanApi.instance.cancelCollect(id ?? "");
     if (success) {
-      listData?[index].collect = false;
-      notifyListeners();
+      listData[index].collect = false;
+      update([id ?? ""]);
     }
   }
 }

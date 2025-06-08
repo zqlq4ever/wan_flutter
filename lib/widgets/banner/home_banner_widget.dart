@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
 import 'banner_logic.dart';
 
@@ -66,40 +64,37 @@ class _BannerWidgetState extends State<BannerWidget> {
           }
 
           return Container(
-              width: double.infinity,
-              height: 150.h,
-              margin: EdgeInsets.only(left: 23.w, right: 23.w, top: 20.h),
-              child: Swiper(
-                indicatorLayout: PageIndicatorLayout.NONE,
-                autoplayDelay: 5000,
-                duration: 800,
-                autoplay: true,
-                pagination: SwiperPagination(
-                    margin: EdgeInsets.all(5.r),
-                    builder: DotSwiperPaginationBuilder(size: 8.r, activeColor: Colors.blueAccent, color: Colors.grey)),
-                // control: SwiperControl(size: 5.r),
-                autoplayDisableOnInteraction: false,
-                onTap: (int index) {
-                  var banner = snapshot.data?.bannerList?[index];
-                  var url = banner?.url ?? "";
-                  var title = banner?.title ?? "";
-                  log("BannerWidget banner点击 地址=$url");
-                  widget.itemClick?.call(title, url);
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  return ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                      child: CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          placeholder: (context, url) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                          imageUrl: snapshot.data?.bannerList?[index].imagePath ?? ""));
-                },
-                itemCount: snapshot.data?.bannerList?.length ?? 0,
-              ));
+            width: double.infinity,
+            height: 150.h,
+            margin: EdgeInsets.only(left: 23.w, right: 23.w, top: 20.h),
+            child: Swiper(
+              autoplay: true,
+              duration: 1000,
+              viewportFraction: 0.85,
+              scale: 0.85,
+              pagination: const SwiperPagination(),
+              itemCount: snapshot.data?.bannerList?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.r)),
+                  child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      imageUrl: snapshot.data?.bannerList?[index].imagePath ?? ""),
+                );
+              },
+              onTap: (int index) {
+                var banner = snapshot.data?.bannerList?[index];
+                var url = banner?.url ?? "";
+                var title = banner?.title ?? "";
+                widget.itemClick?.call(title, url);
+              },
+            ),
+          );
         });
   }
 

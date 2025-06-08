@@ -3,7 +3,7 @@ import 'package:wan_android_flutter/pages/about/about_us_page.dart';
 import 'package:wan_android_flutter/pages/auth/login_page.dart';
 import 'package:wan_android_flutter/pages/auth/register_page.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_tab_page.dart';
-import 'package:wan_android_flutter/pages/my_collects/my_collects_page.dart';
+import 'package:wan_android_flutter/pages/my_collects/collection_page.dart';
 import 'package:wan_android_flutter/pages/search/search_page.dart';
 import 'package:wan_android_flutter/pages/tab_page.dart';
 

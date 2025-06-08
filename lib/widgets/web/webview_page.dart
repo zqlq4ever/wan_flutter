@@ -66,14 +66,4 @@ class _WebViewPageState extends State<WebViewPage> {
         : const SizedBox.shrink();
   }
 
-  String limitsStr(String? content, {int limit = 15}) {
-    if (content == null || content.isEmpty == true) {
-      return "";
-    }
-    if (content.length > 15) {
-      return content.substring(0, 15);
-    } else {
-      return content;
-    }
-  }
 }

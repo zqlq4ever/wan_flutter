@@ -121,6 +121,21 @@ class WanApi {
     return false;
   }
 
+  /// 取消收藏文章
+  Future<bool> cancelCollect2(
+    String id,
+    String originId,
+  ) async {
+    Response response = await DioInstance.instance.post(
+      path: "lg/uncollect/$id/json",
+      queryParameters: {"originId": originId},
+    );
+    if (response.data != null && response.data == true) {
+      return true;
+    }
+    return false;
+  }
+
   /// 获取我的收藏列表
   Future<List<MyCollectItemModel>?> getMyCollects(String pageCount) async {
     Response rsp = await DioInstance.instance.get(path: "lg/collect/list/$pageCount/json");

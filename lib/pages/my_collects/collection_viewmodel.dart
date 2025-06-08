@@ -1,13 +1,12 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:wan_android_flutter/repository/api/wan_api.dart';
+import 'package:get/get.dart';
 
+import '../../repository/api/wan_api.dart';
 import '../../repository/model/my_collects_model.dart';
 
-//  我的收藏页面逻辑层
-class MyCollectsViewModel with ChangeNotifier {
-  List<MyCollectItemModel>? dataList = [];
+class CollectionViewmodel extends GetxController {
+  var dataList = <MyCollectItemModel>[].obs;
   int _pageCount = 0;
 
   /// 获取我的收藏列表
@@ -16,12 +15,11 @@ class MyCollectsViewModel with ChangeNotifier {
       _pageCount++;
     } else {
       _pageCount = 0;
-      dataList?.clear();
+      dataList.clear();
     }
     var list = await WanApi.instance.getMyCollects("$_pageCount");
     if (list != null && list.isNotEmpty == true) {
-      dataList?.addAll(list);
-      notifyListeners();
+      dataList.addAll(list);
     } else {
       if (loadMore && _pageCount > 0) {
         _pageCount--;
@@ -30,12 +28,16 @@ class MyCollectsViewModel with ChangeNotifier {
   }
 
   /// 取消收藏文章
-  Future cancelCollect(int index, String? id) async {
-    bool success = await WanApi.instance.cancelCollect(id ?? "");
+  Future cancelCollect(
+    int index,
+    String? id,
+    String? originId,
+  ) async {
+    bool success = await WanApi.instance.cancelCollect2(id ?? "", originId ?? "-1");
     if (success) {
       try {
-        dataList?.remove(dataList?[index]);
-        notifyListeners();
+        log("cancelCollect success");
+        dataList.remove(dataList[index]);
       } catch (e) {
         log("cancelCollect error=$e");
       }

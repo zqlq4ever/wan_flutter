@@ -53,7 +53,7 @@ class _BottomTabState extends State<BottomTabPage> {
   }
 
   void initTabPage() {
-    tabItems.add(const HomeListPage());
+    tabItems.add(HomeListPage());
     tabItems.add(const HotKeyPage());
     tabItems.add(const KnowledgePage());
     tabItems.add(const MineNewPage());

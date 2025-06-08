@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:wan_android_flutter/pages/my_collects/collection_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
 
 import '../../route/RouteUtils.dart';
 import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
-import 'my_collects_view_model.dart';
 
 /// 我的收藏页面
 class MyCollectsPage extends StatefulWidget {
@@ -21,9 +21,8 @@ class MyCollectsPage extends StatefulWidget {
 }
 
 class _MyCollectsPageState extends State<MyCollectsPage> {
-  var vm = MyCollectsViewModel();
+  final CollectionViewmodel vm = Get.put(CollectionViewmodel());
   late RefreshController _refreshController;
-
 
   @override
   void initState() {
@@ -44,44 +43,43 @@ class _MyCollectsPageState extends State<MyCollectsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => vm,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SmartRefresher(
-            controller: _refreshController,
-            onRefresh: () {
-              refreshOrLoad(false);
-            },
-            onLoading: () {
-              refreshOrLoad(true);
-            },
-            child: ListView.builder(
-              itemCount: vm.dataList?.length ?? 0,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SmartRefresher(
+          controller: _refreshController,
+          onRefresh: () {
+            refreshOrLoad(false);
+          },
+          onLoading: () {
+            refreshOrLoad(true);
+          },
+          child: Obx(() {
+            return ListView.builder(
+              itemCount: vm.dataList.length ?? 0,
               itemBuilder: (context, index) {
-                var data = vm.dataList?[index];
+                var data = vm.dataList[index];
                 return _collectItem(
                   data,
                   onTap: () {
                     //取消收藏
-                    vm.cancelCollect(index, "${data?.id}");
+                    vm.cancelCollect(index, "${data.id}", "${data.originId}");
                   },
                   itemClick: () {
                     //进入网页
                     RouteUtil.push(
                       context,
                       WebViewPage(
-                          loadResource: data?.link ?? "",
+                          loadResource: data.link ?? "",
                           webViewType: WebViewType.URL,
                           showTitle: true,
-                          title: vm.dataList?[index].title),
+                          title: vm.dataList[index].title),
                     );
                   },
                 );
               },
-            ),
-          ),
+            );
+          }),
         ),
       ),
     );

@@ -41,9 +41,6 @@ dependencies:
   # 本地化存储
   shared_preferences: ^2.5.3
 
-  # banner 轮播图组件
-  flutter_swiper_view: ^1.1.8
-
   # 图片缓存加载
   cached_network_image: ^3.4.1
 
@@ -71,11 +68,17 @@ dependencies:
   # Dart 常用工具类库 https://github.com/Sky24n/common_utils
   common_utils: 2.1.0
 
-  marquee_plus: ^2.2.4
+  # 路由框架 https://github.com/theyakka/fluro
+  fluro: ^2.0.5
 
   get: ^4.7.2
 
   flutter_localization: ^0.3.2
+
+  # banner 轮播图组件
+  card_swiper: ^3.0.1
+
+  marqueer: ^2.0.1
 
   # https://juejin.cn/post/7508945084487401526#heading-19 推荐的框架
   extended_image: ^10.0.1
