@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_view_model.dart';
 
 import '../../../repository/model/knowledge_detail_list_model.dart';
 import '../../../route/RouteUtils.dart';
 import '../../../widgets/common_styles.dart';
-import '../../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../../widgets/web/webview_page.dart';
 import '../../../widgets/web/webview_widget.dart';
 
@@ -29,7 +28,7 @@ class _DetailTabChildPageState extends State<DetailTabChildPage> {
 
   @override
   void initState() {
-    _refreshController = RefreshController();
+    _refreshController = RefreshController(initialRefresh: false);
     super.initState();
     refreshOrLoad(false);
   }
@@ -53,7 +52,7 @@ class _DetailTabChildPageState extends State<DetailTabChildPage> {
       child: Scaffold(
           backgroundColor: Colors.white,
           body: Consumer<KnowledgeDetailsViewModel>(builder: (context, value, child) {
-            return SmartRefreshWidget(
+            return SmartRefresher(
                 controller: _refreshController,
                 onRefresh: () {
                   refreshOrLoad(false);

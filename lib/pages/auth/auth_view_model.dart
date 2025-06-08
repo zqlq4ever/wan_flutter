@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:wan_android_flutter/repository/api/wan_api.dart';
 import 'package:wan_android_flutter/repository/model/user_info_model.dart';
-import 'package:wan_android_flutter/utils/sp_utils.dart';
+import 'package:wan_android_flutter/utils/sp_util.dart';
 
 import '../../constants.dart';
 

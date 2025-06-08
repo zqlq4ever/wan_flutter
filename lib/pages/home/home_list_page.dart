@@ -1,16 +1,16 @@
 import 'dart:math';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/home/home_view_model.dart';
 import 'package:wan_android_flutter/route/RouteUtils.dart';
 
 import '../../repository/model/home_list_model.dart';
 import '../../widgets/banner/home_banner_widget.dart';
 import '../../widgets/common_styles.dart';
-import '../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
@@ -56,7 +56,9 @@ class _HomeListPageState extends State<HomeListPage> {
         return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
-            child: SmartRefreshWidget(
+            child: SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
               controller: _refreshController,
               onLoading: () {
                 refreshOrLoad(true);
@@ -127,6 +129,7 @@ class _HomeListPageState extends State<HomeListPage> {
   }) {
     int randomNumber = Random().nextInt(10000);
     String imageUrl = 'https://picsum.photos/300/400?random=$randomNumber';
+    String? name = TextUtil.isEmpty(item?.author) ? item?.shareUser : item?.author;
     return GestureDetector(
       onTap: onItemClick,
       child: Card(
@@ -139,30 +142,31 @@ class _HomeListPageState extends State<HomeListPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(25.r),
-                  child: Image.network(
-                    imageUrl,
-                    width: 25.r,
-                    height: 25.r,
-                    fit: BoxFit.fill,
+              Row(
+                children: [
+                  ClipOval(
+                    child: Image.network(
+                      imageUrl,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(width: 5.w),
-                normalText(item?.author),
-                const Expanded(child: SizedBox()),
-                normalText(item?.niceShareDate),
-                SizedBox(width: 10.w),
-                Text(
-                  item?.type == 1 ? "置顶" : "",
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blueAccent,
-                  ),
-                )
-              ]),
+                  SizedBox(width: 5.w),
+                  normalText(name ?? ""),
+                  const Expanded(child: SizedBox()),
+                  normalText(item?.niceShareDate),
+                  SizedBox(width: 10.w),
+                  Text(
+                    item?.type == 1 ? "置顶" : "",
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blueAccent,
+                    ),
+                  )
+                ],
+              ),
               SizedBox(height: 5.h),
               Text(
                 item?.title ?? "",

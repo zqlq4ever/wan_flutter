@@ -2,9 +2,6 @@ class UrlPathConstants {
   //  玩 Android 域名
   static const String hostWanandroid = "https://www.wanandroid.com/";
 
-  //  获取置顶文章列表
-  static const String pathTopArticle = "article/top/json";
-
   //  首页 banner
   static const String pathBanner = "banner/json";
 

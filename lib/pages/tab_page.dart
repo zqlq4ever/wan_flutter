@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_flutter/pages/home/home_list_page.dart';
-import 'package:wan_android_flutter/pages/hot/hot_key_page.dart';
+import 'package:wan_android_flutter/pages/hotkey/hot_key_page.dart';
 import 'package:wan_android_flutter/pages/knowledge/knowledge_page.dart';
 import 'package:wan_android_flutter/pages/mine/mine_page.dart';
 

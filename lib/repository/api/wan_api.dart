@@ -27,14 +27,8 @@ class WanApi {
 
   /// 获取首页文章列表
   Future<HomeListModel?> homeList(String pageCount) async {
-    Response response = await DioInstance.instance.get(path: "article/list/$pageCount/json");
+    Response response = await DioInstance.instance.get(path: "article/list/$pageCount/json?page_size=10");
     return HomeListModel.fromJson(response.data);
-  }
-
-  /// 获取置顶文章列表
-  Future<HomeTopListModel> topHomeList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathTopArticle);
-    return HomeTopListModel.fromJson(response.data);
   }
 
   /// 获取首页 banner 数据

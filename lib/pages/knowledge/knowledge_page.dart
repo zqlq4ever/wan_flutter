@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_tab_page.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
 import 'package:wan_android_flutter/route/RouteUtils.dart';
 
-import '../../widgets/common_styles.dart';
-import '../../widgets/smart_refresh/smart_refresh_widget.dart';
 import 'knowledge_view_model.dart';
 
 ///知识体系页面

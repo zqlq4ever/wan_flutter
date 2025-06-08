@@ -8,31 +8,24 @@ class HomeViewModel with ChangeNotifier {
   int _pageCount = 0;
 
   Future initDataList(bool loadMore, {ValueChanged<bool>? complete}) async {
-    //加载更多
+    //  加载更多
     if (loadMore) {
       _pageCount++;
     } else {
-      //重置页码
+      //  重置页码
       _pageCount = 0;
-      //刷新数据
+      //  刷新数据
       listData?.clear();
     }
 
-    //先获取置顶列表
-    _getTopHomeList(loadMore).then((topList) {
-      if (!loadMore) {
-        listData?.addAll(topList ?? []);
-      }
-      _getHomeList(loadMore).then((list) {
-        listData?.addAll(list ?? []);
-        notifyListeners();
-        //完成后抛出回调
-        complete?.call(loadMore);
-      });
+    _getHomeList(loadMore).then((list) {
+      listData?.addAll(list ?? []);
+      notifyListeners();
+      complete?.call(loadMore);
     });
   }
 
-  ///获取数据
+  /// 获取数据
   Future<List<HomeListItemData>?> _getHomeList(bool loadMore) async {
     HomeListModel? data = await WanApi.instance.homeList("$_pageCount");
     if (data != null && data.datas?.isNotEmpty == true) {
@@ -46,17 +39,7 @@ class HomeViewModel with ChangeNotifier {
     }
   }
 
-  ///获取置顶文章列表
-  Future<List<HomeListItemData>?> _getTopHomeList(bool loadMore) async {
-    //加载更多场景不需要获取置顶数据
-    if (loadMore) {
-      return [];
-    }
-    HomeTopListModel? data = await WanApi.instance.topHomeList();
-    return data.dataList;
-  }
-
-  ///收藏文章
+  /// 收藏文章
   Future collect(int index, String? id) async {
     bool success = await WanApi.instance.collect(id ?? "");
     if (success) {
@@ -65,7 +48,7 @@ class HomeViewModel with ChangeNotifier {
     }
   }
 
-  ///取消收藏文章
+  /// 取消收藏文章
   Future cancelCollect(int index, String? id) async {
     bool success = await WanApi.instance.cancelCollect(id ?? "");
     if (success) {

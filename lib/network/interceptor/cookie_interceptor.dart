@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:wan_android_flutter/constants.dart';
-import 'package:wan_android_flutter/utils/sp_utils.dart';
+import 'package:wan_android_flutter/utils/sp_util.dart';
 
 /// 获取登录接口返回的cookie，并添加到请求头中去
 class CookieInterceptor extends Interceptor {

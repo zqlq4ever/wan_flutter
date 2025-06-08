@@ -60,13 +60,16 @@ dependencies:
   flutter_html: ^3.0.0
 
   # 下拉刷新上拉加载
-  pull_to_refresh: ^2.0.0
+  pull_to_refresh_flutter3: ^2.0.2
 
   # 图片选择插件 https://github.com/flutter/packages/tree/main/packages/image_picker
   image_picker: ^1.1.2
 
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
   keyboard_actions: ^4.2.0
+
+  # Dart 常用工具类库 https://github.com/Sky24n/common_utils
+  common_utils: 2.1.0
 
   marquee_plus: ^2.2.4
 

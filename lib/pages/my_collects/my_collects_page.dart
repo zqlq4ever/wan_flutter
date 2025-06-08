@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
 
 import '../../route/RouteUtils.dart';
 import '../../widgets/common_styles.dart';
-import '../../widgets/smart_refresh/smart_refresh_widget.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 import 'my_collects_view_model.dart';
@@ -25,9 +24,10 @@ class _MyCollectsPageState extends State<MyCollectsPage> {
   var vm = MyCollectsViewModel();
   late RefreshController _refreshController;
 
+
   @override
   void initState() {
-    _refreshController = RefreshController();
+    _refreshController = RefreshController(initialRefresh: false);
     super.initState();
     refreshOrLoad(false);
   }
@@ -49,7 +49,7 @@ class _MyCollectsPageState extends State<MyCollectsPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: SmartRefreshWidget(
+          child: SmartRefresher(
             controller: _refreshController,
             onRefresh: () {
               refreshOrLoad(false);

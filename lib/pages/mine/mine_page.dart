@@ -12,7 +12,7 @@ import 'package:wan_android_flutter/route/RouteUtils.dart';
 
 import '../../route/RoutePath.dart';
 import '../../widgets/common_styles.dart';
-import '../../widgets/dialog/dialog_factory.dart';
+import '../../widgets/dialog/update_dialog.dart';
 
 /// 我的页面
 class MineNewPage extends StatefulWidget {
@@ -113,9 +113,7 @@ class _MineNewPageState extends State<MineNewPage> {
           ),
         ),
       ),
-      SizedBox(
-        height: 5.h,
-      ),
+      SizedBox(height: 5.h),
       GestureDetector(
         onTap: onTap,
         child: Selector<MineViewModel, String?>(
@@ -193,18 +191,15 @@ class _MineNewPageState extends State<MineNewPage> {
         showToast("已是最新版本");
         return;
       }
-
-      DialogFactory.instance.showNeedUpdateDialog(
-          context: context,
-          dismissClick: () {
-            //  是否显示更新红点
-            vm.shouldShowUpdateDot();
-          },
-          confirmClick: () {
-            //  跳转到外部浏览器打开
-            var testUrl = "https://www.baidu.com/?by=history&from=kkframenew";
-            vm.jumpToOutLink(testUrl);
-          });
+      _showUpdateDialog();
     });
+  }
+
+  void _showUpdateDialog() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const UpdateDialog(),
+    );
   }
 }

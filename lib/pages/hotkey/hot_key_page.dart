@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/hot/hot_common_view_model.dart';
+import 'package:wan_android_flutter/pages/hotkey/hot_common_view_model.dart';
 import 'package:wan_android_flutter/pages/search/search_page.dart';
 
 import '../../route/RouteUtils.dart';
@@ -162,24 +162,25 @@ class _HotKeyPageState extends State<HotKeyPage> {
     String? title, {
     GestureTapCallback? onTap,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black12),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.r),
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black12),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ),
+        ),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(5.0),
+        child: Text(
+          title ?? "",
+          textAlign: TextAlign.center,
+          style: blackTextStyle13,
         ),
       ),
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(5.0),
-      child: InkWell(
-          onTap: onTap,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          child: Text(
-            title ?? "",
-            textAlign: TextAlign.center,
-            style: blackTextStyle13,
-          )),
     );
   }
 }
