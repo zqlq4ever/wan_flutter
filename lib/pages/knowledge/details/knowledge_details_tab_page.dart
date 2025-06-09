@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/detail_tab_child_page.dart';
 
@@ -22,13 +23,14 @@ class KnowledgeDetailsTabPage extends StatefulWidget {
 class _KnowledgeDetailsTabPageState extends State<KnowledgeDetailsTabPage> with SingleTickerProviderStateMixin {
   var model = KnowledgeDetailsViewModel();
   TabController? controller;
+  var paras = Get.arguments as List<KnowledgeDetailParam>;
 
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: widget.params?.length ?? 0, vsync: this);
-    model.initTabs(widget.params);
-    log("KnowledgeDetailsPage params=${widget.params?.length}");
+    controller = TabController(length: paras.length, vsync: this);
+    model.initTabs(paras);
+    log("KnowledgeDetailsPage params=${paras.length}");
   }
 
   @override
@@ -62,9 +64,8 @@ class _KnowledgeDetailsTabPageState extends State<KnowledgeDetailsTabPage> with 
 
   /// 根据传进来的数据生成对应数量的tabPage
   List<Widget> children() {
-    return widget.params?.map((e) {
-          return DetailTabChildPage(id: e.id);
-        }).toList() ??
-        [];
+    return paras.map((e) {
+      return DetailTabChildPage(id: e.id);
+    }).toList();
   }
 }

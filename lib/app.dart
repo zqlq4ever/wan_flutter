@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:wan_android_flutter/pages/about/about_us_page.dart';
+import 'package:wan_android_flutter/pages/auth/login_page.dart';
+import 'package:wan_android_flutter/pages/auth/register_page.dart';
+import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_tab_page.dart';
+import 'package:wan_android_flutter/pages/my_collects/collection_page.dart';
+import 'package:wan_android_flutter/pages/search/search_page.dart';
+import 'package:wan_android_flutter/pages/tab_page.dart';
 import 'package:wan_android_flutter/route/RoutePath.dart';
-import 'package:wan_android_flutter/route/RouteUtils.dart';
-import 'package:wan_android_flutter/route/Routes.dart';
+import 'package:wan_android_flutter/widgets/web/webview_page.dart';
+import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
 
 /// 设计尺寸
 Size get designSize {
@@ -32,11 +41,23 @@ class WanApp extends StatelessWidget {
       child: ScreenUtilInit(
         designSize: designSize,
         builder: (context, child) {
-          return MaterialApp(
+          return GetMaterialApp(
             theme: ThemeData(useMaterial3: true),
-            navigatorKey: RouteUtil.navigatorKey,
-            onGenerateRoute: Routes.generateRoute,
             initialRoute: RoutePath.tab,
+            // 路由配置表
+            getPages: [
+              GetPage(name: RoutePath.login, page: () => const LoginPage()),
+              GetPage(name: RoutePath.tab, page: () => const BottomTabPage()),
+              GetPage(name: RoutePath.knowledgeDetails, page: () => KnowledgeDetailsTabPage()),
+              GetPage(name: RoutePath.register, page: () => const RegisterPage()),
+              GetPage(name: RoutePath.myCollects, page: () => const MyCollectsPage()),
+              GetPage(
+                name: RoutePath.webviewPage,
+                page: () => const WebViewPage(loadResource: "", webViewType: WebViewType.URL),
+              ),
+              GetPage(name: RoutePath.aboutUs, page: () => const AboutUsPage()),
+              GetPage(name: RoutePath.search, page: () => const SearchPage()),
+            ],
           );
         },
       ),

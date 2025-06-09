@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/about/about_us_page.dart';
 import 'package:wan_android_flutter/pages/auth/login_page.dart';
 import 'package:wan_android_flutter/pages/mine/mine_view_model.dart';
 import 'package:wan_android_flutter/pages/my_collects/collection_page.dart';
-import 'package:wan_android_flutter/route/RouteUtils.dart';
 
 import '../../route/RoutePath.dart';
 import '../../widgets/common_styles.dart';
@@ -47,7 +48,7 @@ class _MineNewPageState extends State<MineNewPage> {
                   //  点击头像或者用户名
                   if (vm.shouldLogin == true) {
                     log("点击头像或者用户名去登录");
-                    RouteUtil.pushForNamed(context, RoutePath.login);
+                    Get.toNamed(RoutePath.login);
                   }
                 }),
               ),
@@ -55,9 +56,9 @@ class _MineNewPageState extends State<MineNewPage> {
                   title: "我的收藏",
                   onTap: () {
                     if (vm.shouldLogin == true) {
-                      RouteUtil.push(context, const LoginPage());
+                      Get.toNamed(RoutePath.login);
                     } else {
-                      RouteUtil.push(context, const MyCollectsPage());
+                      Get.toNamed(RoutePath.myCollects);
                     }
                   }),
               Selector<MineViewModel, bool>(builder: (context, value, child) {
@@ -74,7 +75,7 @@ class _MineNewPageState extends State<MineNewPage> {
               _commonItem(
                   title: "关于我们",
                   onTap: () {
-                    RouteUtil.push(context, const AboutUsPage());
+                    Get.toNamed(RoutePath.aboutUs);
                   }),
               _logoutButton(() {
                 vm.logout();

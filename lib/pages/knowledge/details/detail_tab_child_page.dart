@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_view_model.dart';
 
 import '../../../repository/model/knowledge_detail_list_model.dart';
-import '../../../route/RouteUtils.dart';
 import '../../../widgets/common_styles.dart';
 import '../../../widgets/web/webview_page.dart';
 import '../../../widgets/web/webview_widget.dart';
@@ -64,9 +65,7 @@ class _DetailTabChildPageState extends State<DetailTabChildPage> {
                     itemCount: value.detailList.length,
                     itemBuilder: (context, index) {
                       return _item(value.detailList[index], onTap: () {
-                        //  进入网页
-                        RouteUtil.push(
-                          context,
+                        Get.to(
                           WebViewPage(
                               loadResource: value.detailList[index].link ?? "",
                               webViewType: WebViewType.URL,

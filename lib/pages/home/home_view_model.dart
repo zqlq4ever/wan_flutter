@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -8,15 +10,23 @@ import '../../widgets/banner/home_banner_widget.dart';
 
 class HomeViewModel extends GetxController {
   BannerController? bannerController = BannerController();
-  late RefreshController refreshController;
+  late final RefreshController refreshController;
   var listData = <HomeListItemData>[].obs;
   int _pageCount = 0;
 
   @override
   void onInit() {
     super.onInit();
+    log("HomeViewModel  onInit");
     refreshController = RefreshController(initialRefresh: false);
     initDataList(false);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    log("HomeViewModel  dispose");
+    refreshController.dispose();
   }
 
   void refreshOrLoad(bool loadMore) {

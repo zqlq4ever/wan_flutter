@@ -38,8 +38,10 @@ class MineViewModel with ChangeNotifier {
     if (success) {
       userName = "未登录";
       shouldLogin = true;
-      //清除缓存
+
+      //  清除缓存
       SpUtil.remove(Constants.spUserName);
+      SpUtil.remove(Constants.spCookieList);
       notifyListeners();
     } else {
       showToast("网络异常");

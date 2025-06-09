@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/auth/auth_view_model.dart';
-import 'package:wan_android_flutter/pages/auth/register_page.dart';
-import 'package:wan_android_flutter/pages/tab_page.dart';
-import 'package:wan_android_flutter/route/RouteUtils.dart';
+import 'package:wan_android_flutter/route/RoutePath.dart';
 import 'package:wan_android_flutter/widgets/common_styles.dart';
 
 /// 登录页面
@@ -61,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                     log("inputPassword  ${vm.inputPassword}");
                     vm.login().then((value) {
                       if (value) {
-                        RouteUtil.pushAndRemoveUntil(context, const BottomTabPage());
+                        Get.offAllNamed(RoutePath.tab);
                       }
                     });
                   }),
@@ -69,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: () {
                       //  点击进入到注册页面
-                      RouteUtil.push(context, const RegisterPage());
+                      Get.toNamed(RoutePath.register);
                     },
                     child: Text("注册", style: whiteTextStyle15),
                   )

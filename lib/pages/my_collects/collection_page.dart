@@ -5,7 +5,6 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/my_collects/collection_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
 
-import '../../route/RouteUtils.dart';
 import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
@@ -66,9 +65,7 @@ class _MyCollectsPageState extends State<MyCollectsPage> {
                     vm.cancelCollect(index, "${data.id}", "${data.originId}");
                   },
                   itemClick: () {
-                    //进入网页
-                    RouteUtil.push(
-                      context,
+                    Get.to(
                       WebViewPage(
                           loadResource: data.link ?? "",
                           webViewType: WebViewType.URL,

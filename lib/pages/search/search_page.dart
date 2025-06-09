@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/search/search_view_model.dart';
 import 'package:wan_android_flutter/repository/model/search_list_model.dart';
-import 'package:wan_android_flutter/route/RouteUtils.dart';
+import 'package:wan_android_flutter/route/RoutePath.dart';
 
 import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
@@ -63,8 +65,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
               _searchResultsView(
                 onItemTap: (item) {
-                  RouteUtil.push(
-                    context,
+                  Get.to(
                     WebViewPage(
                       loadResource: item?.link ?? "",
                       title: item?.title,

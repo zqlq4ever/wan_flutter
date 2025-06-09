@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_tab_page.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
-import 'package:wan_android_flutter/route/RouteUtils.dart';
 
+import '../../route/RoutePath.dart';
 import 'knowledge_view_model.dart';
 
 ///知识体系页面
@@ -55,11 +57,9 @@ class _KnowledgePageState extends State<KnowledgePage> {
   Widget knowledgeItem(KnowledgeModel? item) {
     return GestureDetector(
       onTap: () {
-        RouteUtil.push(
-          context,
-          KnowledgeDetailsTabPage(
-            params: model.generalParams(item?.children),
-          ),
+        Get.toNamed(
+          RoutePath.knowledgeDetails,
+          arguments: model.generalParams(item?.children),
         );
       },
       child: Container(

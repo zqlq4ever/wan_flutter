@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/home/home_view_model.dart';
-import 'package:wan_android_flutter/route/RouteUtils.dart';
 
 import '../../repository/model/home_list_model.dart';
 import '../../widgets/banner/home_banner_widget.dart';
@@ -17,9 +16,9 @@ import '../../widgets/web/webview_widget.dart';
 
 /// 首页文章列表页面
 class HomeListPage extends StatelessWidget {
-  final HomeViewModel vm = Get.put(HomeViewModel());
-
   HomeListPage({super.key});
+
+  final HomeViewModel vm = Get.put(HomeViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +41,13 @@ class HomeListPage extends StatelessWidget {
                 BannerWidget(
                   controller: vm.bannerController,
                   itemClick: (title, url) {
-                    //进入网页
-                    RouteUtil.push(
-                      context,
-                      WebViewPage(loadResource: url, webViewType: WebViewType.URL, showTitle: true, title: title),
+                    Get.to(
+                      WebViewPage(
+                        loadResource: url,
+                        webViewType: WebViewType.URL,
+                        showTitle: true,
+                        title: title,
+                      ),
                     );
                   },
                 ),
@@ -61,9 +63,7 @@ class HomeListPage extends StatelessWidget {
                           return _listItem(
                             item: item,
                             onItemClick: () {
-                              //进入网页
-                              RouteUtil.push(
-                                context,
+                              Get.to(
                                 WebViewPage(
                                     loadResource: item.link ?? "",
                                     webViewType: WebViewType.URL,

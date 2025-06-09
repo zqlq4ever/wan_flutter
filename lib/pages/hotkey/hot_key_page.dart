@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/hotkey/hot_common_view_model.dart';
 import 'package:wan_android_flutter/pages/search/search_page.dart';
+import 'package:wan_android_flutter/route/RoutePath.dart';
 
-import '../../route/RouteUtils.dart';
 import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
@@ -38,7 +39,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
           child: SingleChildScrollView(
             child: Column(children: [
               _titleWidget("搜索热词", true, onTap: () {
-                RouteUtil.push(context, const SearchPage());
+                Get.toNamed(RoutePath.search);
               }),
               SizedBox(height: 10.h),
 
@@ -108,7 +109,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
             return _item(
               name,
               onTap: () {
-                RouteUtil.push(context, SearchPage(keyWord: name));
+                Get.to(SearchPage(keyWord: name));
               },
             );
           },
@@ -122,9 +123,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
       return _gridview(
           itemBuilder: (context, index) {
             return _item(value.websiteList[index].name, onTap: () {
-              //进入网页
-              RouteUtil.push(
-                context,
+              Get.to(
                 WebViewPage(
                     loadResource: value.websiteList[index].link ?? "",
                     webViewType: WebViewType.URL,

@@ -11,7 +11,6 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
 
   List<KnowledgeDetailItem> detailList = [];
 
-  //页码
   int _pageCount = 0;
 
   /// 初始化 tab 列表
