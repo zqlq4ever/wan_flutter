@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:wan_android_flutter/pages/about/about_us_page.dart';
 import 'package:wan_android_flutter/pages/auth/login_page.dart';
@@ -44,12 +45,13 @@ class WanApp extends StatelessWidget {
           return GetMaterialApp(
             theme: ThemeData(useMaterial3: true),
             initialRoute: RoutePath.tab,
+            defaultTransition: Transition.rightToLeftWithFade,
             // 路由配置表
             getPages: [
-              GetPage(name: RoutePath.login, page: () => const LoginPage()),
+              GetPage(name: RoutePath.login, page: () => LoginPage()),
               GetPage(name: RoutePath.tab, page: () => const BottomTabPage()),
-              GetPage(name: RoutePath.knowledgeDetails, page: () => KnowledgeDetailsTabPage()),
-              GetPage(name: RoutePath.register, page: () => const RegisterPage()),
+              GetPage(name: RoutePath.knowledgeDetails, page: () => const KnowledgeDetailsTabPage()),
+              GetPage(name: RoutePath.register, page: () => RegisterPage()),
               GetPage(name: RoutePath.myCollects, page: () => const MyCollectsPage()),
               GetPage(
                 name: RoutePath.webviewPage,

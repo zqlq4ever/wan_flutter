@@ -1,92 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oktoast/oktoast.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:wan_android_flutter/pages/auth/register_viewmodel.dart';
+import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
 
-import '../../widgets/common_styles.dart';
-import 'auth_view_model.dart';
+import '../../res/gaps.dart';
+import '../../utils/other_utils.dart';
+import '../../widgets/my_app_bar.dart';
+import '../../widgets/my_button.dart';
+import '../../widgets/my_scroll_view.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+/// design/1注册登录/index.html#artboard11
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
 
-  @override
-  State<StatefulWidget> createState() {
-    return _RegisterPageState();
-  }
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  late BuildContext _context;
-  var model = AuthViewModel();
+  var vm = Get.put(RegisterViewModel());
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
-    // 在 build 方法中设置状态栏颜色
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light, // 状态栏图标亮度，dark表示黑色图标，light表示白色图标
-    ));
-    return ChangeNotifierProvider(
-      create: (context) {
-        return model;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white10,
-        body: SafeArea(
-          child: Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 15.w),
-              width: double.infinity,
-              height: double.infinity,
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  commonInputText(
-                      labelText: '输入账号',
-                      onChanged: (value) {
-                        model.inputUserName = value;
-                      }),
-                  SizedBox(height: 15.h),
-                  commonInputText(
-                      labelText: '输入密码',
-                      obscureText: true,
-                      onChanged: (value) {
-                        model.inputPassword = value;
-                      }),
-                  SizedBox(height: 15.h),
-                  commonInputText(
-                      labelText: '再次输入密码',
-                      obscureText: true,
-                      onChanged: (value) {
-                        model.inputPasswordTwice = value;
-                      }),
-                  SizedBox(height: 45.h),
-                  outlineWhiteButton("点我注册", onTap: () {
-                    model.register().then((value) {
-                      if (value) {
-                        Navigator.pop(_context);
-                        showToast("注册成功");
-                      } else {
-                        showToast("注册失败");
-                      }
-                    });
-                  })
-                ],
-              ),
-            ),
-          ),
-        ),
+    return Scaffold(
+      appBar: const MyAppBar(
+        centerTitle: "注册",
+      ),
+      body: MyScrollView(
+        keyboardConfig: Utils.getKeyboardActionsConfig(context, <FocusNode>[vm.nodeText1, vm.nodeText2, vm.nodeText3]),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0),
+        children: _buildBody(),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.dark,
-    ));
+  List<Widget> _buildBody() {
+    return <Widget>[
+      Gaps.vGap16,
+      MyTextField(
+        key: const Key('username'),
+        focusNode: vm.nodeText1,
+        controller: vm.nameController,
+        maxLength: 20,
+        keyboardType: TextInputType.text,
+        hintText: "输入账号",
+      ),
+      Gaps.vGap8,
+      MyTextField(
+        key: const Key('password'),
+        keyName: 'password',
+        focusNode: vm.nodeText2,
+        isInputPwd: true,
+        controller: vm.passwordController,
+        keyboardType: TextInputType.visiblePassword,
+        hintText: '输入密码',
+      ),
+      Gaps.vGap8,
+      MyTextField(
+        key: const Key('password2'),
+        keyName: 'password2',
+        focusNode: vm.nodeText3,
+        isInputPwd: true,
+        controller: vm.password2Controller,
+        keyboardType: TextInputType.visiblePassword,
+        hintText: '再次输入密码',
+      ),
+      Gaps.vGap24,
+      MyButton(
+        key: const Key('register'),
+        onPressed: () => vm.register(),
+        text: "注册",
+      )
+    ];
   }
 }

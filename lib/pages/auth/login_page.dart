@@ -1,91 +1,70 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/auth/auth_view_model.dart';
+import 'package:wan_android_flutter/pages/auth/login_viewmodel.dart';
+import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
 import 'package:wan_android_flutter/route/RoutePath.dart';
-import 'package:wan_android_flutter/widgets/common_styles.dart';
+import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 
-/// 登录页面
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import '../../res/gaps.dart';
+import '../../utils/other_utils.dart';
+import '../../widgets/my_button.dart';
+import '../../widgets/my_scroll_view.dart';
 
-  @override
-  State<StatefulWidget> createState() {
-    return _LoginPageState();
-  }
-}
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-class _LoginPageState extends State<LoginPage> {
-  var vm = AuthViewModel();
+  var vm = Get.put(LoginViewModel());
 
   @override
   Widget build(BuildContext context) {
-    // 在 build 方法中设置状态栏颜色
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light, // 状态栏图标亮度，dark表示黑色图标，light表示白色图标
-    ));
-
-    return ChangeNotifierProvider(
-      create: (context) => vm,
-      child: Scaffold(
-        backgroundColor: Colors.white10,
-        body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 15.w),
-            alignment: Alignment.center,
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  commonInputText(
-                      labelText: "输入账号",
-                      onChanged: (value) {
-                        vm.inputUserName = value;
-                      }),
-                  SizedBox(height: 15.h),
-                  commonInputText(
-                      labelText: "输入密码",
-                      obscureText: true,
-                      onChanged: (value) {
-                        vm.inputPassword = value;
-                      }),
-                  SizedBox(height: 45.h),
-                  outlineWhiteButton("开始登录", onTap: () {
-                    FocusScope.of(context).unfocus();
-                    log("inputUserName  ${vm.inputUserName}");
-                    log("inputPassword  ${vm.inputPassword}");
-                    vm.login().then((value) {
-                      if (value) {
-                        Get.offAllNamed(RoutePath.tab);
-                      }
-                    });
-                  }),
-                  SizedBox(height: 15.h),
-                  GestureDetector(
-                    onTap: () {
-                      //  点击进入到注册页面
-                      Get.toNamed(RoutePath.register);
-                    },
-                    child: Text("注册", style: whiteTextStyle15),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
+    return Scaffold(
+      appBar: const MyAppBar(
+        centerTitle: "密码登陆",
+      ),
+      body: MyScrollView(
+        keyboardConfig: Utils.getKeyboardActionsConfig(context, <FocusNode>[vm.nodeText1, vm.nodeText2]),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0),
+        children: _buildBody,
       ),
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.dark,
-    ));
-  }
+  List<Widget> get _buildBody => <Widget>[
+        Gaps.vGap16,
+        MyTextField(
+          key: const Key('username'),
+          focusNode: vm.nodeText1,
+          controller: vm.nameController,
+          maxLength: 20,
+          keyboardType: TextInputType.text,
+          hintText: "输入用户名",
+        ),
+        Gaps.vGap8,
+        MyTextField(
+          key: const Key('password'),
+          keyName: 'password',
+          focusNode: vm.nodeText2,
+          isInputPwd: true,
+          controller: vm.passwordController,
+          keyboardType: TextInputType.visiblePassword,
+          hintText: "输入密码",
+        ),
+        Gaps.vGap24,
+        MyButton(
+          key: const Key('login'),
+          onPressed: () => vm.login(),
+          text: "登录",
+        ),
+        Gaps.vGap16,
+        Container(
+          alignment: Alignment.center,
+          child: GestureDetector(
+            child: const Text(
+              "注册账号",
+              key: Key('noAccountRegister'),
+            ),
+            onTap: () => Get.toNamed(RoutePath.register),
+          ),
+        )
+      ];
 }
