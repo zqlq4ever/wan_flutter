@@ -6,71 +6,45 @@ import 'package:wan_android_flutter/pages/my_collects/collection_viewmodel.dart'
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
 
 import '../../widgets/common_styles.dart';
+import '../../widgets/my_app_bar.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
 /// 我的收藏页面
-class MyCollectsPage extends StatefulWidget {
+class MyCollectsPage extends GetView<CollectionViewmodel> {
   const MyCollectsPage({super.key});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _MyCollectsPageState();
-  }
-}
-
-class _MyCollectsPageState extends State<MyCollectsPage> {
-  final CollectionViewmodel vm = Get.put(CollectionViewmodel());
-  late RefreshController _refreshController;
-
-  @override
-  void initState() {
-    _refreshController = RefreshController(initialRefresh: false);
-    super.initState();
-    refreshOrLoad(false);
-  }
-
-  void refreshOrLoad(bool loadMore) {
-    vm.getMyCollects(loadMore).then((value) {
-      if (loadMore) {
-        _refreshController.loadComplete();
-      } else {
-        _refreshController.refreshCompleted();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: const MyAppBar(
+        centerTitle: "我的收藏",
+      ),
       body: SafeArea(
         child: SmartRefresher(
-          controller: _refreshController,
-          onRefresh: () {
-            refreshOrLoad(false);
-          },
-          onLoading: () {
-            refreshOrLoad(true);
-          },
+          controller: controller.refreshController,
+          onRefresh: () => controller.refreshOrLoad(false),
+          onLoading: () => controller.refreshOrLoad(true),
           child: Obx(() {
             return ListView.builder(
-              itemCount: vm.dataList.length ?? 0,
+              itemCount: controller.dataList.length ?? 0,
               itemBuilder: (context, index) {
-                var data = vm.dataList[index];
+                var data = controller.dataList[index];
                 return _collectItem(
                   data,
-                  onTap: () {
-                    //取消收藏
-                    vm.cancelCollect(index, "${data.id}", "${data.originId}");
-                  },
+                  onTap: () => controller.cancelCollect(
+                    index,
+                    "${data.id}",
+                    "${data.originId}",
+                  ),
                   itemClick: () {
                     Get.to(
                       WebViewPage(
                           loadResource: data.link ?? "",
                           webViewType: WebViewType.URL,
                           showTitle: true,
-                          title: vm.dataList[index].title),
+                          title: controller.dataList[index].title),
                     );
                   },
                 );

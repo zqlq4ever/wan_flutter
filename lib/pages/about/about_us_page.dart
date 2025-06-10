@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../widgets/my_app_bar.dart';
+
 class AboutUsPage extends StatefulWidget {
   const AboutUsPage({super.key});
 
@@ -26,7 +28,9 @@ class _AboutUsPageState extends State<AboutUsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("关于我们")),
+      appBar: const MyAppBar(
+        centerTitle: "关于我们",
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(

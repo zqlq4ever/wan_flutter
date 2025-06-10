@@ -16,7 +16,7 @@ class HotCommonViewModel with ChangeNotifier {
     });
   }
 
-  ///获取搜索热词
+  /// 获取搜索热词
   Future getHotKeyList({VoidCallback? complete}) async {
     var list = await WanApi.instance.searchHotKeys();
     if (list != null) {
@@ -26,7 +26,7 @@ class HotCommonViewModel with ChangeNotifier {
     complete?.call();
   }
 
-  ///获取搜索热词
+  /// 获取搜索热词
   Future commonWebsiteList({VoidCallback? complete}) async {
     var list = await WanApi.instance.commonWebsiteList();
     if (list != null) {

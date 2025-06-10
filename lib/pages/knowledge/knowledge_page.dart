@@ -1,57 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_tab_page.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
+import 'package:wan_android_flutter/res/styles.dart';
 
 import '../../route/RoutePath.dart';
 import 'knowledge_view_model.dart';
 
-///知识体系页面
-class KnowledgePage extends StatefulWidget {
+/// 知识体系页面
+class KnowledgePage extends GetView<KnowledgeViewModel> {
   const KnowledgePage({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _KnowledgePageState();
-  }
-}
-
-class _KnowledgePageState extends State<KnowledgePage> {
-  var model = KnowledgeViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-    model.getKnowledgeList();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        return model;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: knowledgeListview(),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Obx(() {
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: controller.list.length,
+              itemBuilder: (context, index) {
+                return knowledgeItem(controller.list[index]);
+              });
+        }),
       ),
     );
-  }
-
-  Widget knowledgeListview() {
-    return Consumer<KnowledgeViewModel>(builder: (context, value, child) {
-      return ListView.builder(
-          shrinkWrap: true,
-          itemCount: value.list?.length ?? 0,
-          itemBuilder: (context, index) {
-            return knowledgeItem(value.list?[index]);
-          });
-    });
   }
 
   Widget knowledgeItem(KnowledgeModel? item) {
@@ -59,7 +33,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
       onTap: () {
         Get.toNamed(
           RoutePath.knowledgeDetails,
-          arguments: model.generalParams(item?.children),
+          arguments: controller.generalParams(item?.children),
         );
       },
       child: Container(
@@ -73,6 +47,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Column(
@@ -87,14 +62,40 @@ class _KnowledgePageState extends State<KnowledgePage> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Text(model.generalChildNames(item?.children)),
+                  Wrap(
+                    spacing: 10.0, // 水平间距
+                    runSpacing: 4.0, // 垂直间距
+                    children: buildChildren(item?.children),
+                  ),
                 ],
               ),
             ),
-            Image.asset("assets/images/img_arrow_right.png", height: 24.r, width: 24.r)
+            Opacity(
+              opacity: 0.5,
+              child: Image.asset(
+                "assets/images/img_arrow_right.png",
+                height: 24.r,
+                width: 24.r,
+              ),
+            )
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> buildChildren(List<Children?>? children) {
+    if (children == null || children.isEmpty) return [];
+    var list = <Chip>[];
+    for (var value in children) {
+      list.add(Chip(
+        label: Text(
+          value?.name ?? "",
+          style: TextStyles.textWhite14,
+        ),
+        backgroundColor: controller.getRandomPastelColor(),
+      ));
+    }
+    return list;
   }
 }

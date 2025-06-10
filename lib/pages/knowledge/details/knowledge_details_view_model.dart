@@ -5,7 +5,7 @@ import '../../../repository/model/knowledge_detail_list_model.dart';
 import '../../../repository/model/knowledge_detail_param.dart';
 import '../../../widgets/loading.dart';
 
-///知识体系业务逻辑层
+/// 知识体系业务逻辑层
 class KnowledgeDetailsViewModel with ChangeNotifier {
   List<Tab> tabList = [];
 

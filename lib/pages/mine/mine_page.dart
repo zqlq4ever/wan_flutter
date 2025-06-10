@@ -3,13 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/about/about_us_page.dart';
-import 'package:wan_android_flutter/pages/auth/login_page.dart';
 import 'package:wan_android_flutter/pages/mine/mine_view_model.dart';
-import 'package:wan_android_flutter/pages/my_collects/collection_page.dart';
+import 'package:wan_android_flutter/widgets/my_button.dart';
 
 import '../../route/RoutePath.dart';
 import '../../widgets/common_styles.dart';
@@ -58,7 +55,7 @@ class _MineNewPageState extends State<MineNewPage> {
                     if (vm.shouldLogin == true) {
                       Get.toNamed(RoutePath.login);
                     } else {
-                      Get.toNamed(RoutePath.myCollects);
+                      Get.toNamed(RoutePath.myCollection);
                     }
                   }),
               Selector<MineViewModel, bool>(builder: (context, value, child) {
@@ -77,6 +74,9 @@ class _MineNewPageState extends State<MineNewPage> {
                   onTap: () {
                     Get.toNamed(RoutePath.aboutUs);
                   }),
+
+              const SizedBox(height: 100.0),
+
               _logoutButton(() {
                 vm.logout();
               })
@@ -165,18 +165,12 @@ class _MineNewPageState extends State<MineNewPage> {
   Widget _logoutButton(GestureTapCallback? onTap) {
     return Selector<MineViewModel, bool>(builder: (context, value, child) {
       return !value
-          ? GestureDetector(
-              onTap: onTap,
-              child: Container(
-                width: double.infinity,
-                height: 40.h,
-                alignment: Alignment.center,
-                margin: EdgeInsets.only(left: 40.w, right: 40.w, top: 100.h),
-                decoration: BoxDecoration(color: Colors.teal, borderRadius: BorderRadius.all(Radius.circular(20.r))),
-                child: Text(
-                  "退出登录",
-                  style: whiteTextStyle14,
-                ),
+          ? Padding(
+              padding: const EdgeInsets.only(left: 40, right: 40), // 四周都有4像素边距
+              child: MyButton(
+                key: const Key('logout'),
+                onPressed: onTap,
+                text: "退出登录",
               ),
             )
           : const SizedBox();

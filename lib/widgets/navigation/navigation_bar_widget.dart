@@ -14,7 +14,6 @@ class NavigationBarWidget extends StatefulWidget {
     this.currentIndex = 0,
     this.themeData,
     this.onItemChange,
-    this.bottomNavigationBarType,
     this.bottomBarIconWidth,
     this.bottomBarIconHeight,
   }) {
@@ -46,9 +45,6 @@ class NavigationBarWidget extends StatefulWidget {
   //页面主题
   final ThemeData? themeData;
 
-  //底部导航栏风格
-  final BottomNavigationBarType? bottomNavigationBarType;
-
   //底部导航栏icon宽高
   final double? bottomBarIconWidth;
   final double? bottomBarIconHeight;
@@ -67,28 +63,25 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
       //  tab 页面
       body: IndexedStack(index: widget.currentIndex, children: widget.tabItems),
       //  底部导航栏
-      bottomNavigationBar: Theme(
-        data: widget.themeData ??
-            Theme.of(context).copyWith(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-            ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
-          currentIndex: widget.currentIndex,
-          items: _barItemList(),
-          onTap: (index) {
-            //  重复事件不处理
-            if (widget.currentIndex == index) {
-              return;
-            }
-            //  点击切换 page 事件
-            widget.onItemChange?.call(index);
-            widget.currentIndex = index;
-            setState(() {});
-          },
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 3,
+        backgroundColor: Colors.white,
+        selectedItemColor: Theme.of(context).primaryColor,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: widget.currentIndex,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        items: _barItemList(),
+        onTap: (index) {
+          //  重复事件不处理
+          if (widget.currentIndex == index) {
+            return;
+          }
+          //  点击切换 page 事件
+          widget.onItemChange?.call(index);
+          widget.currentIndex = index;
+          setState(() {});
+        },
       ),
     );
   }
@@ -102,14 +95,14 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         activeIcon: NavigationBarItem(
           builder: (_) => Image.asset(
             widget.tabActiveIcons[i],
-            width: widget.bottomBarIconWidth ?? 28.w,
-            height: widget.bottomBarIconHeight ?? 28.w,
+            width: widget.bottomBarIconWidth ?? 24.w,
+            height: widget.bottomBarIconHeight ?? 24.w,
           ),
         ),
         icon: Image.asset(
           widget.tabIcons[i],
-          width: widget.bottomBarIconWidth ?? 28.w,
-          height: widget.bottomBarIconHeight ?? 28.w,
+          width: widget.bottomBarIconWidth ?? 24.w,
+          height: widget.bottomBarIconHeight ?? 24.w,
         ),
         label: widget.tabLabels[i],
       );

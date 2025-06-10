@@ -7,7 +7,7 @@ import '../res/gaps.dart';
 import '../utils/theme_util.dart';
 import 'my_button.dart';
 
-/// 自定义AppBar
+/// 自定义 AppBar
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar(
       {super.key,

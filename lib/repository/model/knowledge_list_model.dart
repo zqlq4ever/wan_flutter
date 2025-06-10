@@ -1,5 +1,5 @@
 class KnowledgeListModel {
-  List<KnowledgeModel?> list = [];
+  List<KnowledgeModel> list = [];
 
   KnowledgeListModel(this.list);
 

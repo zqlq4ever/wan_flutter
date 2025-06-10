@@ -27,7 +27,10 @@ class WanApi {
 
   /// 获取首页文章列表
   Future<HomeListModel?> homeList(String pageCount) async {
-    Response response = await DioInstance.instance.get(path: "article/list/$pageCount/json?page_size=10");
+    Response response = await DioInstance.instance.get(
+      path: "article/list/$pageCount/json",
+      param: {"page_size": 10},
+    );
     return HomeListModel.fromJson(response.data);
   }
 
@@ -53,7 +56,7 @@ class WanApi {
   }
 
   /// 知识体系列表
-  Future<List<KnowledgeModel?>?> knowledgeList() async {
+  Future<List<KnowledgeModel>?> knowledgeList() async {
     Response response = await DioInstance.instance.get(path: UrlPathConstants.pathTree);
     var model = KnowledgeListModel.fromJson(response.data);
     return model.list;
@@ -112,7 +115,7 @@ class WanApi {
     return false;
   }
 
-  /// 取消收藏文章
+  /// 取消收藏文章 (首页列表)
   Future<bool> cancelCollect(String id) async {
     Response response = await DioInstance.instance.post(path: "lg/uncollect_originId/$id/json");
     if (response.data != null && response.data == true) {
@@ -121,7 +124,7 @@ class WanApi {
     return false;
   }
 
-  /// 取消收藏文章
+  /// 取消收藏文章 (我的收藏)
   Future<bool> cancelCollect2(
     String id,
     String originId,

@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:math' hide log;
+import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,10 +17,8 @@ import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
 /// 首页文章列表页面
-class HomeListPage extends StatelessWidget {
-  HomeListPage({super.key});
-
-  final HomeViewModel vm = Get.put(HomeViewModel());
+class HomeListPage extends GetView<HomeViewModel> {
+  const HomeListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,28 +28,45 @@ class HomeListPage extends StatelessWidget {
         child: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
-          controller: vm.refreshController,
+          controller: controller.refreshController,
           onLoading: () {
-            vm.refreshOrLoad(true);
+            controller.refreshOrLoad(true);
           },
           onRefresh: () {
-            vm.refreshOrLoad(false);
+            controller.refreshOrLoad(false);
           },
           child: SingleChildScrollView(
             child: Column(
               children: [
-                BannerWidget(
-                  controller: vm.bannerController,
-                  itemClick: (title, url) {
-                    Get.to(
-                      WebViewPage(
-                        loadResource: url,
-                        webViewType: WebViewType.URL,
-                        showTitle: true,
-                        title: title,
+                Stack(
+                  children: [
+                    Obx(() {
+                      return CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: controller.currentUrl.value,
+                      );
+                    }),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                      child: const SizedBox(
+                        width: double.infinity,
+                        height: 200.0,
                       ),
-                    );
-                  },
+                    ),
+                    BannerWidget(
+                      controller: controller.bannerController,
+                      itemClick: (title, url) {
+                        Get.to(
+                          WebViewPage(
+                            loadResource: url,
+                            webViewType: WebViewType.URL,
+                            showTitle: true,
+                            title: title,
+                          ),
+                        );
+                      },
+                    )
+                  ],
                 ),
                 GetBuilder<HomeViewModel>(
                   builder: (controller) {
@@ -57,9 +74,9 @@ class HomeListPage extends StatelessWidget {
                         padding: const EdgeInsets.all(16),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: vm.listData.length,
+                        itemCount: controller.listData.length,
                         itemBuilder: (BuildContext context, int index) {
-                          HomeListItemData? item = vm.listData[index];
+                          HomeListItemData? item = controller.listData[index];
                           return _listItem(
                             item: item,
                             onItemClick: () {
@@ -74,10 +91,10 @@ class HomeListPage extends StatelessWidget {
                             imageClick: () {
                               if (item.collect == true) {
                                 //  取消收藏
-                                vm.cancelCollect(index, "${item.id}");
+                                controller.cancelCollect(index, "${item.id}");
                               } else {
                                 //  收藏
-                                vm.collect(index, "${item.id}");
+                                controller.collect(index, "${item.id}");
                               }
                             },
                           );

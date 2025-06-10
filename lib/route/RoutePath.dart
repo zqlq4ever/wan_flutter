@@ -13,7 +13,7 @@ class RoutePath {
   static const String knowledgeDetails = "/knowledge_details";
 
   //我的收藏页面
-  static const String myCollects = "/my_collects";
+  static const String myCollection = "/my_collects";
 
   //显示网页资源的页面
   static const String webviewPage = "/web_view";

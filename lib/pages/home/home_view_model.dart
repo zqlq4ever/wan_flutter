@@ -9,16 +9,21 @@ import '../../repository/model/home_list_model.dart';
 import '../../widgets/banner/home_banner_widget.dart';
 
 class HomeViewModel extends GetxController {
-  BannerController? bannerController = BannerController();
+  final BannerController bannerController = BannerController();
   late final RefreshController refreshController;
   var listData = <HomeListItemData>[].obs;
   int _pageCount = 0;
+  var currentUrl = "https://picsum.photos/400/200".obs;
 
   @override
   void onInit() {
     super.onInit();
     log("HomeViewModel  onInit");
     refreshController = RefreshController(initialRefresh: false);
+    bannerController.setIndexChangeListener((url) {
+      currentUrl.value = url;
+      log("HomeViewModel  url   = $url");
+    });
     initDataList(false);
   }
 
