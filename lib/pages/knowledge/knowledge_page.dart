@@ -39,12 +39,6 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
         padding: EdgeInsets.all(8.r),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12, width: 0.5.r),
-          borderRadius: BorderRadius.all(
-            Radius.circular(5.r),
-          ),
-        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,

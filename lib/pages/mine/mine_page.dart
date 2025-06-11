@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -40,14 +42,26 @@ class _MineNewPageState extends State<MineNewPage> {
           child: Column(
             children: [
               //  用户信息区域
-              _userArea(
-                children: _userHead(onTap: () {
-                  //  点击头像或者用户名
-                  if (vm.shouldLogin == true) {
-                    log("点击头像或者用户名去登录");
-                    Get.toNamed(RoutePath.login);
-                  }
-                }),
+              SizedBox(
+                width: double.infinity,
+                height: 200.h,
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      cacheKey: DateTime.now.toString(),
+                      fit: BoxFit.cover,
+                      imageUrl: "https://picsum.photos/380/200",
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
+                      child: const SizedBox(
+                        width: double.infinity,
+                        height: 200.0,
+                      ),
+                    ),
+                    _userHeader(),
+                  ],
+                ),
               ),
               _commonItem(
                   title: "我的收藏",
@@ -87,75 +101,92 @@ class _MineNewPageState extends State<MineNewPage> {
     );
   }
 
-  Widget _userArea({required List<Widget> children}) {
+  Widget _userHeader() {
     return Container(
       width: double.infinity,
       height: 200.h,
       color: Colors.white10,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
+        children: [
+          GestureDetector(
+            onTap: () {
+              log("点击头像或者用户名去登录");
+              //  点击头像或者用户名
+              if (vm.shouldLogin == true) {
+                Get.toNamed(RoutePath.login);
+              }
+            },
+            child: ClipOval(
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: "https://picsum.photos/100/100",
+              ),
+            ),
+          ),
+          SizedBox(height: 5.h),
+          Selector<MineViewModel, String?>(
+            builder: (context, value, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 8.h),
+                child: Text(value ?? "", style: whiteTextStyle15),
+              );
+            },
+            selector: (context, value) {
+              return value.userName;
+            },
+          )
+        ],
       ),
     );
   }
 
-  List<Widget> _userHead({
+  Widget _commonItem({
+    required String title,
     GestureTapCallback? onTap,
+    bool? showRedDot,
   }) {
-    return [
-      GestureDetector(
-        onTap: onTap,
-        child: ClipOval(
-          child: Image.network(
-            "https://picsum.photos/100",
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      width: double.infinity,
+      child: Card(
+        elevation: 1,
+        color: Colors.white,
+        child: InkWell(
+          customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: Row(
+              children: [
+                //  不显示红点需要填充一个边距
+                if (showRedDot != true) SizedBox(width: 10.w),
+                //  显示红点
+                if (showRedDot == true)
+                  Container(
+                    margin: EdgeInsets.only(left: 3.w, right: 4.w),
+                    width: 3.r,
+                    height: 3.r,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(1.5.r),
+                      ),
+                    ),
+                  ),
+                Expanded(child: Text(title, style: blackTextStyle13)),
+                Image.asset(
+                  "assets/images/img_arrow_right.png",
+                  width: 20.w,
+                  height: 20.h,
+                )
+              ],
+            ),
           ),
-        ),
-      ),
-      SizedBox(height: 5.h),
-      GestureDetector(
-        onTap: onTap,
-        child: Selector<MineViewModel, String?>(
-          builder: (context, value, child) {
-            return Text(value ?? "", style: titleTextStyle15);
-          },
-          selector: (context, value) {
-            return value.userName;
-          },
-        ),
-      )
-    ];
-  }
-
-  Widget _commonItem({required String title, GestureTapCallback? onTap, bool? showRedDot}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.only(right: 5.w),
-        margin: EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black38, width: 0.5.r),
-          borderRadius: BorderRadius.all(Radius.circular(5.r)),
-        ),
-        width: double.infinity,
-        height: 45.h,
-        child: Row(
-          children: [
-            //  不显示红点需要填充一个边距
-            if (showRedDot != true) SizedBox(width: 10.w),
-            //  显示红点
-            if (showRedDot == true)
-              Container(
-                margin: EdgeInsets.only(left: 3.w, right: 4.w),
-                width: 3.r,
-                height: 3.r,
-                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(1.5.r))),
-              ),
-            Expanded(child: Text(title, style: blackTextStyle13)),
-            Image.asset("assets/images/img_arrow_right.png", width: 20.r, height: 20.r)
-          ],
         ),
       ),
     );

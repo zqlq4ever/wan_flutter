@@ -3,36 +3,8 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'BannerController.dart';
 import 'banner_logic.dart';
-
-typedef OnIndexChangeListener = void Function(String url);
-
-class BannerController {
-  late BannerLogic logic;
-  OnIndexChangeListener? _listener;
-
-  void setIndexChangeListener(OnIndexChangeListener? listener) {
-    _listener = listener;
-  }
-
-  void changeIndex(String url) {
-    _listener?.call(url);
-  }
-
-  void reload(bool load) {
-    logic.getBannerList();
-  }
-
-  void initState() {
-    logic = BannerLogic();
-    logic.getBannerList();
-  }
-
-  void dispose() {
-    _listener = null;
-    logic.dispose();
-  }
-}
 
 typedef BannerClick = Function(String title, String url);
 
@@ -71,13 +43,12 @@ class _BannerWidgetState extends State<BannerWidget> {
 
           return Container(
             width: double.infinity,
-            height: 150.h,
+            height: 180.h,
             margin: const EdgeInsets.all(25.0),
             child: Swiper(
               autoplay: true,
               duration: 1000,
-              viewportFraction: 0.85,
-              scale: 0.85,
+              scale: 0.8,
               pagination: const SwiperPagination(),
               itemCount: snapshot.data?.bannerList?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
@@ -89,11 +60,6 @@ class _BannerWidgetState extends State<BannerWidget> {
                     borderRadius: BorderRadius.all(Radius.circular(5.r)),
                     child: CachedNetworkImage(
                       fit: BoxFit.fill,
-                      // placeholder: (context, url) {
-                      //   return const Center(
-                      //     child: CircularProgressIndicator(),
-                      //   );
-                      // },
                       imageUrl: snapshot.data?.bannerList?[index].imagePath ?? "",
                     ),
                   ),

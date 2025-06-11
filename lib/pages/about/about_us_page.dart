@@ -38,28 +38,15 @@ class _AboutUsPageState extends State<AboutUsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 80.h),
-                Image.asset("assets/images/ic_launcher.png", width: 100.w, height: 100.h),
-                Text("v $_version"),
-                // Html(
-                //   data: "https://www.wanandroid.com/wxarticle/list/408/1",
-                //   onLinkTap: (
-                //     String? url,
-                //     Map<String, String> attributes,
-                //     element,
-                //   ) {
-                //     log("AboutUsPage html onLinkTap url= $url");
-                //     //  进入网页
-                //     RouteUtil.push(
-                //       context,
-                //       WebViewPage(
-                //         loadResource: url ?? "",
-                //         webViewType: WebViewType.URL,
-                //         showTitle: true,
-                //       ),
-                //     );
-                //   },
-                // ),
+                SizedBox(height: 50.h),
+                const FlutterLogo(
+                  size: 100,
+                  style: FlutterLogoStyle.markOnly, // 可选样式: stacked, markOnly
+                  curve: Curves.easeInOut, // 动画曲线
+                  duration: Duration(seconds: 1), // 旋转动画时长
+                ),
+                SizedBox(height: 20.h),
+                Text("v $_version - 持续学习中 ~"),
               ],
             ),
           ),

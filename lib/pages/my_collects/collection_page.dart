@@ -60,27 +60,46 @@ class MyCollectsPage extends GetView<CollectionViewmodel> {
     return GestureDetector(
       onTap: itemClick,
       child: Container(
-        margin: EdgeInsets.all(10.r),
-        padding: EdgeInsets.all(15.r),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black38),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.r),
-          ),
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
               Expanded(
-                child: Text("作者: ${item?.author}"),
+                child: Text(
+                  "${item?.author}",
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54,
+                  ),
+                ),
               ),
-              Text("时间: ${item?.niceDate}")
+              Text(
+                "${item?.niceDate}",
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.black54,
+                ),
+              )
             ]),
+            SizedBox(height: 10.h),
+            Text(
+              "${item?.title}",
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
             SizedBox(height: 6.h),
-            Text("${item?.title}", style: titleTextStyle15),
+            Text(
+              "${item?.desc}",
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.black54,
+              ),
+            ),
             Row(children: [
-              Expanded(child: Text("分类: ${item?.chapterName}")),
+              Expanded(child: Text("${item?.chapterName}")),
               collectImage(true, onTap: onTap),
             ]),
           ],

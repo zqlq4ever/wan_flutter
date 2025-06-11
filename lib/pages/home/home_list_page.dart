@@ -47,7 +47,7 @@ class HomeListPage extends GetView<HomeViewModel> {
                       );
                     }),
                     BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                      filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                       child: const SizedBox(
                         width: double.infinity,
                         height: 200.0,

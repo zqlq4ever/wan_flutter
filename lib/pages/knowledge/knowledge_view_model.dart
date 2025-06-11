@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -43,12 +42,12 @@ class KnowledgeViewModel extends GetxController {
 
   Color getRandomPastelColor() {
     final random = Random();
-    // HSL颜色空间更适合生成柔和的颜色
-    final hue = random.nextDouble() * 360; // 色调（0-360）
-    final saturation = 0.3 + random.nextDouble() * 0.4; // 饱和度（0.3-0.7）
-    final lightness = 0.7 + random.nextDouble() * 0.2; // 亮度（0.7-0.9）
-
-    // 转换为RGB
-    return HSLColor.fromAHSL(1.0, hue, saturation, lightness).toColor();
+    final hsl = HSLColor.fromAHSL(
+      1.0, // 透明度 1.0（不透明）
+      random.nextDouble() * 360, // 色相 0-360
+      random.nextDouble() * 0.4 + 0.3, // 饱和度 0.5-1.0
+      random.nextDouble() * 0.3 + 0.5, // 亮度 0.0-0.5
+    );
+    return hsl.toColor();
   }
 }
