@@ -47,16 +47,12 @@ class _MinePageState extends State<MinePage> {
                 height: 200.h,
                 child: Stack(
                   children: [
-                    CachedNetworkImage(
-                      cacheKey: DateTime.now.toString(),
-                      fit: BoxFit.cover,
-                      imageUrl: "https://picsum.photos/380/200",
-                    ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
-                      child: const SizedBox(
-                        width: double.infinity,
-                        height: 200.0,
+                    ImageFiltered(
+                      imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                      child: CachedNetworkImage(
+                        cacheKey: DateTime.now.toString(),
+                        fit: BoxFit.cover,
+                        imageUrl: "https://picsum.photos/380/200",
                       ),
                     ),
                     _userHeader(),

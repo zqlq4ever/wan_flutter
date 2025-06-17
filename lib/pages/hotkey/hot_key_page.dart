@@ -109,7 +109,6 @@ class _HotKeyPageState extends State<HotKeyPage> {
                 WebViewPage(
                     loadResource: value.websiteList[index].link ?? "",
                     webViewType: WebViewType.URL,
-                    showTitle: true,
                     title: value.websiteList[index].name),
               );
             });

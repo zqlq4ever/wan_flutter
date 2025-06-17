@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:wan_android_flutter/widgets/web/webview_page.dart';
 
 import '../../res/colors.dart';
 import '../../res/dimens.dart';
@@ -7,6 +10,7 @@ import '../../res/gaps.dart';
 import '../../res/styles.dart';
 import '../../utils/image_util.dart';
 import '../my_button.dart';
+import '../web/webview_widget.dart';
 
 class UpdateDialog extends StatefulWidget {
   const UpdateDialog({super.key});
@@ -110,6 +114,13 @@ class _UpdateDialogState extends State<UpdateDialog> {
             fontSize: Dimens.font_sp16,
             onPressed: () {
               Navigator.pop(context);
+              Get.to(
+                const WebViewPage(
+                  loadResource: "https://www.pgyer.com/ER0YOhzL",
+                  webViewType: WebViewType.URL,
+                  title: "下载页面",
+                ),
+              );
             },
             textColor: Colors.white,
             backgroundColor: primaryColor,

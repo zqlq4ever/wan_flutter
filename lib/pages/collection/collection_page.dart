@@ -47,7 +47,6 @@ class CollectionPage extends GetView<CollectionViewModel> {
                       WebViewPage(
                           loadResource: data.link ?? "",
                           webViewType: WebViewType.URL,
-                          showTitle: true,
                           title: controller.dataList[index].title),
                     );
                   },

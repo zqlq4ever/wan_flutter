@@ -89,6 +89,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: const TextStyle(
             fontSize: Dimens.font_sp18,
           ),
+          maxLines: 1, // 限制最多显示1行
+          overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+          softWrap: false, // 不允许文本换行（可选）
         ),
       ),
     );

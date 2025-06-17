@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_flutter/widgets/common_styles.dart';
 import 'package:wan_android_flutter/widgets/loading.dart';
+import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
 
 /// 显示网页资源的页面
@@ -9,13 +10,9 @@ class WebViewPage extends StatefulWidget {
     super.key,
     required this.loadResource,
     required this.webViewType,
-    this.showTitle,
     this.title,
     this.jsChannelMap,
   });
-
-  //是否显示标题
-  final bool? showTitle;
 
   //标题内容
   final String? title;
@@ -39,7 +36,9 @@ class _WebViewPageState extends State<WebViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (widget.showTitle ?? false) ? AppBar(title: _buildAppBarTitle(widget.showTitle, widget.title)) : null,
+      appBar: MyAppBar(
+        centerTitle: widget.title ?? "",
+      ),
       body: SafeArea(
         child: WebViewWidget(
           webViewType: widget.webViewType,
@@ -55,15 +54,4 @@ class _WebViewPageState extends State<WebViewPage> {
     super.dispose();
     Loading.dismissAll();
   }
-
-  Widget _buildAppBarTitle(bool? showTitle, String? title) {
-    var show = showTitle ?? false;
-    return show
-        ? Text(
-            title ?? "",
-            style: titleTextStyle15,
-          )
-        : const SizedBox.shrink();
-  }
-
 }

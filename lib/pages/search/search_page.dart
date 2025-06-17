@@ -36,7 +36,6 @@ class SearchPage extends GetView<SearchViewModel> {
                   WebViewPage(
                     loadResource: item?.link ?? "",
                     title: item?.title,
-                    showTitle: true,
                     webViewType: WebViewType.URL,
                   ),
                 );

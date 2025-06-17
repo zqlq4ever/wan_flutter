@@ -33,6 +33,34 @@ class HomePage extends GetView<HomeViewModel> {
           enablePullDown: true,
           enablePullUp: true,
           controller: controller.refreshController,
+          // 自定义 Header
+          header: const ClassicHeader(
+            refreshStyle: RefreshStyle.Follow,
+            idleText: '下拉刷新',
+            releaseText: '释放刷新',
+            refreshingText: '刷新中...',
+            completeText: '刷新完成',
+            failedText: '刷新失败',
+            // 设置刷新过程中的颜色
+            textStyle: TextStyle(color: Colours.app_main),
+            idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main),
+            refreshingIcon: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+            ),
+          ),
+          // 自定义 Footer
+          footer: const ClassicFooter(
+            loadingText: '加载中...',
+            canLoadingText: '释放加载',
+            idleText: '上拉加载更多',
+            noDataText: '没有更多数据',
+            failedText: '加载失败',
+            // 设置加载过程中的颜色
+            textStyle: TextStyle(color: Colours.app_main),
+            loadingIcon: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+            ),
+          ),
           onLoading: () {
             controller.refreshOrLoad(true);
           },
@@ -58,10 +86,7 @@ class HomePage extends GetView<HomeViewModel> {
                           onItemClick: () {
                             Get.to(
                               WebViewPage(
-                                  loadResource: item.link ?? "",
-                                  webViewType: WebViewType.URL,
-                                  showTitle: true,
-                                  title: item.title),
+                                  loadResource: item.link ?? "", webViewType: WebViewType.URL, title: item.title),
                             );
                           },
                           imageClick: () {
@@ -101,7 +126,6 @@ class HomePage extends GetView<HomeViewModel> {
               WebViewPage(
                 loadResource: url,
                 webViewType: WebViewType.URL,
-                showTitle: true,
                 title: title,
               ),
             );
@@ -144,9 +168,7 @@ class HomePage extends GetView<HomeViewModel> {
         ),
         const SizedBox(width: 10),
         InkWell(
-          onTap: ()=>{
-            Get.toNamed(RoutePath.scan)
-          },
+          onTap: () => {Get.toNamed(RoutePath.scan)},
           child: Image.asset(
             "assets/images/icon_scan.png",
             width: 28.w,

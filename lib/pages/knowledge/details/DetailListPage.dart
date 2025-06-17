@@ -70,7 +70,6 @@ class _DetailListPageState extends State<DetailListPage> {
                         WebViewPage(
                             loadResource: value.detailList[index].link ?? "",
                             webViewType: WebViewType.URL,
-                            showTitle: true,
                             title: value.detailList[index].title),
                       );
                     },
