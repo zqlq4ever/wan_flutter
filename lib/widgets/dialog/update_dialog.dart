@@ -49,8 +49,10 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   height: 120.0,
                   width: 280.0,
                   decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8.0),
+                      topRight: Radius.circular(8.0),
+                    ),
                     image: DecorationImage(
                       image: ImageUtil.getAssetImage('update_head', format: ImageFormat.jpg),
                       fit: BoxFit.cover,
@@ -59,11 +61,14 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 ),
                 Container(
                   width: 280.0,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).canvasColor,
-                      borderRadius:
-                          const BorderRadius.only(bottomLeft: Radius.circular(8.0), bottomRight: Radius.circular(8.0))),
                   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8.0),
+                      bottomRight: Radius.circular(8.0),
+                    ),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

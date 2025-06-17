@@ -3,6 +3,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../res/colors.dart';
 import 'banner_controller.dart';
 import 'banner_logic.dart';
 
@@ -41,41 +42,52 @@ class _BannerWidgetState extends State<BannerWidget> {
             return SizedBox(height: 20.h);
           }
 
-          return Container(
-            width: double.infinity,
-            height: 180.h,
-            margin: const EdgeInsets.all(20.0),
-            child: Swiper(
-              autoplay: true,
-              duration: 1000,
-              scale: 0.8,
-              pagination: const SwiperPagination(),
-              itemCount: snapshot.data?.bannerList?.length ?? 0,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  margin: EdgeInsets.only(bottom: 16.h),
-                  color: Colors.white,
-                  elevation: 1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: snapshot.data?.bannerList?[index].imagePath ?? "",
+          return SizedBox(
+            width: double.infinity, // 宽度占满父容器（通常是屏幕）
+            child: AspectRatio(
+              aspectRatio: 9 / 5, // 宽高比 5:9
+              child: Container(
+                margin: const EdgeInsets.all(20.0),
+                child: Swiper(
+                  autoplay: true,
+                  duration: 1000,
+                  scale: 0.8,
+                  pagination: const SwiperPagination(
+                    builder: DotSwiperPaginationBuilder(
+                      activeColor: Colours.app_main, // 选中时的颜色
+                      color: Colors.grey, // 未选中时的颜色
+                      size: 8.0, // 指示器大小
+                      activeSize: 10.0, // 选中时的大小
                     ),
                   ),
-                );
-              },
-              onTap: (int index) {
-                var banner = snapshot.data?.bannerList?[index];
-                var url = banner?.url ?? "";
-                var title = banner?.title ?? "";
-                widget.itemClick?.call(title, url);
-              },
-              onIndexChanged: (index) {
-                widget.controller?.changeIndex(
-                  widget.controller?.logic.state.bannerList?[index].imagePath ?? "https://picsum.photos/400/200",
-                );
-              },
+                  itemCount: snapshot.data?.bannerList?.length ?? 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      margin: EdgeInsets.only(bottom: 16.h),
+                      color: Colors.white,
+                      elevation: 1,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(5.r)),
+                        child: CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          imageUrl: snapshot.data?.bannerList?[index].imagePath ?? "",
+                        ),
+                      ),
+                    );
+                  },
+                  onTap: (int index) {
+                    var banner = snapshot.data?.bannerList?[index];
+                    var url = banner?.url ?? "";
+                    var title = banner?.title ?? "";
+                    widget.itemClick?.call(title, url);
+                  },
+                  onIndexChanged: (index) {
+                    widget.controller?.changeIndex(
+                      widget.controller?.logic.state.bannerList?[index].imagePath ?? "https://picsum.photos/400/200",
+                    );
+                  },
+                ),
+              ),
             ),
           );
         });

@@ -113,10 +113,15 @@ class HomePage extends GetView<HomeViewModel> {
     return Stack(
       children: [
         Obx(() {
-          return CachedNetworkImage(
-            height: 200.h,
-            fit: BoxFit.cover,
-            imageUrl: controller.currentUrl.value,
+          return SizedBox(
+            width: double.infinity, // 宽度占满父容器（通常是屏幕）
+            child: AspectRatio(
+              aspectRatio: 9 / 5, // 宽高比 5:9
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: controller.currentUrl.value,
+              ),
+            ),
           );
         }),
         BannerWidget(
@@ -159,7 +164,7 @@ class HomePage extends GetView<HomeViewModel> {
                   SizedBox(width: 10),
                   Text(
                     "搜索玩安卓",
-                    style: TextStyles.textGray12,
+                    style: TextStyles.textHint14,
                   ),
                 ],
               ),

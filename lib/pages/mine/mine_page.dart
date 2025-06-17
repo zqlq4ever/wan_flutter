@@ -42,22 +42,24 @@ class _MinePageState extends State<MinePage> {
           child: Column(
             children: [
               //  用户信息区域
-              SizedBox(
-                width: double.infinity,
-                height: 200.h,
-                child: Stack(
-                  children: [
-                    ImageFiltered(
-                      imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                      child: CachedNetworkImage(
-                        cacheKey: DateTime.now.toString(),
-                        fit: BoxFit.cover,
-                        imageUrl: "https://picsum.photos/380/200",
+              Stack(
+                children: [
+                  SizedBox(
+                    width: double.infinity, // 宽度占满父容器（通常是屏幕）
+                    child: AspectRatio(
+                      aspectRatio: 5 / 3, // 宽高比
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: CachedNetworkImage(
+                          cacheKey: DateTime.now.toString(),
+                          fit: BoxFit.cover,
+                          imageUrl: "https://picsum.photos/500/300",
+                        ),
                       ),
                     ),
-                    _userHeader(),
-                  ],
-                ),
+                  ),
+                  _userHeader(),
+                ],
               ),
               _commonItem(
                   title: "我的收藏",

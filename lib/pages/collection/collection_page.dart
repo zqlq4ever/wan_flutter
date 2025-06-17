@@ -90,6 +90,8 @@ class CollectionPage extends GetView<CollectionViewModel> {
                 fontSize: 12,
                 color: Colors.black54,
               ),
+              maxLines: 4, // 最多显示6行
+              overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
             ),
             Row(children: [
               Expanded(child: Text("${item?.chapterName}")),
@@ -100,9 +102,7 @@ class CollectionPage extends GetView<CollectionViewModel> {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(
-                width: 10.0.w,
-              ),
+              SizedBox(width: 10.0.w),
               collectImage(true, onTap: onTap),
             ]),
           ],
