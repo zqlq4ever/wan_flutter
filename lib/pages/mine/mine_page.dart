@@ -7,22 +7,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/mine/mine_view_model.dart';
+import 'package:wan_android_flutter/pages/mine/mine_viewmodel.dart';
 import 'package:wan_android_flutter/widgets/my_button.dart';
 
-import '../../route/RoutePath.dart';
+import '../../route/route_path_constant.dart';
 import '../../widgets/common_styles.dart';
 import '../../widgets/dialog/update_dialog.dart';
 
 /// 我的页面
-class MineNewPage extends StatefulWidget {
-  const MineNewPage({super.key});
+class MinePage extends StatefulWidget {
+  const MinePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MineNewPageState();
+  State<StatefulWidget> createState() => _MinePageState();
 }
 
-class _MineNewPageState extends State<MineNewPage> {
+class _MinePageState extends State<MinePage> {
   var vm = MineViewModel();
 
   @override

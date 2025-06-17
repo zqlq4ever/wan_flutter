@@ -6,7 +6,7 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import '../../repository/api/wan_api.dart';
 import '../../repository/model/my_collects_model.dart';
 
-class CollectionViewmodel extends GetxController {
+class CollectionViewModel extends GetxController {
   late RefreshController refreshController;
   var dataList = <MyCollectItemModel>[].obs;
   int _pageCount = 0;

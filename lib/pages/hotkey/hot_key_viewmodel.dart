@@ -4,7 +4,7 @@ import 'package:wan_android_flutter/repository/api/wan_api.dart';
 import '../../repository/model/common_website_model.dart';
 import '../../repository/model/search_hot_key_model.dart';
 
-class HotCommonViewModel with ChangeNotifier {
+class HotKeyViewModel with ChangeNotifier {
   List<SearchHotKeyModel> hotKeyList = [];
   List<CommonWebsiteModel> websiteList = [];
 

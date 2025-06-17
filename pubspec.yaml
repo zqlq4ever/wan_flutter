@@ -80,6 +80,8 @@ dependencies:
 
   marqueer: ^2.0.1
 
+  mobile_scanner: ^7.0.1
+
   # https://juejin.cn/post/7508945084487401526#heading-19 推荐的框架
   extended_image: ^10.0.1
   event_bus: ^2.0.1

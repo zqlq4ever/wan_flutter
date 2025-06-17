@@ -6,7 +6,7 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import '../../repository/api/wan_api.dart';
 import '../../repository/model/home_list_model.dart';
-import '../../widgets/banner/BannerController.dart';
+import '../../widgets/banner/banner_controller.dart';
 
 class HomeViewModel extends GetxController {
   final BannerController bannerController = BannerController();

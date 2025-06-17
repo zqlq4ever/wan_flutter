@@ -2,90 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/search/search_view_model.dart';
+import 'package:wan_android_flutter/pages/search/search_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/search_list_model.dart';
-import 'package:wan_android_flutter/route/RoutePath.dart';
 
+import '../../res/colors.dart';
 import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
 /// 搜索页
-class SearchPage extends StatefulWidget {
-  final String? keyWord;
-
-  const SearchPage({super.key, this.keyWord});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _SearchPageState();
-  }
-}
-
-class _SearchPageState extends State<SearchPage> {
-  SearchViewModel vm = SearchViewModel();
-  TextEditingController? _editController;
-
-  @override
-  void initState() {
-    _editController = TextEditingController(text: widget.keyWord ?? "");
-    super.initState();
-    vm.searchList(widget.keyWord);
-  }
+class SearchPage extends GetView<SearchViewModel> {
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => vm,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _searchBar(
-                onSubmitted: (value) {
-                  if (!value.trim().isNotEmpty) {
-                    showToast("输入不可以为空！");
-                    return;
-                  }
-                  vm.searchList(value);
-                },
-                onTapReset: () {
-                  //  清空
-                  _editController?.text = "";
-                  vm.searchList();
-                },
-                onTapFinish: () {
-                  //  退出
-                  Navigator.pop(context);
-                },
-              ),
-              _searchResultsView(
-                onItemTap: (item) {
-                  Get.to(
-                    WebViewPage(
-                      loadResource: item?.link ?? "",
-                      title: item?.title,
-                      showTitle: true,
-                      webViewType: WebViewType.URL,
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _searchBar(
+              onTapReset: () {
+                //  清空
+                controller.editController.text = "";
+                controller.searchList();
+              },
+            ),
+            _searchListWidget(
+              onItemTap: (item) {
+                Get.to(
+                  WebViewPage(
+                    loadResource: item?.link ?? "",
+                    title: item?.title,
+                    showTitle: true,
+                    webViewType: WebViewType.URL,
+                  ),
+                );
+              },
+            )
+          ],
         ),
       ),
     );
   }
 
   Widget _searchBar({
-    ValueChanged<String>? onSubmitted,
     GestureTapCallback? onTapReset,
-    GestureTapCallback? onTapFinish,
   }) {
     return Container(
         color: Colors.white,
@@ -93,7 +57,7 @@ class _SearchPageState extends State<SearchPage> {
         child: Row(children: [
           SizedBox(width: 10.w),
           GestureDetector(
-            onTap: onTapFinish,
+            onTap: () => Get.back(),
             child: Image.asset(
               "assets/images/icon_back.png",
               width: 20.r,
@@ -105,13 +69,16 @@ class _SearchPageState extends State<SearchPage> {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 6.h),
               child: TextField(
+                cursorColor: Colours.app_main,
                 textAlign: TextAlign.justify,
-                controller: _editController,
-                style: titleTextStyle15,
+                controller: controller.editController,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w300,
+                ),
                 decoration: _inputDecoration(),
                 keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.search,
-                onSubmitted: onSubmitted,
               ),
             ),
           ),
@@ -126,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
 
   OutlineInputBorder _inputBorder() {
     return OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.grey),
+      borderSide: const BorderSide(color: Colors.white),
       borderRadius: BorderRadius.all(Radius.circular(8.r)),
     );
   }
@@ -134,7 +101,7 @@ class _SearchPageState extends State<SearchPage> {
   InputDecoration _inputDecoration() {
     return InputDecoration(
       contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
-      fillColor: Colors.white,
+      fillColor: Colours.line,
       filled: true,
       enabledBorder: _inputBorder(),
       focusedBorder: _inputBorder(),
@@ -142,48 +109,55 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _searchResultsView({
-    ValueChanged<SearchListItemModel?>? onItemTap,
+  Widget _searchListWidget({
+    required ValueChanged<SearchListItemModel?> onItemTap,
   }) {
-    return Selector<SearchViewModel, List<SearchListItemModel>?>(
-      selector: (context, vm) => vm.dataList,
-      builder: (context, value, child) {
-        return Expanded(
-          child: ListView.builder(
-            itemCount: value?.length ?? 0,
-            itemBuilder: (context, index) {
-              var item = value?[index];
-              return _resultItem(item, onItemTap: () {
-                onItemTap?.call(item);
-              });
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _resultItem(
-    SearchListItemModel? item, {
-    GestureTapCallback? onItemTap,
-  }) {
-    return GestureDetector(
-      onTap: onItemTap,
-      child: Container(
-        alignment: Alignment.centerLeft,
-        width: double.infinity,
-        padding: const EdgeInsets.all(8.0),
-        child: Html(
-          data: item?.title ?? "",
-          style: {
-            //  整体样式使用 html
-            "html": Style(
-              fontSize: FontSize(15.sp),
-              color: Colors.black54,
-            )
+    var list = controller.dataList;
+    return Obx(() {
+      return Expanded(
+        child: ListView.separated(
+          itemCount: list.length,
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          separatorBuilder: (BuildContext context, int index) {
+            return const Divider(color: Colours.text_gray_c);
+          },
+          itemBuilder: (context, index) {
+            var item = list[index];
+            return GestureDetector(
+              onTap: () => onItemTap.call(item),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Text(
+                      "$index",
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colours.app_main,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 14.w),
+                    Expanded(
+                      child: Html(
+                        data: item.title?.trim() ?? "",
+                        style: {
+                          //  整体样式使用 html
+                          "html": Style(
+                            fontSize: FontSize(15.sp),
+                            color: Colors.black87,
+                          )
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           },
         ),
-      ),
-    );
+      );
+    });
   }
 }

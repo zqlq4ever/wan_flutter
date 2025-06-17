@@ -1,28 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:get/get.dart';
+import 'package:wan_android_flutter/pages/about/about_us_viewmodel.dart';
 
 import '../../widgets/my_app_bar.dart';
 
-class AboutUsPage extends StatefulWidget {
+class AboutUsPage extends GetView<AboutUsViewModel> {
   const AboutUsPage({super.key});
-
-  @override
-  State createState() {
-    return _AboutUsPageState();
-  }
-}
-
-class _AboutUsPageState extends State<AboutUsPage> {
-  String? _version = "";
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      getVersion();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +30,14 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   duration: Duration(seconds: 1), // 旋转动画时长
                 ),
                 SizedBox(height: 20.h),
-                Text("v $_version - 持续学习中 ~"),
+                Obx(() {
+                  return Text("V ${controller.version} - 持续学习中 ~");
+                }),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  Future getVersion() async {
-    var info = await PackageInfo.fromPlatform();
-    _version = info.version;
-    setState(() {});
   }
 }

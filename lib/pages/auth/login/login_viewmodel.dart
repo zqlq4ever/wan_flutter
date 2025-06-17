@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:wan_android_flutter/repository/api/wan_api.dart';
 import 'package:wan_android_flutter/repository/model/user_info_model.dart';
-import 'package:wan_android_flutter/route/RoutePath.dart';
+import 'package:wan_android_flutter/route/route_path_constant.dart';
 import 'package:wan_android_flutter/utils/sp_util.dart';
 
 import '../../../constants.dart';

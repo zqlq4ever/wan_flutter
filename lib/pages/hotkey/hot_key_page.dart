@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/hotkey/hot_common_view_model.dart';
+import 'package:wan_android_flutter/pages/hotkey/hot_key_viewmodel.dart';
 import 'package:wan_android_flutter/pages/search/search_page.dart';
-import 'package:wan_android_flutter/route/RoutePath.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/route/route_path_constant.dart';
 
 import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
@@ -21,7 +22,7 @@ class HotKeyPage extends StatefulWidget {
 }
 
 class _HotKeyPageState extends State<HotKeyPage> {
-  var vm = HotCommonViewModel();
+  var vm = HotKeyViewModel();
 
   @override
   void initState() {
@@ -38,16 +39,14 @@ class _HotKeyPageState extends State<HotKeyPage> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(children: [
-              _titleWidget("搜索热词", true, onTap: () {
-                Get.toNamed(RoutePath.search);
-              }),
+              _titleWidget("搜索热词"),
               SizedBox(height: 10.h),
 
               //  搜索热词列表
               _searchHotKeyListView(),
               SizedBox(height: 10.h),
 
-              _titleWidget("常用网站", false),
+              _titleWidget("常用网站"),
               SizedBox(height: 10.h),
 
               //  常用网站列表
@@ -62,30 +61,13 @@ class _HotKeyPageState extends State<HotKeyPage> {
 
   Widget _titleWidget(
     String title,
-    bool search, {
-    GestureTapCallback? onTap,
-  }) {
+  ) {
     return Container(
       width: double.infinity,
       height: 50.h,
       padding: EdgeInsets.only(left: 15.w, right: 15.w),
       alignment: Alignment.centerLeft,
-      child: search
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _titleText(title),
-                GestureDetector(
-                  onTap: onTap,
-                  child: Image.asset(
-                    "assets/images/icon_search.png",
-                    width: 30.r,
-                    height: 30.r,
-                  ),
-                )
-              ],
-            )
-          : _titleText(title),
+      child: _titleText(title),
     );
   }
 
@@ -93,7 +75,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
     return Text(
       title,
       style: TextStyle(
-        color: Colors.teal,
+        color: Colours.app_main,
         fontSize: 16.sp,
         fontWeight: FontWeight.bold,
       ),
@@ -102,14 +84,14 @@ class _HotKeyPageState extends State<HotKeyPage> {
 
   /// 搜索热词列表
   Widget _searchHotKeyListView() {
-    return Consumer<HotCommonViewModel>(builder: (context, value, child) {
+    return Consumer<HotKeyViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
-            var name = value.hotKeyList[index].name;
+            var keyword = value.hotKeyList[index].name;
             return _item(
-              name,
+              keyword,
               onTap: () {
-                Get.to(SearchPage(keyWord: name));
+                Get.toNamed(RoutePath.search, arguments: {"keyword": keyword});
               },
             );
           },
@@ -119,7 +101,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
 
   /// 常用网站列表
   Widget _commonWebsiteListView({GestureTapCallback? itemClick}) {
-    return Consumer<HotCommonViewModel>(builder: (context, value, child) {
+    return Consumer<HotKeyViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
             return _item(value.websiteList[index].name, onTap: () {

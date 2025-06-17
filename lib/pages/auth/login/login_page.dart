@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
-import 'package:wan_android_flutter/route/RoutePath.dart';
+import 'package:wan_android_flutter/route/route_path_constant.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 
 import '../../../res/gaps.dart';

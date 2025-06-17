@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/knowledge/details/detail_list.dart';
+import 'package:wan_android_flutter/pages/knowledge/details/DetailListPage.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../../repository/model/knowledge_detail_param.dart';
 import '../../../widgets/round_rect_rab_indicator.dart';
-import 'knowledge_details_view_model.dart';
+import 'KnowledgeDetailsViewModel.dart';
 
 /// 知识体系子页面
 class KnowledgeDetailsPage extends StatefulWidget {
@@ -47,8 +48,8 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage> with Single
             tabAlignment: TabAlignment.start,
             indicatorSize: TabBarIndicatorSize.label,
             isScrollable: true,
-            indicator: RoundRectTabIndicator(
-              borderSide: BorderSide(color: themeColor, width: 3),
+            indicator: const RoundRectTabIndicator(
+              borderSide: BorderSide(color: Colours.app_main, width: 3),
             ),
             labelStyle: const TextStyle(
               fontSize: 14,
@@ -56,8 +57,7 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage> with Single
             ),
             controller: tabController,
             indicatorWeight: 3,
-            indicatorColor: themeColor,
-            labelColor: themeColor,
+            labelColor: Colours.app_main,
             unselectedLabelColor: Colors.grey,
             // 隐藏点击效果
             overlayColor: WidgetStateProperty.resolveWith<Color?>(

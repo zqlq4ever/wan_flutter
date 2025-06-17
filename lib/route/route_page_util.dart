@@ -1,18 +1,21 @@
 import 'package:get/get.dart';
+import 'package:wan_android_flutter/pages/about/about_us_viewmodel.dart';
+import 'package:wan_android_flutter/pages/search/search_viewmodel.dart';
 
 import '../pages/about/about_us_page.dart';
 import '../pages/auth/login/login_page.dart';
 import '../pages/auth/login/login_viewmodel.dart';
 import '../pages/auth/register/register_page.dart';
 import '../pages/auth/register/register_viewmodel.dart';
-import '../pages/knowledge/details/knowledge_details_page.dart';
-import '../pages/my_collects/collection_page.dart';
-import '../pages/my_collects/collection_viewmodel.dart';
+import '../pages/knowledge/details/KnowledgeDetailsPage.dart';
+import '../pages/collection/collection_page.dart';
+import '../pages/collection/collection_viewmodel.dart';
+import '../pages/scan/scan_page.dart';
 import '../pages/search/search_page.dart';
 import '../pages/home_bottom_tab.dart';
 import '../widgets/web/webview_page.dart';
 import '../widgets/web/webview_widget.dart';
-import 'RoutePath.dart';
+import 'route_path_constant.dart';
 
 class RoutePageUtil {
   static List<GetPage> pages = [
@@ -34,16 +37,35 @@ class RoutePageUtil {
     ),
     GetPage(
       name: RoutePath.myCollection,
-      page: () => const MyCollectsPage(),
+      page: () => const CollectionPage(),
       binding: BindingsBuilder(() {
-        Get.lazyPut(() => CollectionViewmodel());
+        Get.lazyPut(() => CollectionViewModel());
       }),
     ),
     GetPage(
       name: RoutePath.webviewPage,
       page: () => const WebViewPage(loadResource: "", webViewType: WebViewType.URL),
     ),
-    GetPage(name: RoutePath.aboutUs, page: () => const AboutUsPage()),
-    GetPage(name: RoutePath.search, page: () => const SearchPage()),
+    GetPage(
+      name: RoutePath.aboutUs,
+      page: () => const AboutUsPage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => AboutUsViewModel());
+      }),
+    ),
+    GetPage(
+      name: RoutePath.search,
+      page: () => const SearchPage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => SearchViewModel());
+      }),
+    ),
+    GetPage(
+      name: RoutePath.scan,
+      page: () => const ScanPage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => SearchViewModel());
+      }),
+    ),
   ];
 }

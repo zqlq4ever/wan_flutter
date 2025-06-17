@@ -3,7 +3,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'BannerController.dart';
+import 'banner_controller.dart';
 import 'banner_logic.dart';
 
 typedef BannerClick = Function(String title, String url);
@@ -44,7 +44,7 @@ class _BannerWidgetState extends State<BannerWidget> {
           return Container(
             width: double.infinity,
             height: 180.h,
-            margin: const EdgeInsets.all(25.0),
+            margin: const EdgeInsets.all(20.0),
             child: Swiper(
               autoplay: true,
               duration: 1000,

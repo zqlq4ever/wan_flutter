@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/res/styles.dart';
 
-import '../../route/RoutePath.dart';
-import 'knowledge_view_model.dart';
+import '../../route/route_path_constant.dart';
+import 'knowledge_viewmodel.dart';
 
 /// 知识体系页面
 class KnowledgePage extends GetView<KnowledgeViewModel> {
@@ -51,8 +52,8 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
                     item?.name ?? "",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 15.sp,
+                      color: Colours.app_main,
+                      fontSize: 16.sp,
                     ),
                   ),
                   SizedBox(height: 10.h),
@@ -65,7 +66,7 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
               ),
             ),
             Opacity(
-              opacity: 0.5,
+              opacity: 0.7,
               child: Image.asset(
                 "assets/images/img_arrow_right.png",
                 height: 24.r,
@@ -85,7 +86,10 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
       list.add(Chip(
         label: Text(
           value?.name ?? "",
-          style: TextStyles.textWhite14,
+          style: const TextStyle(
+            fontSize: 13.0,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: controller.getRandomPastelColor(),
       ));

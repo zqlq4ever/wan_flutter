@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 
 //  绿色字体14号
-TextStyle tealTextStyle14 = TextStyle(color: Colors.teal, fontSize: 14.sp);
+TextStyle tealTextStyle14 = TextStyle(color: Colours.app_main, fontSize: 14.sp);
 //  灰色字体14号
 TextStyle greyTextStyle14 = TextStyle(color: Colors.grey, fontSize: 14.sp);
 //  白色字体14号

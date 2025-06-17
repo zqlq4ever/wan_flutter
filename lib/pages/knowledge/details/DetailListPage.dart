@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'package:wan_android_flutter/pages/knowledge/details/knowledge_details_view_model.dart';
+import 'package:wan_android_flutter/pages/knowledge/details/KnowledgeDetailsViewModel.dart';
 
 import '../../../repository/model/knowledge_detail_list_model.dart';
 import '../../../widgets/common_styles.dart';
@@ -96,6 +96,7 @@ class _DetailListPageState extends State<DetailListPage> {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("${item.title}", style: titleTextStyle15),
             SizedBox(height: 16.h),

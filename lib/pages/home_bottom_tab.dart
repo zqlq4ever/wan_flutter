@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wan_android_flutter/pages/home/home_list_page.dart';
+import 'package:wan_android_flutter/pages/home/home_page.dart';
 import 'package:wan_android_flutter/pages/hotkey/hot_key_page.dart';
 import 'package:wan_android_flutter/pages/knowledge/knowledge_page.dart';
-import 'package:wan_android_flutter/pages/knowledge/knowledge_view_model.dart';
+import 'package:wan_android_flutter/pages/knowledge/knowledge_viewmodel.dart';
 import 'package:wan_android_flutter/pages/mine/mine_page.dart';
 
 import '../widgets/navigation/navigation_bar_widget.dart';
-import 'home/home_view_model.dart';
+import 'home/home_viewmodel.dart';
 
 class HomeBottomTab extends StatefulWidget {
   const HomeBottomTab({super.key});
@@ -57,10 +57,10 @@ class _BottomTabState extends State<HomeBottomTab> {
   }
 
   void initTabPage() {
-    tabItems.add(const HomeListPage());
+    tabItems.add(const HomePage());
     tabItems.add(const HotKeyPage());
     tabItems.add(const KnowledgePage());
-    tabItems.add(const MineNewPage());
+    tabItems.add(const MinePage());
 
     Get.lazyPut(() => HomeViewModel());
     Get.lazyPut(() => KnowledgeViewModel());
