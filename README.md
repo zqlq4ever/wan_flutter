@@ -7,14 +7,11 @@ wanandroid flutter 版本 。
 
 下载 Android Demo 体验 : https://www.pgyer.com/ER0YOhzL
 
-![QRCode_258](https://github.com/user-attachments/assets/06eeaa17-d379-4b61-9dcd-0e88e8b5e986)
+![](ScreenShots/home.png)
 
 效果预览图 : 
 
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/5be56205-547b-4153-b475-82a270f038ed" width="200"/>
-  <img src="https://github.com/user-attachments/assets/084a5054-784b-4c2a-9903-c6c45d55587b" width="200"/>
-  <img src="https://github.com/user-attachments/assets/b5d1e4e5-caec-4547-a313-869119094268" width="200"/>
-  <img src="https://github.com/user-attachments/assets/31b40595-0331-4e1c-ac2c-73f437452b09" width="200"/>
-</p>
+| ![](ScreenShots/home.png)       | ![](ScreenShots/hotkey.png) | ![](ScreenShots/knowledge.png) |
+|---------------------------------|-----------------------------|--------------------------------|
+| ![](ScreenShots/collection.png) | ![](ScreenShots/mine.png)   | ![](ScreenShots/search.png)    |
+| ---                             | ---                         | ---                            |
