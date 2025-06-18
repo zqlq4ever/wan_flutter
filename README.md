@@ -14,4 +14,3 @@ wanandroid flutter 版本 。
 | ![](ScreenShots/home.png)       | ![](ScreenShots/hotkey.png) | ![](ScreenShots/knowledge.png) |
 |---------------------------------|-----------------------------|--------------------------------|
 | ![](ScreenShots/collection.png) | ![](ScreenShots/mine.png)   | ![](ScreenShots/search.png)    |
-| ---                             | ---                         | ---                            |
