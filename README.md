@@ -7,7 +7,7 @@ wanandroid flutter 版本 。
 
 下载 Android Demo 体验 : https://www.pgyer.com/ER0YOhzL
 
-![](ScreenShots/home.png)
+![](ScreenShots/download.png)
 
 效果预览图 : 
 
