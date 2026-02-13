@@ -217,8 +217,10 @@ class HomePage extends GetView<HomeViewModel> {
                     ),
                   ),
                   SizedBox(width: 5.w),
-                  normalText(name ?? ""),
-                  const Expanded(child: SizedBox()),
+                  Expanded(
+                    child: normalText(name ?? ""),
+                  ),
+                  SizedBox(width: 10.w),
                   normalText(item?.niceShareDate),
                   SizedBox(width: 10.w),
                   Text(

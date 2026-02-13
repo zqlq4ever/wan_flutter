@@ -63,7 +63,7 @@ dependencies:
   image_picker: ^1.1.2
 
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
-  keyboard_actions: ^4.2.0
+  keyboard_actions: ^4.2.1
 
   # Dart 常用工具类库 https://github.com/Sky24n/common_utils
   common_utils: 2.1.0
@@ -101,4 +101,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-

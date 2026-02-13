@@ -20,6 +20,8 @@ Text normalText(String? text) {
   return Text(
     text ?? "",
     style: titleTextStyle15,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
   );
 }
 
