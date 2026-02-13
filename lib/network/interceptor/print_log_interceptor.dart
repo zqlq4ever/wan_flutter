@@ -6,28 +6,28 @@ import 'package:dio/dio.dart';
 class PrintLogInterceptor extends InterceptorsWrapper {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    log("\nrequest-------------->");
+    log("\nHTTP request-------------->");
     options.headers.forEach((key, value) {
       log("请求头信息：key=$key  value=${value.toString()}");
     });
     log("path:${options.uri}");
     log("method:${options.method}");
     log("data:${options.data}");
-    log("queryParameters:${options.queryParameters.toString()}");
-    log("<--------------request\n");
+    log("参数:${options.queryParameters.toString()}");
+    log("<--------------HTTP request\n");
     super.onRequest(options, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    log("\nresponse-------------->");
+    log("\nHTTP response-------------->");
     log("path:${response.realUri}");
     log("headers:${response.headers.toString()}");
     log("statusMessage:${response.statusMessage}");
-    log("statusCode:${response.statusCode}");
+    log("状态码:${response.statusCode}");
     log("extra:${response.extra.toString()}");
-    log("data:${response.data}");
-    log("<--------------response\n");
+    log("数据:${response.data}");
+    log("<--------------HTTP response\n");
     super.onResponse(response, handler);
   }
 
