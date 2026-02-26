@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:oktoast/oktoast.dart';
-import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/search/search_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/search_list_model.dart';
 
 import '../../res/colors.dart';
-import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
@@ -23,13 +20,7 @@ class SearchPage extends GetView<SearchViewModel> {
       body: SafeArea(
         child: Column(
           children: [
-            _searchBar(
-              onTapReset: () {
-                //  清空
-                controller.editController.text = "";
-                controller.searchList();
-              },
-            ),
+            _searchBar(),
             _searchListWidget(
               onItemTap: (item) {
                 Get.to(
@@ -47,9 +38,7 @@ class SearchPage extends GetView<SearchViewModel> {
     );
   }
 
-  Widget _searchBar({
-    GestureTapCallback? onTapReset,
-  }) {
+  Widget _searchBar() {
     return Container(
         color: Colors.white,
         height: 50.h,
@@ -76,15 +65,28 @@ class SearchPage extends GetView<SearchViewModel> {
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w300,
                 ),
-                decoration: _inputDecoration(),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
+                  fillColor: Colours.line,
+                  filled: true,
+                  enabledBorder: _inputBorder(),
+                  focusedBorder: _inputBorder(),
+                  border: _inputBorder(),
+                  suffixIcon: Obx(() => Visibility(
+                    visible: controller.hasText.value,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.editController.text = "";
+                        controller.hasText.value = false;
+                        controller.searchList();
+                      },
+                      child: Icon(Icons.clear, size: 18.sp, color: Colors.grey),
+                    ),
+                  )),
+                ),
                 keyboardType: TextInputType.text,
               ),
             ),
-          ),
-          SizedBox(width: 10.w),
-          GestureDetector(
-            onTap: onTapReset,
-            child: Text("重置", style: titleTextStyle15),
           ),
           SizedBox(width: 15.w)
         ]));
@@ -97,16 +99,7 @@ class SearchPage extends GetView<SearchViewModel> {
     );
   }
 
-  InputDecoration _inputDecoration() {
-    return InputDecoration(
-      contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
-      fillColor: Colours.line,
-      filled: true,
-      enabledBorder: _inputBorder(),
-      focusedBorder: _inputBorder(),
-      border: _inputBorder(),
-    );
-  }
+
 
   Widget _searchListWidget({
     required ValueChanged<SearchListItemModel?> onItemTap,

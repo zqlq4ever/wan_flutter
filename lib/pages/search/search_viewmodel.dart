@@ -10,6 +10,7 @@ import '../../repository/model/search_list_model.dart';
 class SearchViewModel extends GetxController {
   late TextEditingController editController;
   var dataList = <SearchListItemModel>[].obs;
+  var hasText = false.obs;
 
   @override
   void onInit() {
@@ -38,6 +39,7 @@ class SearchViewModel extends GetxController {
 
   void _listener() {
     var input = editController.text;
+    hasText.value = input.isNotEmpty;
     log("SearchViewModel _listener input = $input");
     if (!input.trim().isNotEmpty) {
       return;
