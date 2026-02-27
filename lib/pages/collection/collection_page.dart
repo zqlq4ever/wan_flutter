@@ -5,7 +5,6 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/collection/collection_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
 
-import '../../widgets/common_styles.dart';
 import '../../widgets/my_app_bar.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
@@ -17,7 +16,7 @@ class CollectionPage extends GetView<CollectionViewModel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: const MyAppBar(
         centerTitle: "我的收藏",
       ),
@@ -29,10 +28,8 @@ class CollectionPage extends GetView<CollectionViewModel> {
           child: Obx(() {
             return ListView.separated(
               itemCount: controller.dataList.length,
-              separatorBuilder: (context, index) => Container(
-                height: 10.h,
-                color: Colors.black12,
-              ), // item 间距
+              separatorBuilder: (context, index) => SizedBox(height: 16.h),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               itemBuilder: (context, index) {
                 var data = controller.dataList[index];
                 return _collectionItem(
@@ -63,49 +60,131 @@ class CollectionPage extends GetView<CollectionViewModel> {
     return GestureDetector(
       onTap: itemClick,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${item?.title}",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16.sp,
-                color: Colors.black,
-              ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
-            SizedBox(height: 6.h),
-            Text(
-              item?.author ?? "未知",
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 10.h),
-            Text(
-              "${item?.desc}",
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.black54,
-              ),
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Row(children: [
-              Expanded(child: Text("${item?.chapterName}")),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                "${item?.niceDate}",
+                "${item?.title}",
                 style: TextStyle(
-                  fontSize: 13.sp,
-                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 40.sp,
+                  color: Colors.black,
                 ),
               ),
-              SizedBox(width: 10.w),
-              collectImage(true, onTap: onTap),
-            ]),
-          ],
+              if (item?.author?.isNotEmpty ?? false) ...[
+                SizedBox(height: 16.h),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        item?.author ?? "",
+                        style: TextStyle(
+                          fontSize: 32.sp,
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24.h),
+              ],
+              if (item?.desc?.isNotEmpty ?? false)
+                Container(
+                  padding: EdgeInsets.all(20.w),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: Colors.grey[200]!, width: 1),
+                  ),
+                  child: Text(
+                    "${item?.desc}",
+                    style: TextStyle(
+                      fontSize: 28.sp,
+                      color: Colors.black54,
+                      height: 1.6,
+                    ),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              SizedBox(height: 24.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.folder_open_outlined,
+                        size: 32.sp,
+                        color: Colors.orangeAccent,
+                      ),
+                      SizedBox(width: 12.w),
+                      Text(
+                        "${item?.chapterName}",
+                        style: TextStyle(
+                          fontSize: 28.sp,
+                          color: Colors.orangeAccent,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time_outlined,
+                        size: 32.sp,
+                        color: Colors.grey[500],
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        "${item?.niceDate}",
+                        style: TextStyle(
+                          fontSize: 30.sp,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(width: 20.w),
+                      GestureDetector(
+                        onTap: onTap,
+                        child: Container(
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                          child: Icon(
+                            Icons.favorite,
+                            size: 40.sp,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

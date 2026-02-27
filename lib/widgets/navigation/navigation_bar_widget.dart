@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../res/colors.dart';
 import 'navigation_bar_item.dart';
 
 /// 底部导航栏组件
@@ -82,7 +81,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         showSelectedLabels: true,
         showUnselectedLabels: true,
         // 增加图标与文本的间距
-        iconSize: 50.r, // 图标大小
+        iconSize: 80.r, // 图标大小
         selectedFontSize: 26.sp, // 选中文本大小
         unselectedFontSize: 24.sp, // 未选中文本大小
         items: _barItemList(),
@@ -110,14 +109,14 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         activeIcon: NavigationBarItem(
           builder: (_) => Image.asset(
             widget.tabActiveIcons[i],
-            width: widget.bottomBarIconWidth ?? 28.r,
-            height: widget.bottomBarIconHeight ?? 28.r,
+            width: widget.bottomBarIconWidth ?? 48.r,
+            height: widget.bottomBarIconHeight ?? 48.r,
           ),
         ),
         icon: Image.asset(
           widget.tabIcons[i],
-          width: widget.bottomBarIconWidth ?? 28.r,
-          height: widget.bottomBarIconHeight ?? 28.r,
+          width: widget.bottomBarIconWidth ?? 48.r,
+          height: widget.bottomBarIconHeight ?? 48.r,
         ),
         label: widget.tabLabels[i],
       );

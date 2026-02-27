@@ -149,7 +149,6 @@ class HomePage extends GetView<HomeViewModel> {
   Widget _topSearchBar() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 20.h),
       child: Row(
         children: [
           SizedBox(width: 12.w),
@@ -157,7 +156,7 @@ class HomePage extends GetView<HomeViewModel> {
             child: GestureDetector(
               onTap: () => Get.toNamed(RoutePath.search),
               child: Container(
-                height: 100.h,
+                height: 80.h,
                 padding: EdgeInsets.symmetric(horizontal: 32.w),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -169,13 +168,13 @@ class HomePage extends GetView<HomeViewModel> {
                     Icon(
                       Icons.search,
                       color: Colors.grey,
-                      size: 88.r,
+                      size: 60.r,
                     ),
                     SizedBox(width: 20.w),
                     Text(
                       "搜索玩安卓",
                       style: TextStyle(
-                        fontSize: 60.sp,
+                        fontSize: 40.sp,
                         color: Colors.grey[400],
                       ),
                     ),
@@ -189,8 +188,8 @@ class HomePage extends GetView<HomeViewModel> {
             onTap: () => {Get.toNamed(RoutePath.scan)},
             child: Image.asset(
               "assets/images/icon_scan.png",
-              width: 128.w,
-              height: 128.h,
+              width: 110.w,
+              height: 110.h,
             ),
           ),
           SizedBox(width: 12.w),

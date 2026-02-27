@@ -5,6 +5,9 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import '../../repository/api/wan_api.dart';
 import '../../repository/model/my_collects_model.dart';
+import '../../utils/sp_util.dart';
+import '../../constants.dart';
+import '../../route/route_path_constant.dart';
 
 class CollectionViewModel extends GetxController {
   late RefreshController refreshController;
@@ -15,6 +18,20 @@ class CollectionViewModel extends GetxController {
   void onInit() {
     super.onInit();
     refreshController = RefreshController(initialRefresh: false);
+    
+    // 检查用户是否已登录
+    _checkLoginStatus();
+  }
+  
+  /// 检查登录状态
+  Future<void> _checkLoginStatus() async {
+    String? userName = await SpUtil.getString(Constants.spUserName);
+    if (userName == null || userName.isEmpty) {
+      // 未登录，跳转到登录页面
+      Get.toNamed(RoutePath.login);
+      return;
+    }
+    
     refreshOrLoad(false);
   }
 

@@ -10,6 +10,7 @@ class MyButton extends StatelessWidget {
     super.key,
     this.text = '',
     this.fontSize = Dimens.font_sp18,
+    this.fontWeight,
     this.textColor,
     this.disabledTextColor,
     this.backgroundColor,
@@ -24,6 +25,7 @@ class MyButton extends StatelessWidget {
 
   final String text;
   final double fontSize;
+  final FontWeight? fontWeight;
   final Color? textColor;
   final Color? disabledTextColor;
   final Color? backgroundColor;
@@ -76,7 +78,7 @@ class MyButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: fontSize),
+          style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
         ));
   }
 }

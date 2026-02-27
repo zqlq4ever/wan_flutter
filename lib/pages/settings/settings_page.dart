@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../widgets/my_app_bar.dart';
@@ -31,16 +30,7 @@ class SettingsPage extends StatelessWidget {
                     trailing: Switch(
                       value: false,
                       onChanged: (value) {},
-                      activeColor: Colours.app_main,
-                    ),
-                  ),
-                  _buildSettingsItem(
-                    icon: Icons.notifications_outlined,
-                    title: "消息推送",
-                    trailing: Switch(
-                      value: true,
-                      onChanged: (value) {},
-                      activeColor: Colours.app_main,
+                      activeThumbColor: Colours.app_main,
                     ),
                   ),
                   _buildSettingsItem(
@@ -87,11 +77,6 @@ class SettingsPage extends StatelessWidget {
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
                   _buildSettingsItem(
-                    icon: Icons.help_outline,
-                    title: "帮助与反馈",
-                    onTap: () {},
-                  ),
-                  _buildSettingsItem(
                     icon: Icons.info_outline,
                     title: "版本信息",
                     trailing: Text(
@@ -106,7 +91,7 @@ class SettingsPage extends StatelessWidget {
                 SizedBox(height: 60.h),
                 Center(
                   child: Text(
-                    "玩安卓 © 2024",
+                    "玩安卓 © 2026",
                     style: TextStyle(
                       color: Colors.grey[400],
                       fontSize: 24.sp,

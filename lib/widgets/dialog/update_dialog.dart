@@ -33,7 +33,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
         backgroundColor: Colors.black54,
         body: Center(
           child: Container(
-            width: 600.w,
+            width: MediaQuery.of(context).size.width * 0.9,
+            constraints: BoxConstraints(maxWidth: 700.w),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(40.r),

@@ -52,14 +52,14 @@ class _BannerWidgetState extends State<BannerWidget> {
                   autoplay: true,
                   duration: 1000,
                   scale: 0.8,
-                  pagination: const SwiperPagination(
-                    builder: DotSwiperPaginationBuilder(
-                      activeColor: Colours.app_main, // 选中时的颜色
-                      color: Colors.grey, // 未选中时的颜色
-                      size: 8.0, // 指示器大小
-                      activeSize: 10.0, // 选中时的大小
-                    ),
-                  ),
+                  pagination: SwiperPagination(
+                builder: DotSwiperPaginationBuilder(
+                  activeColor: Colours.app_main, // 选中时的颜色 - 第三方库属性，暂不替换
+                  color: Colors.grey, // 未选中时的颜色
+                  size: 8.0, // 指示器大小
+                  activeSize: 10.0, // 选中时的大小
+                ),
+              ),
                   itemCount: snapshot.data?.bannerList?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     return Card(

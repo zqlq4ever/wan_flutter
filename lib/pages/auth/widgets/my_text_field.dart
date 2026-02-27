@@ -114,21 +114,15 @@ class _MyTextFieldState extends State<MyTextField> {
           ? [FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
           : [FilteringTextInputFormatter.deny(RegExp('[\u4e00-\u9fa5]'))],
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 16.h),
+        contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 0),
         hintText: widget.hintText,
         counterText: '',
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: themeData.primaryColor,
-            width: 0.8,
-          ),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).dividerTheme.color ?? Colors.white,
-            width: 0.8,
-          ),
-        ),
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
       ),
     );
 
@@ -166,8 +160,8 @@ class _MyTextFieldState extends State<MyTextField> {
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath(_isShowPwd ? 'icon_display' : 'icon_hide'),
-            width: 18.r,
-            height: 40.h,
+            width: 36.r,
+            height: 80.h,
           ),
           onTap: () {
             setState(() {
@@ -200,26 +194,49 @@ class _MyTextFieldState extends State<MyTextField> {
       );
     }
 
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: <Widget>[
-        textField,
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            /// _isShowDelete参数动态变化，为了不破坏树结构使用Visibility，false时放一个空Widget。
-            /// 对于其他参数，为初始配置参数，基本可以确定树结构，就不做空Widget处理。
-            Visibility(
-              visible: _isShowDelete,
-              child: clearButton ?? Gaps.empty,
+    // 添加焦点监听器，当焦点变化时更新状态
+    widget.focusNode?.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    
+    // 监听焦点状态
+    final isFocused = widget.focusNode?.hasFocus ?? false;
+
+    return Container(
+      height: 100.h,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isFocused ? themeData.primaryColor : Colors.grey[200]!,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Stack(
+        children: <Widget>[
+          textField,
+          Positioned(
+            right: 0,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                /// _isShowDelete参数动态变化，为了不破坏树结构使用Visibility，false时放一个空Widget。
+                /// 对于其他参数，为初始配置参数，基本可以确定树结构，就不做空Widget处理。
+                Visibility(
+                  visible: _isShowDelete,
+                  child: clearButton ?? Gaps.empty,
+                ),
+                if (widget.isInputPwd) Gaps.hGap15,
+                if (widget.isInputPwd) pwdVisible,
+                if (widget.getVCode != null) Gaps.hGap15,
+                if (widget.getVCode != null) getVCodeButton,
+              ],
             ),
-            if (widget.isInputPwd) Gaps.hGap15,
-            if (widget.isInputPwd) pwdVisible,
-            if (widget.getVCode != null) Gaps.hGap15,
-            if (widget.getVCode != null) getVCodeButton,
-          ],
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

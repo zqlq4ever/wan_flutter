@@ -41,37 +41,44 @@ class SearchPage extends GetView<SearchViewModel> {
       leading: IconButton(
         icon: Image.asset(
           "assets/images/icon_back.png",
-          width: 24.r,
-          height: 24.r,
+          width: 60.r,
+          height: 60.r,
         ),
         onPressed: () => Get.back(),
       ),
       title: Container(
-        height: 40.h,
+        height: 80.h,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.grey[100]!,
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(40.r),
         ),
         padding: EdgeInsets.symmetric(horizontal: 12.w),
         child: TextField(
           cursorColor: Colours.app_main,
           textAlign: TextAlign.start,
+          textAlignVertical: TextAlignVertical.center,
           controller: controller.editController,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 30.sp,
+            fontSize: 40.sp,
             fontWeight: FontWeight.w300,
           ),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.zero,
+            // 关键修改：移除 vertical padding，让 Flutter 自动计算
+            contentPadding: EdgeInsets.symmetric(horizontal: 32.w),
+            // 或者使用：contentPadding: EdgeInsets.only(left: 32.w, right: 32.w),
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
             prefixIcon: Icon(
               Icons.search,
               color: Colors.grey,
-              size: 24.r,
+              size: 60.r,
+            ),
+            prefixIconConstraints: BoxConstraints(
+              minWidth: 60.r,
+              minHeight: 60.r,
             ),
             suffixIcon: Obx(() => Visibility(
               visible: controller.hasText.value,
@@ -81,8 +88,8 @@ class SearchPage extends GetView<SearchViewModel> {
                   controller.hasText.value = false;
                   controller.searchList();
                 },
-                child: Icon(Icons.clear, size: 24.r, color: Colors.grey),
-              ),
+                    child: Icon(Icons.clear, size: 60.r, color: Colors.grey),
+                  ),
             )),
           ),
           keyboardType: TextInputType.text,
@@ -97,111 +104,109 @@ class SearchPage extends GetView<SearchViewModel> {
   }) {
     var list = controller.dataList;
     return Obx(() {
-      return Expanded(
-        child: ListView.builder(
-          itemCount: list.length,
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-          itemBuilder: (context, index) {
-            var item = list[index];
-            return GestureDetector(
-              onTap: () => onItemTap.call(item),
+      return ListView.builder(
+        itemCount: list.length,
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        itemBuilder: (context, index) {
+          var item = list[index];
+          return GestureDetector(
+            onTap: () => onItemTap.call(item),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 20.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: Container(
-                margin: EdgeInsets.only(bottom: 20.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
+                padding: EdgeInsets.all(28.w),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 56.r,
+                      height: 56.r,
+                      decoration: BoxDecoration(
+                        color: _getRankColor(index),
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "${index + 1}",
+                        style: TextStyle(
+                          fontSize: 28.sp,
+                          color: _getRankTextColor(index),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 24.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Html(
+                            data: item.title?.trim() ?? "",
+                            style: {
+                              "html": Style(
+                                fontSize: FontSize(30.sp),
+                                color: Colors.black87,
+                                lineHeight: LineHeight(1.5),
+                              )
+                            },
+                          ),
+                          SizedBox(height: 12.h),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.article_outlined,
+                                size: 28.sp,
+                                color: Colors.grey[400],
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                item.author ?? item.shareUser ?? "匿名",
+                                style: TextStyle(
+                                  fontSize: 24.sp,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                              SizedBox(width: 16.w),
+                              Icon(
+                                Icons.access_time,
+                                size: 28.sp,
+                                color: Colors.grey[400],
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                item.niceDate ?? "",
+                                style: TextStyle(
+                                  fontSize: 24.sp,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 32.sp,
+                      color: Colors.grey[300],
                     ),
                   ],
                 ),
-                child: Container(
-                  padding: EdgeInsets.all(28.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 56.r,
-                        height: 56.r,
-                        decoration: BoxDecoration(
-                          color: _getRankColor(index),
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "${index + 1}",
-                          style: TextStyle(
-                            fontSize: 28.sp,
-                            color: _getRankTextColor(index),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 24.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Html(
-                              data: item.title?.trim() ?? "",
-                              style: {
-                                "html": Style(
-                                  fontSize: FontSize(30.sp),
-                                  color: Colors.black87,
-                                  lineHeight: LineHeight(1.5),
-                                )
-                              },
-                            ),
-                            SizedBox(height: 12.h),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.article_outlined,
-                                  size: 28.sp,
-                                  color: Colors.grey[400],
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  item.author ?? item.shareUser ?? "匿名",
-                                  style: TextStyle(
-                                    fontSize: 24.sp,
-                                    color: Colors.grey[500],
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                                Icon(
-                                  Icons.access_time,
-                                  size: 28.sp,
-                                  color: Colors.grey[400],
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  item.niceDate ?? "",
-                                  style: TextStyle(
-                                    fontSize: 24.sp,
-                                    color: Colors.grey[500],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 32.sp,
-                        color: Colors.grey[300],
-                      ),
-                    ],
-                  ),
-                ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       );
     });
   }
