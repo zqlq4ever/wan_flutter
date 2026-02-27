@@ -17,88 +17,79 @@ class SearchPage extends GetView<SearchViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: _buildAppBar(context),
       body: SafeArea(
-        child: Column(
-          children: [
-            _searchBar(),
-            _searchListWidget(
-              onItemTap: (item) {
-                Get.to(
-                  WebViewPage(
-                    loadResource: item?.link ?? "",
-                    title: item?.title,
-                    webViewType: WebViewType.URL,
-                  ),
-                );
-              },
-            )
-          ],
+        child: _searchListWidget(
+          onItemTap: (item) {
+            Get.to(
+              WebViewPage(
+                loadResource: item?.link ?? "",
+                title: item?.title,
+                webViewType: WebViewType.URL,
+              ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _searchBar() {
-    return Container(
-        color: Colors.white,
-        height: 50.h,
-        child: Row(children: [
-          SizedBox(width: 10.w),
-          GestureDetector(
-            onTap: () => Get.back(),
-            child: Image.asset(
-              "assets/images/icon_back.png",
-              width: 20.r,
-              height: 20.r,
-            ),
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: Image.asset(
+          "assets/images/icon_back.png",
+          width: 24.r,
+          height: 24.r,
+        ),
+        onPressed: () => Get.back(),
+      ),
+      title: Container(
+        height: 40.h,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.grey[100]!,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        child: TextField(
+          cursorColor: Colours.app_main,
+          textAlign: TextAlign.start,
+          controller: controller.editController,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 30.sp,
+            fontWeight: FontWeight.w300,
           ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 6.h),
-              child: TextField(
-                cursorColor: Colours.app_main,
-                textAlign: TextAlign.justify,
-                controller: controller.editController,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w300,
-                ),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 10.w, right: 10.w),
-                  fillColor: Colours.line,
-                  filled: true,
-                  enabledBorder: _inputBorder(),
-                  focusedBorder: _inputBorder(),
-                  border: _inputBorder(),
-                  suffixIcon: Obx(() => Visibility(
-                    visible: controller.hasText.value,
-                    child: GestureDetector(
-                      onTap: () {
-                        controller.editController.text = "";
-                        controller.hasText.value = false;
-                        controller.searchList();
-                      },
-                      child: Icon(Icons.clear, size: 18.sp, color: Colors.grey),
-                    ),
-                  )),
-                ),
-                keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.zero,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.grey,
+              size: 24.r,
+            ),
+            suffixIcon: Obx(() => Visibility(
+              visible: controller.hasText.value,
+              child: GestureDetector(
+                onTap: () {
+                  controller.editController.text = "";
+                  controller.hasText.value = false;
+                  controller.searchList();
+                },
+                child: Icon(Icons.clear, size: 24.r, color: Colors.grey),
               ),
-            ),
+            )),
           ),
-          SizedBox(width: 15.w)
-        ]));
-  }
-
-  OutlineInputBorder _inputBorder() {
-    return OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.white),
-      borderRadius: BorderRadius.all(Radius.circular(8.r)),
+          keyboardType: TextInputType.text,
+        ),
+      ),
     );
   }
-
 
 
   Widget _searchListWidget({
@@ -107,43 +98,105 @@ class SearchPage extends GetView<SearchViewModel> {
     var list = controller.dataList;
     return Obx(() {
       return Expanded(
-        child: ListView.separated(
+        child: ListView.builder(
           itemCount: list.length,
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
-          separatorBuilder: (BuildContext context, int index) {
-            return const Divider(color: Colours.text_gray_c);
-          },
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           itemBuilder: (context, index) {
             var item = list[index];
             return GestureDetector(
               onTap: () => onItemTap.call(item),
               child: Container(
-                alignment: Alignment.centerLeft,
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Text(
-                      "$index",
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        color: Colours.app_main,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: 14.w),
-                    Expanded(
-                      child: Html(
-                        data: item.title?.trim() ?? "",
-                        style: {
-                          //  整体样式使用 html
-                          "html": Style(
-                            fontSize: FontSize(15.sp),
-                            color: Colors.black87,
-                          )
-                        },
-                      ),
+                margin: EdgeInsets.only(bottom: 20.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
                     ),
                   ],
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(28.w),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 56.r,
+                        height: 56.r,
+                        decoration: BoxDecoration(
+                          color: _getRankColor(index),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${index + 1}",
+                          style: TextStyle(
+                            fontSize: 28.sp,
+                            color: _getRankTextColor(index),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 24.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Html(
+                              data: item.title?.trim() ?? "",
+                              style: {
+                                "html": Style(
+                                  fontSize: FontSize(30.sp),
+                                  color: Colors.black87,
+                                  lineHeight: LineHeight(1.5),
+                                )
+                              },
+                            ),
+                            SizedBox(height: 12.h),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.article_outlined,
+                                  size: 28.sp,
+                                  color: Colors.grey[400],
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  item.author ?? item.shareUser ?? "匿名",
+                                  style: TextStyle(
+                                    fontSize: 24.sp,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                Icon(
+                                  Icons.access_time,
+                                  size: 28.sp,
+                                  color: Colors.grey[400],
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  item.niceDate ?? "",
+                                  style: TextStyle(
+                                    fontSize: 24.sp,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 32.sp,
+                        color: Colors.grey[300],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -151,5 +204,19 @@ class SearchPage extends GetView<SearchViewModel> {
         ),
       );
     });
+  }
+
+  Color _getRankColor(int index) {
+    if (index == 0) return Colors.orange;
+    if (index == 1) return Colors.grey[400]!;
+    if (index == 2) return Colors.brown[300]!;
+    return Colors.grey[200]!;
+  }
+
+  Color _getRankTextColor(int index) {
+    if (index == 0) return Colors.white;
+    if (index == 1) return Colors.white;
+    if (index == 2) return Colors.white;
+    return Colors.grey[600]!;
   }
 }

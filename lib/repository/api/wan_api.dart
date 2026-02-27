@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wan_android_flutter/repository/model/home_banner_bean.dart';
 import 'package:wan_android_flutter/repository/model/home_list_model.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_detail_list_model.dart';
@@ -164,17 +165,36 @@ class WanApi {
 
   /// 检查 app 新版本
   Future<AppCheckUpdateModel?> checkUpdate() async {
-    DioInstance.instance.changeBaseUrl(UrlPathConstants.hostPgyer);
-    Response response = await DioInstance.instance.post(
-      path: UrlPathConstants.pathCheckUpgrade,
-      queryParameters: {
-        "_api_key": "57c543d258a34f8565748561de50b6e6",
-        "appKey": "2639f784ce9ee850532074b7b0534e62",
-      },
-    );
+    // 根据平台设置不同的baseUrl
+    String pgyerBaseUrl = UrlPathConstants.hostPgyer;
+    String wanandroidBaseUrl = UrlPathConstants.hostWanandroid;
+    
+    // Web平台使用直接URL，不通过代理
+    if (kIsWeb) {
+      DioInstance.instance.changeBaseUrl(pgyerBaseUrl);
+      Response response = await DioInstance.instance.post(
+        path: UrlPathConstants.pathCheckUpgrade,
+        queryParameters: {
+          "_api_key": "57c543d258a34f8565748561de50b6e6",
+          "appKey": "2639f784ce9ee850532074b7b0534e62",
+        },
+      );
 
-    DioInstance.instance.changeBaseUrl(UrlPathConstants.hostWanandroid);
+      DioInstance.instance.changeBaseUrl('/api/');
+      return AppCheckUpdateModel.fromJson(response.data);
+    } else {
+      // 非Web平台使用正常逻辑
+      DioInstance.instance.changeBaseUrl(pgyerBaseUrl);
+      Response response = await DioInstance.instance.post(
+        path: UrlPathConstants.pathCheckUpgrade,
+        queryParameters: {
+          "_api_key": "57c543d258a34f8565748561de50b6e6",
+          "appKey": "2639f784ce9ee850532074b7b0534e62",
+        },
+      );
 
-    return AppCheckUpdateModel.fromJson(response.data);
+      DioInstance.instance.changeBaseUrl(wanandroidBaseUrl);
+      return AppCheckUpdateModel.fromJson(response.data);
+    }
   }
 }

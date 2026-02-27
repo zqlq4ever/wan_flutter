@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:math' hide log;
-import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
@@ -10,8 +9,6 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/home/home_viewmodel.dart';
 import 'package:wan_android_flutter/res/colors.dart';
-import 'package:wan_android_flutter/res/styles.dart';
-import 'package:wan_android_flutter/utils/image_util.dart';
 
 import '../../repository/model/home_list_model.dart';
 import '../../route/route_path_constant.dart';
@@ -35,12 +32,13 @@ class HomePage extends GetView<HomeViewModel> {
           controller: controller.refreshController,
           // 自定义 Header
           header: const ClassicHeader(
-            refreshStyle: RefreshStyle.Follow,
             idleText: '下拉刷新',
             releaseText: '释放刷新',
             refreshingText: '刷新中...',
             completeText: '刷新完成',
             failedText: '刷新失败',
+            // 缩短完成动画时长
+            completeDuration: Duration(milliseconds: 100),
             // 设置刷新过程中的颜色
             textStyle: TextStyle(color: Colours.app_main),
             idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main),
@@ -48,6 +46,8 @@ class HomePage extends GetView<HomeViewModel> {
               valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
             ),
           ),
+          // 使用固定滚动物理，彻底关闭回弹效果
+          physics: const ClampingScrollPhysics(),
           // 自定义 Footer
           footer: const ClassicFooter(
             loadingText: '加载中...',
@@ -71,11 +71,11 @@ class HomePage extends GetView<HomeViewModel> {
             child: Column(
               children: [
                 _topSearchBar(),
-                SizedBox(height: 16.h),
+                SizedBox(height: 8.h),
                 _banner(),
                 Obx(() {
                   return ListView.builder(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.w),
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.listData.length,
@@ -110,78 +110,92 @@ class HomePage extends GetView<HomeViewModel> {
   }
 
   Widget _banner() {
-    return Stack(
-      children: [
-        Obx(() {
-          return SizedBox(
-            width: double.infinity, // 宽度占满父容器（通常是屏幕）
-            child: AspectRatio(
-              aspectRatio: 9 / 5, // 宽高比 5:9
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: controller.currentUrl.value,
-              ),
-            ),
-          );
-        }),
-        BannerWidget(
-          controller: controller.bannerController,
-          itemClick: (title, url) {
-            Get.to(
-              WebViewPage(
-                loadResource: url,
-                webViewType: WebViewType.URL,
-                title: title,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      child: Stack(
+        children: [
+          Obx(() {
+            return SizedBox(
+              width: double.infinity, // 宽度占满父容器（通常是屏幕）
+              child: AspectRatio(
+                aspectRatio: 9 / 4, // 减小banner高度，从9/5调整为9/4
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: controller.currentUrl.value,
+                  ),
+                ),
               ),
             );
-          },
-        )
-      ],
+          }),
+          BannerWidget(
+            controller: controller.bannerController,
+            itemClick: (title, url) {
+              Get.to(
+                WebViewPage(
+                  loadResource: url,
+                  webViewType: WebViewType.URL,
+                  title: title,
+                ),
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 
   Widget _topSearchBar() {
-    return Row(
-      children: [
-        const SizedBox(width: 16),
-        Expanded(
-          child: GestureDetector(
-            onTap: () => Get.toNamed(RoutePath.search),
-            child: Container(
-              height: 36.h,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.search,
-                    color: Colors.grey, // 图标颜色
-                    size: 24.0, // 图标大小
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    "搜索玩安卓",
-                    style: TextStyles.textHint14,
-                  ),
-                ],
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 20.h),
+      child: Row(
+        children: [
+          SizedBox(width: 12.w),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => Get.toNamed(RoutePath.search),
+              child: Container(
+                height: 100.h,
+                padding: EdgeInsets.symmetric(horizontal: 32.w),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100]!,
+                  borderRadius: BorderRadius.circular(40.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 88.r,
+                    ),
+                    SizedBox(width: 20.w),
+                    Text(
+                      "搜索玩安卓",
+                      style: TextStyle(
+                        fontSize: 60.sp,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 10),
-        InkWell(
-          onTap: () => {Get.toNamed(RoutePath.scan)},
-          child: Image.asset(
-            "assets/images/icon_scan.png",
-            width: 28.w,
-            height: 28.h,
+          SizedBox(width: 16.w),
+          InkWell(
+            onTap: () => {Get.toNamed(RoutePath.scan)},
+            child: Image.asset(
+              "assets/images/icon_scan.png",
+              width: 128.w,
+              height: 128.h,
+            ),
           ),
-        ),
-        const SizedBox(width: 16),
-      ],
+          SizedBox(width: 12.w),
+        ],
+      ),
     );
   }
 
@@ -197,12 +211,14 @@ class HomePage extends GetView<HomeViewModel> {
     return GestureDetector(
       onTap: onItemClick,
       child: Card(
-        margin: EdgeInsets.only(bottom: 16.h),
+        margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
         color: Colors.white,
-        elevation: 1,
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
         child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(15.r),
+          padding: EdgeInsets.all(42.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -210,43 +226,61 @@ class HomePage extends GetView<HomeViewModel> {
                 children: [
                   ClipOval(
                     child: CachedNetworkImage(
-                      width: 20,
-                      height: 20,
+                      width: 72.r,
+                      height: 72.r,
                       fit: BoxFit.cover,
                       imageUrl: imageUrl,
                     ),
                   ),
-                  SizedBox(width: 5.w),
+                  SizedBox(width: 30.w),
                   Expanded(
-                    child: normalText(name ?? ""),
-                  ),
-                  SizedBox(width: 10.w),
-                  normalText(item?.niceShareDate),
-                  SizedBox(width: 10.w),
-                  Text(
-                    item?.type == 1 ? "置顶" : "",
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blueAccent,
+                    child: Text(
+                      name ?? "",
+                      style: TextStyle(
+                        fontSize: 30.sp,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  )
+                  ),
+                  SizedBox(width: 30.w),
+                  Text(
+                    item?.niceShareDate ?? "",
+                    style: TextStyle(
+                      fontSize: 27.sp,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                  SizedBox(width: 30.w),
+                  if (item?.type == 1)
+                    Text(
+                      "置顶",
+                      style: TextStyle(
+                        fontSize: 27.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blueAccent,
+                      ),
+                    )
                 ],
               ),
-              SizedBox(height: 5.h),
+              SizedBox(height: 30.h),
               Text(
                 item?.title ?? "",
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w300,
+                  fontSize: 33.sp,
+                  fontWeight: FontWeight.w600,
+                  height: 1.4,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
               ),
-              SizedBox(height: 5.h),
+              SizedBox(height: 30.h),
               Row(children: [
                 Text(
                   "${item?.superChapterName ?? ""} • ${item?.chapterName ?? ""}",
-                  style: TextStyle(fontSize: 13.sp, color: Colours.app_main),
+                  style: TextStyle(fontSize: 27.sp, color: Colours.app_main, fontWeight: FontWeight.w500),
                 ),
                 const Expanded(child: SizedBox()),
                 GetBuilder<HomeViewModel>(

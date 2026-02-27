@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 
@@ -48,7 +49,7 @@ class _ScanPageState extends State<ScanPage> {
             alignment: Alignment.bottomCenter,
             child: Container(
               alignment: Alignment.bottomCenter,
-              height: 100,
+              height: 100.h,
               color: const Color.fromRGBO(0, 0, 0, 0.4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

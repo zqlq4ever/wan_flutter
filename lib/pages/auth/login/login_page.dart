@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
 import 'package:wan_android_flutter/route/route_path_constant.dart';
@@ -29,7 +30,7 @@ class LoginPage extends GetView<LoginViewModel> {
             controller.nodeText2,
           ],
         ),
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0),
+        padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 20.h),
         children: _buildBody,
       ),
     );

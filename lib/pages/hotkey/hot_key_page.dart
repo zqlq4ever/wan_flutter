@@ -3,11 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/hotkey/hot_key_viewmodel.dart';
-import 'package:wan_android_flutter/pages/search/search_page.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/route/route_path_constant.dart';
 
-import '../../widgets/common_styles.dart';
 import '../../widgets/web/webview_page.dart';
 import '../../widgets/web/webview_widget.dart';
 
@@ -37,22 +35,26 @@ class _HotKeyPageState extends State<HotKeyPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(children: [
-              _titleWidget("搜索热词"),
-              SizedBox(height: 10.h),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40.w),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                SizedBox(height: 40.h),
+                _titleWidget("搜索热词"),
+                SizedBox(height: 40.h),
 
-              //  搜索热词列表
-              _searchHotKeyListView(),
-              SizedBox(height: 10.h),
+                //  搜索热词列表
+                _searchHotKeyListView(),
+                SizedBox(height: 40.h),
 
-              _titleWidget("常用网站"),
-              SizedBox(height: 10.h),
+                _titleWidget("常用网站"),
+                SizedBox(height: 40.h),
 
-              //  常用网站列表
-              _commonWebsiteListView(),
-              SizedBox(height: 10.h),
-            ]),
+                //  常用网站列表
+                _commonWebsiteListView(),
+                SizedBox(height: 20.h),
+              ]),
+            ),
           ),
         ),
       ),
@@ -65,7 +67,6 @@ class _HotKeyPageState extends State<HotKeyPage> {
     return Container(
       width: double.infinity,
       height: 50.h,
-      padding: EdgeInsets.only(left: 15.w, right: 15.w),
       alignment: Alignment.centerLeft,
       child: _titleText(title),
     );
@@ -76,7 +77,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
       title,
       style: TextStyle(
         color: Colours.app_main,
-        fontSize: 16.sp,
+        fontSize: 36.sp,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -100,7 +101,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
   }
 
   /// 常用网站列表
-  Widget _commonWebsiteListView({GestureTapCallback? itemClick}) {
+  Widget _commonWebsiteListView() {
     return Consumer<HotKeyViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
@@ -120,16 +121,16 @@ class _HotKeyPageState extends State<HotKeyPage> {
   /// 通用网格布局
   Widget _gridview<T>({required NullableIndexedWidgetBuilder itemBuilder, int? itemCount}) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15.w),
+      margin: EdgeInsets.symmetric(horizontal: 0.w),
       child: GridView.builder(
         //  禁止滑动
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          mainAxisSpacing: 10.r, //主轴间隔
-          crossAxisSpacing: 10.r, //横轴间隔
-          maxCrossAxisExtent: 120.0, //最大横轴范围
-          childAspectRatio: 2.0, //宽高比为2
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5, // 5列
+          mainAxisSpacing: 15.w, //主轴间隔
+          crossAxisSpacing: 15.w, //横轴间隔
+          childAspectRatio: 2.5, //调整宽高比，让item更高一些
         ),
         itemBuilder: itemBuilder,
         itemCount: itemCount,
@@ -150,15 +151,21 @@ class _HotKeyPageState extends State<HotKeyPage> {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black12),
           borderRadius: BorderRadius.all(
-            Radius.circular(10.r),
+            Radius.circular(12.r),
           ),
         ),
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(5.0),
+        padding: EdgeInsets.all(12.w), // 使用适配单位，增加内边距
         child: Text(
           title ?? "",
           textAlign: TextAlign.center,
-          style: blackTextStyle13,
+          style: TextStyle(
+            fontSize: 28.sp,
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

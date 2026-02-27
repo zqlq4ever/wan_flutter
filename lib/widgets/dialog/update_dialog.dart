@@ -1,16 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/widgets/web/webview_page.dart';
-
-import '../../res/colors.dart';
-import '../../res/dimens.dart';
-import '../../res/gaps.dart';
-import '../../res/styles.dart';
-import '../../utils/image_util.dart';
-import '../my_button.dart';
-import '../web/webview_widget.dart';
+import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
 
 class UpdateDialog extends StatefulWidget {
   const UpdateDialog({super.key});
@@ -35,89 +29,181 @@ class _UpdateDialogState extends State<UpdateDialog> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-
-      /// 使用false禁止返回键返回，达到强制升级目的
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.transparent,
-          body: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  height: 120.0,
-                  width: 280.0,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(8.0),
-                    ),
-                    image: DecorationImage(
-                      image: ImageUtil.getAssetImage('update_head', format: ImageFormat.jpg),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 280.0,
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8.0),
-                      bottomRight: Radius.circular(8.0),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('新版本更新', style: TextStyles.textSize16),
-                      Gaps.vGap10,
-                      const Text('1.又双叒修复了一大堆bug。\n\n2.祭天了多名程序猿。'),
-                      Gaps.vGap15,
-                      _buildButton(context),
-                    ],
-                  ),
+        backgroundColor: Colors.black54,
+        body: Center(
+          child: Container(
+            width: 600.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 30,
+                  spreadRadius: 5,
                 ),
               ],
             ),
-          )),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(),
+                _buildContent(context),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  Widget _buildButton(BuildContext context) {
-    final Color primaryColor = Theme.of(context).primaryColor;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        SizedBox(
-          width: 110.0,
-          height: 36.0,
-          child: MyButton(
-            text: '残忍拒绝',
-            fontSize: Dimens.font_sp16,
-            textColor: primaryColor,
-            disabledTextColor: Colors.white,
-            disabledBackgroundColor: Colours.text_gray_c,
-            radius: 18.0,
-            side: BorderSide(
-              color: primaryColor,
-              width: 0.8,
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 50.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(40.r),
+          topRight: Radius.circular(40.r),
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 120.r,
+            height: 120.r,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colours.app_main.withValues(alpha: 0.15),
+                  Colours.app_main.withValues(alpha: 0.05),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(30.r),
             ),
-            backgroundColor: Colors.transparent,
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            child: Icon(
+              Icons.system_update_alt_rounded,
+              size: 60.r,
+              color: Colours.app_main,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            '发现新版本',
+            style: TextStyle(
+              fontSize: 40.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: Colours.app_main.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Text(
+              'v2.0.0',
+              style: TextStyle(
+                fontSize: 24.sp,
+                color: Colours.app_main,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(40.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '更新内容',
+            style: TextStyle(
+              fontSize: 32.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 24.h),
+          Container(
+            constraints: BoxConstraints(maxHeight: 300.h),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildUpdateItem('优化用户体验，提升应用性能'),
+                  _buildUpdateItem('修复已知问题，增强稳定性'),
+                  _buildUpdateItem('新增多项实用功能'),
+                  _buildUpdateItem('界面全面升级，视觉更清爽'),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 40.h),
+          _buildButtons(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateItem(String text) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 8.h),
+            width: 12.r,
+            height: 12.r,
+            decoration: BoxDecoration(
+              color: Colours.app_main,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 28.sp,
+                color: Colors.grey[700],
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtons(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildButton(
+            text: '稍后再说',
+            isPrimary: false,
+            onTap: () => Navigator.pop(context),
           ),
         ),
-        SizedBox(
-          width: 110.0,
-          height: 36.0,
-          child: MyButton(
+        SizedBox(width: 24.w),
+        Expanded(
+          child: _buildButton(
             text: '立即更新',
-            fontSize: Dimens.font_sp16,
-            onPressed: () {
+            isPrimary: true,
+            onTap: () {
               Navigator.pop(context);
               Get.to(
                 const WebViewPage(
@@ -127,14 +213,41 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 ),
               );
             },
-            textColor: Colors.white,
-            backgroundColor: primaryColor,
-            disabledTextColor: Colors.white,
-            disabledBackgroundColor: Colours.text_gray_c,
-            radius: 18.0,
           ),
-        )
+        ),
       ],
+    );
+  }
+
+  Widget _buildButton({
+    required String text,
+    required bool isPrimary,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 88.h,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isPrimary ? Colours.app_main : Colors.grey[100],
+          borderRadius: BorderRadius.circular(44.r),
+          border: isPrimary
+              ? null
+              : Border.all(
+                  color: Colors.grey[300]!,
+                  width: 2,
+                ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 30.sp,
+            fontWeight: FontWeight.w500,
+            color: isPrimary ? Colors.white : Colors.grey[700],
+          ),
+        ),
+      ),
     );
   }
 }

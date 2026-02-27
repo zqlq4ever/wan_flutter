@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../res/colors.dart';
-import '../../../res/dimens.dart';
 import '../../../res/gaps.dart';
 import '../../../utils/device_util.dart';
 import '../../../utils/image_util.dart';
@@ -114,7 +114,7 @@ class _MyTextFieldState extends State<MyTextField> {
           ? [FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
           : [FilteringTextInputFormatter.deny(RegExp('[\u4e00-\u9fa5]'))],
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
+        contentPadding: EdgeInsets.symmetric(vertical: 16.h),
         hintText: widget.hintText,
         counterText: '',
         focusedBorder: UnderlineInputBorder(
@@ -150,8 +150,8 @@ class _MyTextFieldState extends State<MyTextField> {
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath("icon_delete"),
-            width: 18.0,
-            height: 40.0,
+            width: 18.r,
+            height: 40.h,
           ),
           onTap: () => widget.controller.text = '',
         ),
@@ -166,8 +166,8 @@ class _MyTextFieldState extends State<MyTextField> {
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath(_isShowPwd ? 'icon_display' : 'icon_hide'),
-            width: 18.0,
-            height: 40.0,
+            width: 18.r,
+            height: 40.h,
           ),
           onTap: () {
             setState(() {
@@ -183,16 +183,16 @@ class _MyTextFieldState extends State<MyTextField> {
       getVCodeButton = MyButton(
         key: const Key('getVerificationCode'),
         onPressed: _clickable ? _getVCode : null,
-        fontSize: Dimens.font_sp12,
+        fontSize: 12.sp,
         text: _clickable ? "获取验证码" : '（$_currentSecond s）',
         textColor: themeData.primaryColor,
         disabledTextColor: isDark ? Colours.dark_text : Colors.white,
         backgroundColor: Colors.transparent,
         disabledBackgroundColor: isDark ? Colours.dark_text_gray : Colours.text_gray_c,
-        radius: 1.0,
-        minHeight: 26.0,
-        minWidth: 76.0,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        radius: 1.r,
+        minHeight: 26.h,
+        minWidth: 76.w,
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
         side: BorderSide(
           color: _clickable ? themeData.primaryColor : Colors.transparent,
           width: 0.8,

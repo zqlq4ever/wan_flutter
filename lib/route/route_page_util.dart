@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/about/about_us_viewmodel.dart';
 import 'package:wan_android_flutter/pages/search/search_viewmodel.dart';
+import 'package:wan_android_flutter/pages/settings/settings_page.dart';
 
 import '../pages/about/about_us_page.dart';
 import '../pages/auth/login/login_page.dart';
@@ -66,6 +67,10 @@ class RoutePageUtil {
       binding: BindingsBuilder(() {
         Get.lazyPut(() => SearchViewModel());
       }),
+    ),
+    GetPage(
+      name: RoutePath.settings,
+      page: () => const SettingsPage(),
     ),
   ];
 }

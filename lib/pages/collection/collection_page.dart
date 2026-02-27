@@ -30,7 +30,7 @@ class CollectionPage extends GetView<CollectionViewModel> {
             return ListView.separated(
               itemCount: controller.dataList.length,
               separatorBuilder: (context, index) => Container(
-                height: 10,
+                height: 10.h,
                 color: Colors.black12,
               ), // item 间距
               itemBuilder: (context, index) {
@@ -63,46 +63,46 @@ class CollectionPage extends GetView<CollectionViewModel> {
     return GestureDetector(
       onTap: itemClick,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "${item?.title}",
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 16,
+                fontSize: 16.sp,
                 color: Colors.black,
               ),
             ),
             SizedBox(height: 6.h),
             Text(
               item?.author ?? "未知",
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: 14.sp,
                 color: Colors.black,
               ),
             ),
             SizedBox(height: 10.h),
             Text(
               "${item?.desc}",
-              style: const TextStyle(
-                fontSize: 12,
+              style: TextStyle(
+                fontSize: 12.sp,
                 color: Colors.black54,
               ),
-              maxLines: 4, // 最多显示6行
-              overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
             ),
             Row(children: [
               Expanded(child: Text("${item?.chapterName}")),
               Text(
                 "${item?.niceDate}",
-                style: const TextStyle(
-                  fontSize: 13,
+                style: TextStyle(
+                  fontSize: 13.sp,
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(width: 10.0.w),
+              SizedBox(width: 10.w),
               collectImage(true, onTap: onTap),
             ]),
           ],

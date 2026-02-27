@@ -1,0 +1,14 @@
+{
+  "name": "wan_flutter_web",
+  "version": "1.0.0",
+  "description": "WanAndroid Flutter Web App",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "http-proxy-middleware": "^3.0.3"
+  }
+}

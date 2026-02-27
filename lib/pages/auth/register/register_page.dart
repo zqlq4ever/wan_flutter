@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/register/register_viewmodel.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
@@ -24,7 +25,7 @@ class RegisterPage extends GetView<RegisterViewModel> {
         keyboardConfig: Utils.getKeyboardActionsConfig(
             context, <FocusNode>[controller.nodeText1, controller.nodeText2, controller.nodeText3]),
         crossAxisAlignment: CrossAxisAlignment.center,
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0),
+        padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 20.h),
         children: _buildBody(),
       ),
     );

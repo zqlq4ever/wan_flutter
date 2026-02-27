@@ -97,6 +97,9 @@ class Win32Window {
 
   // window handle for hosted content.
   HWND child_content_ = nullptr;
+  
+  // Desired aspect ratio (width / height) to maintain when resizing.
+  double desired_aspect_ratio_ = 0.0;
 };
 
 #endif  // RUNNER_WIN32_WINDOW_H_

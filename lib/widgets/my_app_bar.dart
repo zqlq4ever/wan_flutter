@@ -100,14 +100,26 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       value: overlayStyle,
       child: Material(
         color: bgColor,
-        child: SafeArea(
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            children: <Widget>[
-              titleWidget,
-              back,
-              action,
+        child: Container(
+          decoration: BoxDecoration(
+            color: bgColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
             ],
+          ),
+          child: SafeArea(
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: <Widget>[
+                titleWidget,
+                back,
+                action,
+              ],
+            ),
           ),
         ),
       ),

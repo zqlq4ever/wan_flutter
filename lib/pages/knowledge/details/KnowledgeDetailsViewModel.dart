@@ -3,7 +3,6 @@ import 'package:wan_android_flutter/repository/api/wan_api.dart';
 
 import '../../../repository/model/knowledge_detail_list_model.dart';
 import '../../../repository/model/knowledge_detail_param.dart';
-import '../../../widgets/loading.dart';
 
 /// 知识体系业务逻辑层
 class KnowledgeDetailsViewModel with ChangeNotifier {
@@ -24,7 +23,6 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
 
   /// 知识体系明细列表数据
   Future getDetailList(String? id, bool loadMore) async {
-    Loading.showLoading();
     if (loadMore) {
       _pageCount++;
     } else {
@@ -40,6 +38,5 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
         _pageCount--;
       }
     }
-    Loading.dismissAll();
   }
 }

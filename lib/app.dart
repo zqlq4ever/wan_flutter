@@ -2,20 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/route/route_page_util.dart';
 import 'package:wan_android_flutter/route/route_path_constant.dart';
 
 /// 设计尺寸
 Size get designSize {
-  final firstView = WidgetsBinding.instance.platformDispatcher.views.first;
-  //  逻辑短边
-  final logicalShortestSide = firstView.physicalSize.shortestSide / firstView.devicePixelRatio;
-  //  逻辑长边
-  final logicalLongestSide = firstView.physicalSize.longestSide / firstView.devicePixelRatio;
-  //  缩放比例 designSize 越小，元素越大
-  const scaleFactor = 0.95;
-  //  缩放后的逻辑短边和长边
-  return Size(logicalShortestSide * scaleFactor, logicalLongestSide * scaleFactor);
+  // 使用固定的设计尺寸，确保UI元素在不同窗口大小下保持一致比例
+  return const Size(1080, 1920);
 }
 
 class WanApp extends StatelessWidget {
@@ -29,7 +23,16 @@ class WanApp extends StatelessWidget {
         designSize: designSize,
         builder: (context, child) {
           return GetMaterialApp(
-            theme: ThemeData(useMaterial3: true),
+            theme: ThemeData(
+              useMaterial3: true,
+              primaryColor: Colours.app_main,
+              scaffoldBackgroundColor: Colors.white,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colours.app_main,
+                primary: Colours.app_main,
+                surface: Colors.white,
+              ),
+            ),
             initialRoute: RoutePath.tab,
             defaultTransition: Transition.rightToLeftWithFade,
             //  路由配置表

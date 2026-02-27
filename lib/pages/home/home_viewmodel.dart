@@ -22,7 +22,6 @@ class HomeViewModel extends GetxController {
     refreshController = RefreshController(initialRefresh: false);
     bannerController.setIndexChangeListener((url) {
       currentUrl.value = url;
-      log("HomeViewModel  url   = $url");
     });
     initDataList(false);
   }

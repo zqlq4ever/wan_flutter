@@ -133,6 +133,9 @@ bool Win32Window::Create(const std::wstring& title,
   HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTONEAREST);
   UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
   double scale_factor = dpi / 96.0;
+  
+  // Calculate and save the desired aspect ratio
+  desired_aspect_ratio_ = static_cast<double>(size.width) / static_cast<double>(size.height);
 
   HWND window = CreateWindow(
       window_class, title.c_str(), WS_OVERLAPPEDWINDOW,
@@ -196,6 +199,48 @@ Win32Window::MessageHandler(HWND hwnd,
                    newHeight, SWP_NOZORDER | SWP_NOACTIVATE);
 
       return 0;
+    }
+    case WM_SIZING: {
+      if (desired_aspect_ratio_ <= 0.0) {
+        return DefWindowProc(window_handle_, message, wparam, lparam);
+      }
+      
+      RECT* rect = reinterpret_cast<RECT*>(lparam);
+      LONG currentWidth = rect->right - rect->left;
+      LONG currentHeight = rect->bottom - rect->top;
+      
+      // Calculate the desired size based on the aspect ratio
+      LONG desiredHeight = static_cast<LONG>(currentWidth / desired_aspect_ratio_);
+      LONG desiredWidth = static_cast<LONG>(currentHeight * desired_aspect_ratio_);
+      
+      // Determine which dimension to adjust based on the sizing edge
+      switch (wparam) {
+        case WMSZ_LEFT:
+        case WMSZ_RIGHT:
+          // Left or right edge: adjust height to maintain aspect ratio
+          rect->bottom = rect->top + desiredHeight;
+          break;
+        case WMSZ_TOP:
+        case WMSZ_BOTTOM:
+          // Top or bottom edge: adjust width to maintain aspect ratio
+          rect->right = rect->left + desiredWidth;
+          break;
+        case WMSZ_TOPLEFT:
+        case WMSZ_TOPRIGHT:
+        case WMSZ_BOTTOMLEFT:
+        case WMSZ_BOTTOMRIGHT:
+          // Corner: adjust both dimensions to maintain aspect ratio
+          if (abs(currentWidth - desiredWidth) > abs(currentHeight - desiredHeight)) {
+            // Width is more different, adjust height
+            rect->bottom = rect->top + desiredHeight;
+          } else {
+            // Height is more different, adjust width
+            rect->right = rect->left + desiredWidth;
+          }
+          break;
+      }
+      
+      return TRUE;
     }
     case WM_SIZE: {
       RECT rect = GetClientArea();

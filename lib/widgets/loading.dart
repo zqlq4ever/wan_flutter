@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
@@ -26,7 +25,7 @@ class Loading {
         ),
       ),
       handleTouch: true,
-      duration: duration ?? const Duration(days: 1),
+      duration: duration ?? const Duration(seconds: 1),
     );
   }
 

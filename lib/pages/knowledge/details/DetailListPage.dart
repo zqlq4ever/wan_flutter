@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/KnowledgeDetailsViewModel.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../../repository/model/knowledge_detail_list_model.dart';
-import '../../../widgets/common_styles.dart';
 import '../../../widgets/web/webview_page.dart';
 import '../../../widgets/web/webview_widget.dart';
 
@@ -85,25 +85,25 @@ class _DetailListPageState extends State<DetailListPage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.all(16.0),
+        margin: EdgeInsets.all(32.w),
+        padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: Colors.black12,
-            width: 0.5.r,
+            width: 1.r,
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("${item.title}", style: titleTextStyle15),
-            SizedBox(height: 16.h),
+            Text("${item.title}", style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold, color: Colors.black)),
+            SizedBox(height: 32.h),
             Row(
               children: [
-                Text("${item.shareUser}", style: tealTextStyle14),
+                Text("${item.shareUser}", style: TextStyle(fontSize: 28.sp, color: Colours.app_main)),
                 const Expanded(child: SizedBox()),
-                Text("${item.niceShareDate}", style: greyTextStyle14),
+                Text("${item.niceShareDate}", style: TextStyle(fontSize: 28.sp, color: Colors.grey)),
               ],
             )
           ],

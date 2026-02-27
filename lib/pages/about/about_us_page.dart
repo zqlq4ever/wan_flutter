@@ -25,9 +25,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                 SizedBox(height: 50.h),
                 const FlutterLogo(
                   size: 100,
-                  style: FlutterLogoStyle.markOnly, // 可选样式: stacked, markOnly
-                  curve: Curves.easeInOut, // 动画曲线
-                  duration: Duration(seconds: 1), // 旋转动画时长
+                  style: FlutterLogoStyle.markOnly,
+                  curve: Curves.easeInOut,
                 ),
                 SizedBox(height: 20.h),
                 Obx(() {

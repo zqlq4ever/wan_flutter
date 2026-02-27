@@ -26,4 +26,7 @@ class RoutePath {
 
   //扫码页
   static const String scan = "/scan";
+
+  //设置页
+  static const String settings = "/settings";
 }

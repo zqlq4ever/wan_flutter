@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../res/colors.dart';
 import 'navigation_bar_item.dart';
 
 /// 底部导航栏组件
@@ -37,7 +38,7 @@ class NavigationBarWidget extends StatefulWidget {
   final List<String> tabActiveIcons;
 
   //当前页面下标
-  int currentIndex = 0;
+  final int currentIndex;
 
   //底部导航栏切换事件
   final ValueChanged<int>? onItemChange;
@@ -56,31 +57,45 @@ class NavigationBarWidget extends StatefulWidget {
 }
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.currentIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       //  tab 页面
-      body: IndexedStack(index: widget.currentIndex, children: widget.tabItems),
+      body: IndexedStack(index: _currentIndex, children: widget.tabItems),
       //  底部导航栏
       bottomNavigationBar: BottomNavigationBar(
         elevation: 3,
         backgroundColor: Colors.white,
-        selectedItemColor: Theme.of(context).primaryColor,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
-        currentIndex: widget.currentIndex,
+        currentIndex: _currentIndex,
         showSelectedLabels: true,
         showUnselectedLabels: true,
+        // 增加图标与文本的间距
+        iconSize: 50.r, // 图标大小
+        selectedFontSize: 26.sp, // 选中文本大小
+        unselectedFontSize: 24.sp, // 未选中文本大小
         items: _barItemList(),
         onTap: (index) {
           //  重复事件不处理
-          if (widget.currentIndex == index) {
+          if (_currentIndex == index) {
             return;
           }
           //  点击切换 page 事件
           widget.onItemChange?.call(index);
-          widget.currentIndex = index;
-          setState(() {});
+          setState(() {
+            _currentIndex = index;
+          });
         },
       ),
     );
@@ -95,14 +110,14 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         activeIcon: NavigationBarItem(
           builder: (_) => Image.asset(
             widget.tabActiveIcons[i],
-            width: widget.bottomBarIconWidth ?? 24.w,
-            height: widget.bottomBarIconHeight ?? 24.w,
+            width: widget.bottomBarIconWidth ?? 28.r,
+            height: widget.bottomBarIconHeight ?? 28.r,
           ),
         ),
         icon: Image.asset(
           widget.tabIcons[i],
-          width: widget.bottomBarIconWidth ?? 24.w,
-          height: widget.bottomBarIconHeight ?? 24.w,
+          width: widget.bottomBarIconWidth ?? 28.r,
+          height: widget.bottomBarIconHeight ?? 28.r,
         ),
         label: widget.tabLabels[i],
       );
