@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import 'http_method.dart';
 import 'interceptor/cookie_interceptor.dart';
@@ -37,6 +38,10 @@ class DioInstance {
       responseType: responseType,
       contentType: contentType,
     );
+
+    if (kIsWeb) {
+      _dio.options.extra['withCredentials'] = true;
+    }
 
     _dio.interceptors
       ..add(CookieInterceptor())

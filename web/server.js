@@ -5,25 +5,31 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// 代理配置
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 const apiProxy = createProxyMiddleware({
   target: 'https://www.wanandroid.com',
   changeOrigin: true,
   pathRewrite: {
     '^/api': '',
   },
-  headers: {
-    'X-Forwarded-For': 'localhost:8080',
+  onProxyReq: (proxyReq, req, res) => {
+    proxyReq.setHeader('Host', 'www.wanandroid.com');
   },
 });
 
-// 使用代理
 app.use('/api', apiProxy);
 
-// 提供静态文件服务
 app.use(express.static(path.join(__dirname, '..', 'build', 'web')));
 
-// 所有其他请求都返回index.html，用于单页应用
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'build', 'web', 'index.html'));
 });
@@ -31,4 +37,5 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log(`API proxy is set up for https://www.wanandroid.com`);
+  console.log(`Open http://localhost:${PORT} in your browser to use the app`);
 });
