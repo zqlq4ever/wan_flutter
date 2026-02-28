@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/about/about_us_viewmodel.dart';
 
 import '../../widgets/my_app_bar.dart';
+import '../../widgets/web/webview_page.dart';
+import '../../widgets/web/webview_widget.dart';
 
 class AboutUsPage extends GetView<AboutUsViewModel> {
   const AboutUsPage({super.key});
@@ -66,8 +68,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                         ),
                         child: Center(
                           child: Icon(
-                            Icons.bookmark,
-                            size: 90.r,
+                            Icons.flutter_dash,
+                            size: 100.r,
                             color: Colors.white,
                           ),
                         ),
@@ -139,7 +141,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     Text(
                       "应用功能",
                       style: TextStyle(
-                        fontSize: 40.sp,
+                        fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -197,7 +199,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     Text(
                       "开发者信息",
                       style: TextStyle(
-                        fontSize: 40.sp,
+                        fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -228,7 +230,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                               Text(
                                 "开发者",
                                 style: TextStyle(
-                                  fontSize: 32.sp,
+                                  fontSize: 37.sp,
                                   color: Colors.grey[600],
                                 ),
                               ),
@@ -236,7 +238,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                               Text(
                                 "今生挥毫只为你",
                                 style: TextStyle(
-                                  fontSize: 36.sp,
+                                  fontSize: 41.sp,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black,
                                 ),
@@ -285,7 +287,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     Text(
                       "其他信息",
                       style: TextStyle(
-                        fontSize: 40.sp,
+                        fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -320,7 +322,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   Text(
                     "玩安卓 Flutter",
                     style: TextStyle(
-                      fontSize: 32.sp,
+                      fontSize: 37.sp,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                     ),
@@ -329,7 +331,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   Text(
                     "持续学习 · 不断进步",
                     style: TextStyle(
-                      fontSize: 28.sp,
+                      fontSize: 33.sp,
                       color: Colors.grey[500],
                     ),
                   ),
@@ -375,7 +377,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 36.sp,
+                  fontSize: 41.sp,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
@@ -384,7 +386,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
               Text(
                 description,
                 style: TextStyle(
-                  fontSize: 30.sp,
+                  fontSize: 35.sp,
                   color: Colors.grey[600],
                   height: 1.5,
                 ),
@@ -401,6 +403,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
     required IconData icon,
     required String value,
   }) {
+    final isLink = value.startsWith('http');
     return Row(
       children: [
         Icon(
@@ -409,11 +412,26 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
           color: Colors.grey[500],
         ),
         SizedBox(width: 20.w),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 32.sp,
-            color: Colors.grey[700],
+        Expanded(
+          child: GestureDetector(
+            onTap: isLink
+                ? () {
+                    Get.to(
+                      WebViewPage(
+                        loadResource: value,
+                        webViewType: WebViewType.URL,
+                        title: value,
+                      ),
+                    );
+                  }
+                : null,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 37.sp,
+                color: isLink ? Colors.blueAccent : Colors.grey[700],
+              ),
+            ),
           ),
         ),
       ],
@@ -440,7 +458,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 32.sp,
+                fontSize: 37.sp,
                 color: Colors.grey[700],
               ),
             ),
@@ -449,7 +467,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
         Text(
           value,
           style: TextStyle(
-            fontSize: 32.sp,
+            fontSize: 37.sp,
             color: Colors.blueAccent,
             fontWeight: FontWeight.w500,
           ),

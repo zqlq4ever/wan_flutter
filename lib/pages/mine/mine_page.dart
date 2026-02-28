@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +6,6 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/mine/mine_viewmodel.dart';
 import 'package:wan_android_flutter/res/colors.dart';
-import 'package:wan_android_flutter/widgets/my_button.dart';
 
 import '../../route/route_path_constant.dart';
 import '../../widgets/dialog/update_dialog.dart';
@@ -35,28 +32,31 @@ class _MinePageState extends State<MinePage> {
       create: (context) => vm,
       child: Scaffold(
         backgroundColor: Colours.bg_color,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeader(),
-                SizedBox(height: 20.h),
-                _buildMenuSection(),
-                SizedBox(height: 40.h),
-                _buildLogoutButton(),
-                SizedBox(height: 100.h),
-              ],
+        body: Column(
+          children: [
+            _buildHeaderBackground(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildMenuSection(),
+                    SizedBox(height: 40.h),
+                    _buildLogoutButton(),
+                    SizedBox(height: 100.h),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeaderBackground() {
     return Container(
       width: double.infinity,
-      height: 480.h,
+      height: 560.h,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -71,7 +71,7 @@ class _MinePageState extends State<MinePage> {
         children: [
           Positioned(
             right: -50.w,
-            top: -30.h,
+            top: MediaQuery.of(context).padding.top - 30.h,
             child: Container(
               width: 300.w,
               height: 300.w,
@@ -102,44 +102,58 @@ class _MinePageState extends State<MinePage> {
   Widget _buildUserInfo() {
     return SizedBox(
       width: double.infinity,
-      height: 480.h,
+      height: 560.h,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () {
-                log("点击头像或者用户名去登录");
-                if (vm.shouldLogin == true) {
-                  Get.toNamed(RoutePath.login);
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.all(8.r),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.15),
-                      blurRadius: 20,
-                      spreadRadius: 5,
+            SizedBox(height: 60.h),
+            Selector<MineViewModel, bool>(
+              selector: (context, vm) => vm.shouldLogin ?? true,
+              builder: (context, shouldLogin, child) {
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    if (shouldLogin) {
+                      Get.toNamed(RoutePath.login);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8.r),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.15),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    width: 140.r,
-                    height: 140.r,
-                    fit: BoxFit.cover,
-                    imageUrl: "https://picsum.photos/100/100",
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[200],
-                      child: Icon(Icons.person, size: 60.r, color: Colors.grey),
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        width: 160.r,
+                        height: 160.r,
+                        fit: BoxFit.cover,
+                        imageUrl: "https://picsum.photos/100/100",
+                        placeholder: (context, url) => Container(
+                          width: 160.r,
+                          height: 160.r,
+                          color: Colors.grey[200],
+                          child: Icon(Icons.person, size: 60.r, color: Colors.grey),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          width: 160.r,
+                          height: 160.r,
+                          color: Colors.grey[200],
+                          child: Icon(Icons.person, size: 60.r, color: Colors.grey),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
             SizedBox(height: 24.h),
             Selector<MineViewModel, String?>(
@@ -148,7 +162,7 @@ class _MinePageState extends State<MinePage> {
                   value ?? "点击登录",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 36.sp,
+                    fontSize: 44.sp,
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(
@@ -164,7 +178,7 @@ class _MinePageState extends State<MinePage> {
                 return value.userName;
               },
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: 20.h),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
               decoration: BoxDecoration(
@@ -184,7 +198,7 @@ class _MinePageState extends State<MinePage> {
                     "等级: 超级会员",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24.sp,
+                      fontSize: 30.sp,
                     ),
                   ),
                 ],
@@ -201,6 +215,7 @@ class _MinePageState extends State<MinePage> {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
         children: [
+          SizedBox(height: 20.h),
           _buildMenuItem(
             icon: Icons.favorite_outline,
             title: "我的收藏",
@@ -275,8 +290,8 @@ class _MinePageState extends State<MinePage> {
             child: Row(
               children: [
                 Container(
-                  width: 80.r,
-                  height: 80.r,
+                  width: 100.r,
+                  height: 100.r,
                   decoration: BoxDecoration(
                     color: Colours.app_main.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20.r),
@@ -284,7 +299,7 @@ class _MinePageState extends State<MinePage> {
                   child: Icon(
                     icon,
                     color: Colours.app_main,
-                    size: 40.r,
+                    size: 60.r,
                   ),
                 ),
                 SizedBox(width: 24.w),
@@ -292,7 +307,7 @@ class _MinePageState extends State<MinePage> {
                   child: Text(
                     title,
                     style: TextStyle(
-                      fontSize: 30.sp,
+                      fontSize: 40.sp,
                       color: Colors.black87,
                       fontWeight: FontWeight.w500,
                     ),
@@ -344,7 +359,7 @@ class _MinePageState extends State<MinePage> {
                   child: Text(
                     "退出登录",
                     style: TextStyle(
-                      fontSize: 32.sp,
+                      fontSize: 40.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

@@ -17,7 +17,7 @@ class DetailListPage extends StatefulWidget {
   const DetailListPage({super.key, this.id});
 
   @override
-  State<StatefulWidget> createState() {
+  State<DetailListPage> createState() {
     return _DetailListPageState();
   }
 }
@@ -50,10 +50,36 @@ class _DetailListPageState extends State<DetailListPage> {
         return model;
       },
       child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Colours.bg_color,
           body: Consumer<KnowledgeDetailsViewModel>(builder: (context, value, child) {
             return SmartRefresher(
               controller: _refreshController,
+              enablePullDown: true,
+              enablePullUp: true,
+              header: const ClassicHeader(
+                idleText: '下拉刷新',
+                releaseText: '释放刷新',
+                refreshingText: '刷新中...',
+                completeText: '刷新完成',
+                failedText: '刷新失败',
+                completeDuration: Duration(milliseconds: 100),
+                textStyle: TextStyle(color: Colours.app_main),
+                idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main),
+                refreshingIcon: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+                ),
+              ),
+              footer: const ClassicFooter(
+                loadingText: '加载中...',
+                canLoadingText: '释放加载',
+                idleText: '上拉加载更多',
+                noDataText: '没有更多数据',
+                failedText: '加载失败',
+                textStyle: TextStyle(color: Colours.app_main),
+                loadingIcon: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+                ),
+              ),
               onRefresh: () {
                 refreshOrLoad(false);
               },
@@ -61,6 +87,7 @@ class _DetailListPageState extends State<DetailListPage> {
                 refreshOrLoad(true);
               },
               child: ListView.builder(
+                padding: EdgeInsets.all(24.w),
                 itemCount: value.detailList.length,
                 itemBuilder: (context, index) {
                   return _item(
@@ -85,27 +112,66 @@ class _DetailListPageState extends State<DetailListPage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.all(32.w),
-        padding: EdgeInsets.all(32.w),
+        margin: EdgeInsets.only(bottom: 20.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: Colors.black12,
-            width: 1.r,
-          ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("${item.title}", style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold, color: Colors.black)),
-            SizedBox(height: 32.h),
-            Row(
-              children: [
-                Text("${item.shareUser}", style: TextStyle(fontSize: 28.sp, color: Colours.app_main)),
-                const Expanded(child: SizedBox()),
-                Text("${item.niceShareDate}", style: TextStyle(fontSize: 28.sp, color: Colors.grey)),
-              ],
-            )
+            Padding(
+              padding: EdgeInsets.fromLTRB(28.w, 28.w, 28.w, 0),
+              child: Text(
+                item.title ?? "",
+                style: TextStyle(
+                  fontSize: 38.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                  height: 1.5,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Container(
+              padding: EdgeInsets.fromLTRB(28.w, 0, 28.w, 28.w),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: Colours.app_main.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      item.shareUser ?? "",
+                      style: TextStyle(
+                        fontSize: 30.sp,
+                        color: Colours.app_main,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Text(
+                    item.niceShareDate ?? "",
+                    style: TextStyle(
+                      fontSize: 30.sp,
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

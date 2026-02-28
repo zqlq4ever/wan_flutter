@@ -50,7 +50,7 @@ class LoginPage extends GetView<LoginViewModel> {
                 ),
                 child: Center(
                   child: Icon(
-                  Icons.lock,
+                  Icons.person,
                   size: 90.r,
                   color: Colors.white,
                 ),
@@ -123,7 +123,7 @@ class LoginPage extends GetView<LoginViewModel> {
                       key: const Key('login'),
                       onPressed: () => controller.login(),
                       text: "登录",
-                      fontSize: 36.sp,
+                      fontSize: 42.sp,
                       radius: 24.r,
                       minHeight: 96.h,
                       fontWeight: FontWeight.w600,
@@ -138,7 +138,7 @@ class LoginPage extends GetView<LoginViewModel> {
                         Text(
                           "还没有账号？",
                           style: TextStyle(
-                            fontSize: 30.sp,
+                            fontSize: 36.sp,
                             color: Colors.grey[600],
                           ),
                         ),
@@ -148,7 +148,7 @@ class LoginPage extends GetView<LoginViewModel> {
                             "立即注册",
                             key: const Key('noAccountRegister'),
                             style: TextStyle(
-                              fontSize: 30.sp,
+                              fontSize: 36.sp,
                               color: Colors.blueAccent,
                               fontWeight: FontWeight.w600,
                             ),

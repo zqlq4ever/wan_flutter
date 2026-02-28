@@ -33,28 +33,60 @@ class _HotKeyPageState extends State<HotKeyPage> {
     return ChangeNotifierProvider(
       create: (context) => vm,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.w),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                SizedBox(height: 40.h),
-                _titleWidget("搜索热词"),
-                SizedBox(height: 40.h),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              SizedBox(height: 40.h),
 
-                //  搜索热词列表
-                _searchHotKeyListView(),
-                SizedBox(height: 40.h),
+              // 搜索热词区域
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.all(30.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(children: [
+                  _titleWidget("搜索热词"),
+                  SizedBox(height: 24.h),
+                  _searchHotKeyListView(),
+                ]),
+              ),
 
-                _titleWidget("常用网站"),
-                SizedBox(height: 40.h),
+              SizedBox(height: 32.h),
 
-                //  常用网站列表
-                _commonWebsiteListView(),
-                SizedBox(height: 20.h),
-              ]),
-            ),
+              // 常用网站区域
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.all(30.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(children: [
+                  _titleWidget("常用网站"),
+                  SizedBox(height: 24.h),
+                  _commonWebsiteListView(),
+                ]),
+              ),
+
+              SizedBox(height: 40.h),
+            ]),
           ),
         ),
       ),
@@ -66,9 +98,21 @@ class _HotKeyPageState extends State<HotKeyPage> {
   ) {
     return Container(
       width: double.infinity,
-      height: 50.h,
-      alignment: Alignment.centerLeft,
-      child: _titleText(title),
+      padding: EdgeInsets.symmetric(vertical: 20.h),
+      child: Row(
+        children: [
+          Container(
+            width: 8.w,
+            height: 36.h,
+            decoration: BoxDecoration(
+              color: Colours.app_main,
+              borderRadius: BorderRadius.circular(4.r),
+            ),
+          ),
+          SizedBox(width: 16.w),
+          _titleText(title),
+        ],
+      ),
     );
   }
 
@@ -76,8 +120,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
     return Text(
       title,
       style: TextStyle(
-        color: Colours.app_main,
-        fontSize: 36.sp,
+        color: Colors.black87,
+        fontSize: 44.sp,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -91,6 +135,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
             var keyword = value.hotKeyList[index].name;
             return _item(
               keyword,
+              isHot: index < 3,
               onTap: () {
                 Get.toNamed(RoutePath.search, arguments: {"keyword": keyword});
               },
@@ -127,10 +172,10 @@ class _HotKeyPageState extends State<HotKeyPage> {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5, // 5列
-          mainAxisSpacing: 15.w, //主轴间隔
-          crossAxisSpacing: 15.w, //横轴间隔
-          childAspectRatio: 2.5, //调整宽高比，让item更高一些
+          crossAxisCount: 4,
+          mainAxisSpacing: 20.w,
+          crossAxisSpacing: 20.w,
+          childAspectRatio: 2.8,
         ),
         itemBuilder: itemBuilder,
         itemCount: itemCount,
@@ -142,30 +187,34 @@ class _HotKeyPageState extends State<HotKeyPage> {
   Widget _item(
     String? title, {
     GestureTapCallback? onTap,
+    bool isHot = false,
   }) {
-    return InkWell(
-      onTap: onTap,
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-          borderRadius: BorderRadius.all(
-            Radius.circular(12.r),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16.r),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isHot ? Colours.app_main.withValues(alpha: 0.1) : Colors.grey[100],
+            borderRadius: BorderRadius.circular(16.r),
+            border: isHot
+                ? Border.all(color: Colours.app_main.withValues(alpha: 0.3), width: 1)
+                : null,
           ),
-        ),
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(12.w), // 使用适配单位，增加内边距
-        child: Text(
-          title ?? "",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 28.sp,
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Text(
+            title ?? "",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 33.sp,
+              color: isHot ? Colours.app_main : Colors.black87,
+              fontWeight: isHot ? FontWeight.w600 : FontWeight.w500,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

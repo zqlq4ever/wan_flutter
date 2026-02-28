@@ -109,12 +109,14 @@ class _MyTextFieldState extends State<MyTextField> {
       controller: widget.controller,
       textInputAction: TextInputAction.done,
       keyboardType: widget.keyboardType,
+      style: TextStyle(fontSize: 36.sp),
       // 数字、手机号限制格式为0到9， 密码限制不包含汉字
       inputFormatters: (widget.keyboardType == TextInputType.number || widget.keyboardType == TextInputType.phone)
           ? [FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
           : [FilteringTextInputFormatter.deny(RegExp('[\u4e00-\u9fa5]'))],
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 0),
+        isCollapsed: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 36.h, horizontal: 0),
         hintText: widget.hintText,
         counterText: '',
         border: InputBorder.none,
@@ -144,8 +146,8 @@ class _MyTextFieldState extends State<MyTextField> {
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath("icon_delete"),
-            width: 18.r,
-            height: 40.h,
+            width: 40.r,
+            height: 90.h,
           ),
           onTap: () => widget.controller.text = '',
         ),
@@ -160,8 +162,8 @@ class _MyTextFieldState extends State<MyTextField> {
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath(_isShowPwd ? 'icon_display' : 'icon_hide'),
-            width: 36.r,
-            height: 80.h,
+            width: 40.r,
+            height: 90.h,
           ),
           onTap: () {
             setState(() {

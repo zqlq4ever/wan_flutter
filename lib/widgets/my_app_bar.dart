@@ -17,6 +17,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.actionName = '',
       this.backImg = 'assets/images/icon_back.png',
       this.backImgColor,
+      this.titleColor,
       this.onPressed,
       this.isBack = true});
 
@@ -25,6 +26,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String centerTitle;
   final String backImg;
   final Color? backImgColor;
+  final Color? titleColor;
   final String actionName;
   final VoidCallback? onPressed;
   final bool isBack;
@@ -86,12 +88,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         margin: const EdgeInsets.symmetric(horizontal: 48.0),
         child: Text(
           title.isEmpty ? centerTitle : title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: Dimens.font_sp18,
+            color: titleColor,
           ),
-          maxLines: 1, // 限制最多显示1行
-          overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
-          softWrap: false, // 不允许文本换行（可选）
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
         ),
       ),
     );

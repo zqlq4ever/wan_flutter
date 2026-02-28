@@ -90,8 +90,8 @@ Widget collectImage(
           ? "assets/images/icon_collect_selected"
               ".png"
           : "assets/images/icon_collect_normal.png",
-      width: 75.r,
-      height: 75.r,
+      width: 80.r,
+      height: 80.r,
     ),
   );
 }

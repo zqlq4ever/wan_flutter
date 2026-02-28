@@ -14,16 +14,63 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colours.bg_color,
       body: SafeArea(
-        child: Obx(() {
-          return ListView.builder(
-              shrinkWrap: true,
-              itemCount: controller.list.length,
-              itemBuilder: (context, index) {
-                return knowledgeItem(controller.list[index]);
-              });
-        }),
+        child: Column(
+          children: [
+            _buildHeader(),
+            SizedBox(height: 20.h),
+            Expanded(
+              child: Obx(() {
+                return ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
+                    shrinkWrap: true,
+                    itemCount: controller.list.length,
+                    itemBuilder: (context, index) {
+                      return knowledgeItem(controller.list[index]);
+                    });
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 32.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 8.w,
+            height: 40.h,
+            decoration: BoxDecoration(
+              color: Colours.app_main,
+              borderRadius: BorderRadius.circular(4.r),
+            ),
+          ),
+          SizedBox(width: 20.w),
+          Text(
+            "知识体系",
+            style: TextStyle(
+              fontSize: 54.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -37,41 +84,59 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
         );
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 30.w, vertical: 16.h),
-        padding: EdgeInsets.all(16.r),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        margin: EdgeInsets.only(bottom: 20.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Padding(
+              padding: EdgeInsets.fromLTRB(28.w, 28.w, 28.w, 0),
+              child: Row(
                 children: [
-                  Text(
-                    item?.name ?? "",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colours.app_main,
-                      fontSize: 36.sp, // 放大2倍
+                  Expanded(
+                    child: Text(
+                      item?.name ?? "",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colours.app_main,
+                        fontSize: 44.sp,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 24.h), // 放大2倍
-                  Wrap(
-                    spacing: 24.w, // 放大2倍
-                    runSpacing: 16.h, // 放大2倍
-                    children: buildChildren(item?.children),
+                  Container(
+                    padding: EdgeInsets.all(12.r),
+                    decoration: BoxDecoration(
+                      color: Colours.app_main.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 28.r,
+                      color: Colours.app_main,
+                    ),
                   ),
                 ],
               ),
             ),
-            Opacity(
-              opacity: 0.7,
-              child: Image.asset(
-                "assets/images/img_arrow_right.png",
-                height: 56.r, // 放大2倍
-                width: 56.r, // 放大2倍
+            SizedBox(height: 20.h),
+            Padding(
+              padding: EdgeInsets.fromLTRB(28.w, 0, 28.w, 28.w),
+              child: Wrap(
+                spacing: 16.w,
+                runSpacing: 16.h,
+                children: buildChildren(item?.children),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -83,16 +148,18 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
     var list = <Widget>[];
     for (var value in children) {
       list.add(Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(20.r),
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: Colors.grey[200]!, width: 1),
         ),
         child: Text(
           value?.name ?? "",
           style: TextStyle(
-            fontSize: 28.sp,
+            fontSize: 34.sp,
             color: Colors.black87,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ));

@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
                       "跟随系统",
                       style: TextStyle(
                         color: Colors.grey[500],
-                        fontSize: 26.sp,
+                        fontSize: 40.sp,
                       ),
                     ),
                   ),
@@ -66,7 +66,7 @@ class SettingsPage extends StatelessWidget {
                       "12.5MB",
                       style: TextStyle(
                         color: Colors.grey[500],
-                        fontSize: 26.sp,
+                        fontSize: 40.sp,
                       ),
                     ),
                     onTap: () {},
@@ -83,7 +83,7 @@ class SettingsPage extends StatelessWidget {
                       "v1.0.0",
                       style: TextStyle(
                         color: Colors.grey[500],
-                        fontSize: 26.sp,
+                        fontSize: 40.sp,
                       ),
                     ),
                   ),
@@ -94,7 +94,7 @@ class SettingsPage extends StatelessWidget {
                     "玩安卓 © 2026",
                     style: TextStyle(
                       color: Colors.grey[400],
-                      fontSize: 24.sp,
+                      fontSize: 40.sp,
                     ),
                   ),
                 ),
@@ -113,7 +113,7 @@ class SettingsPage extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 28.sp,
+          fontSize: 46.sp,
           color: Colors.grey[600],
           fontWeight: FontWeight.w600,
         ),
@@ -156,8 +156,8 @@ class SettingsPage extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 64.r,
-                height: 64.r,
+                width: 80.r,
+                height: 80.r,
                 decoration: BoxDecoration(
                   color: Colours.app_main.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16.r),
@@ -165,7 +165,7 @@ class SettingsPage extends StatelessWidget {
                 child: Icon(
                   icon,
                   color: Colours.app_main,
-                  size: 32.r,
+                  size: 50.r,
                 ),
               ),
               SizedBox(width: 24.w),
@@ -173,7 +173,7 @@ class SettingsPage extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 30.sp,
+                    fontSize: 40.sp,
                     color: Colors.black87,
                   ),
                 ),
@@ -182,7 +182,7 @@ class SettingsPage extends StatelessWidget {
               if (trailing == null)
                 Icon(
                   Icons.arrow_forward_ios,
-                  size: 28.r,
+                  size: 34.r,
                   color: Colors.grey[300],
                 ),
             ],

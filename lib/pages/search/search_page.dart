@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/search/search_viewmodel.dart';
@@ -38,6 +37,7 @@ class SearchPage extends GetView<SearchViewModel> {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
+      titleSpacing: 3.w,
       leading: IconButton(
         icon: Image.asset(
           "assets/images/icon_back.png",
@@ -48,56 +48,68 @@ class SearchPage extends GetView<SearchViewModel> {
       ),
       title: Container(
         height: 80.h,
-        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.grey[100]!,
           borderRadius: BorderRadius.circular(40.r),
         ),
         padding: EdgeInsets.symmetric(horizontal: 12.w),
+        margin: EdgeInsets.only(right: 40.w),
         child: TextField(
           cursorColor: Colours.app_main,
-          textAlign: TextAlign.start,
-          textAlignVertical: TextAlignVertical.center,
           controller: controller.editController,
           style: TextStyle(
             color: Colors.black,
             fontSize: 40.sp,
             fontWeight: FontWeight.w300,
           ),
+          onChanged: (value) {
+            if (value.isEmpty) {
+              controller.hasText.value = false;
+              controller.searchList();
+            } else if (!controller.hasText.value) {
+              controller.hasText.value = true;
+            }
+          },
           decoration: InputDecoration(
-            // 关键修改：移除 vertical padding，让 Flutter 自动计算
-            contentPadding: EdgeInsets.symmetric(horizontal: 32.w),
-            // 或者使用：contentPadding: EdgeInsets.only(left: 32.w, right: 32.w),
+            isCollapsed: true,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 32.w,
+              vertical: 20.h,
+            ),
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.grey,
-              size: 60.r,
+            prefixIcon: Container(
+              alignment: Alignment.center,
+              child: Icon(Icons.search, color: Colors.grey, size: 60.r),
             ),
-            prefixIconConstraints: BoxConstraints(
-              minWidth: 60.r,
-              minHeight: 60.r,
+            prefixIconConstraints: BoxConstraints.tightFor(
+              width: 60.r,
+              height: 80.h,
             ),
-            suffixIcon: Obx(() => Visibility(
-              visible: controller.hasText.value,
-              child: GestureDetector(
-                onTap: () {
-                  controller.editController.text = "";
-                  controller.hasText.value = false;
-                  controller.searchList();
-                },
-                    child: Icon(Icons.clear, size: 60.r, color: Colors.grey),
-                  ),
-            )),
+            suffixIcon: Container(
+              alignment: Alignment.center,
+              child: Obx(() => Visibility(
+                    visible: controller.hasText.value,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.editController.text = "";
+                        controller.hasText.value = false;
+                        controller.searchList();
+                      },
+                      child: Icon(Icons.clear, size: 60.r, color: Colors.grey),
+                    ),
+                  )),
+            ),
+            suffixIconConstraints: BoxConstraints.tightFor(
+              width: 60.r,
+              height: 80.h,
+            ),
           ),
-          keyboardType: TextInputType.text,
         ),
       ),
     );
   }
-
 
   Widget _searchListWidget({
     required ValueChanged<SearchListItemModel?> onItemTap,
@@ -124,85 +136,91 @@ class SearchPage extends GetView<SearchViewModel> {
                   ),
                 ],
               ),
-              child: Container(
-                padding: EdgeInsets.all(28.w),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 56.r,
-                      height: 56.r,
-                      decoration: BoxDecoration(
-                        color: _getRankColor(index),
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "${index + 1}",
-                        style: TextStyle(
-                          fontSize: 28.sp,
-                          color: _getRankTextColor(index),
-                          fontWeight: FontWeight.bold,
+              padding: EdgeInsets.all(28.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 56.r,
+                        height: 56.r,
+                        decoration: BoxDecoration(
+                          color: _getRankColor(index),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${index + 1}",
+                          style: TextStyle(
+                            fontSize: 28.sp,
+                            color: _getRankTextColor(index),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 24.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Html(
-                            data: item.title?.trim() ?? "",
-                            style: {
-                              "html": Style(
-                                fontSize: FontSize(30.sp),
-                                color: Colors.black87,
-                                lineHeight: LineHeight(1.5),
-                              )
-                            },
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: Text(
+                          item.title?.trim() ?? "",
+                          style: TextStyle(
+                            fontSize: 44.sp,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                            height: 1.4,
                           ),
-                          SizedBox(height: 12.h),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.article_outlined,
-                                size: 28.sp,
-                                color: Colors.grey[400],
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                item.author ?? item.shareUser ?? "匿名",
-                                style: TextStyle(
-                                  fontSize: 24.sp,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                              SizedBox(width: 16.w),
-                              Icon(
-                                Icons.access_time,
-                                size: 28.sp,
-                                color: Colors.grey[400],
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                item.niceDate ?? "",
-                                style: TextStyle(
-                                  fontSize: 24.sp,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                            ],
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: 24.w),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 56.sp,
+                        color: Colors.grey[300],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+                  Padding(
+                    padding: EdgeInsets.only(left: 56.r + 16.w),
+                    child: IntrinsicWidth(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.article_outlined,
+                            size: 48.sp,
+                            color: Colors.grey[400],
+                          ),
+                          SizedBox(width: 16.w),
+                          Text(
+                            item.author ?? item.shareUser ?? "匿名",
+                            style: TextStyle(
+                              fontSize: 30.sp,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                          SizedBox(width: 48.w),
+                          Icon(
+                            Icons.access_time,
+                            size: 48.sp,
+                            color: Colors.grey[400],
+                          ),
+                          SizedBox(width: 16.w),
+                          Text(
+                            item.niceDate ?? "",
+                            style: TextStyle(
+                              fontSize: 30.sp,
+                              color: Colors.grey[500],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 32.sp,
-                      color: Colors.grey[300],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
