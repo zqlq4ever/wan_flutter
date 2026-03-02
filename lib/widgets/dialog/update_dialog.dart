@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/widgets/web/webview_page.dart';
 import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
 
@@ -298,7 +299,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
           ),
           SizedBox(height: 16.h),
           Text(
-            '发现新版本',
+            AppStrings.getString('new_version_found'),
             style: TextStyle(
               fontSize: 38.sp,
               fontWeight: FontWeight.bold,
@@ -363,7 +364,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               ),
               SizedBox(width: 16.w),
               Text(
-                '更新内容',
+                AppStrings.getString('update_content'),
                 style: TextStyle(
                   fontSize: 36.sp,
                   fontWeight: FontWeight.bold,
@@ -384,10 +385,10 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildUpdateItem('优化用户体验，提升应用性能'),
-                  _buildUpdateItem('修复已知问题，增强稳定性'),
-                  _buildUpdateItem('新增多项实用功能'),
-                  _buildUpdateItem('界面全面升级，视觉更清爽'),
+                  _buildUpdateItem(AppStrings.getString('update_item_1')),
+                  _buildUpdateItem(AppStrings.getString('update_item_2')),
+                  _buildUpdateItem(AppStrings.getString('update_item_3')),
+                  _buildUpdateItem(AppStrings.getString('update_item_4')),
                 ],
               ),
             ),
@@ -440,7 +441,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
       children: [
         Expanded(
           child: _buildButton(
-            text: '稍后再说',
+            text: AppStrings.getString('later'),
             isPrimary: false,
             onTap: () => Navigator.pop(context),
           ),
@@ -448,15 +449,15 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
         SizedBox(width: 24.w),
         Expanded(
           child: _buildButton(
-            text: '立即更新',
+            text: AppStrings.getString('update_now'),
             isPrimary: true,
             onTap: () {
               Navigator.pop(context);
               Get.to(
-                const WebViewPage(
+                WebViewPage(
                   loadResource: "https://www.pgyer.com/ER0YOhzL",
                   webViewType: WebViewType.URL,
-                  title: "下载页面",
+                  title: AppStrings.getString('download_page'),
                 ),
               );
             },

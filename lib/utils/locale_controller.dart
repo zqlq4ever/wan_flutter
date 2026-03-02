@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
+import '../res/app_strings.dart';
 import '../utils/sp_util.dart';
 
 class LocaleController extends GetxController {
@@ -27,6 +28,7 @@ class LocaleController extends GetxController {
     final countryCode = await SpUtil.getString(Constants.spLanguageCountry);
     if (languageCode != null) {
       _locale.value = Locale(languageCode, countryCode);
+      Get.updateLocale(_locale.value);
     }
   }
 
@@ -42,18 +44,18 @@ class LocaleController extends GetxController {
   String getLocaleText() {
     switch (_locale.value.languageCode) {
       case 'zh':
-        return "中文";
+        return AppStrings.getString('chinese');
       case 'en':
-        return "English";
+        return AppStrings.getString('english');
       default:
-        return "中文";
+        return AppStrings.getString('chinese');
     }
   }
 
   String getLocaleModeText() {
     final mode = _locale.value.languageCode;
     if (mode == 'system' || _locale.value.countryCode == null) {
-      return "跟随系统";
+      return AppStrings.getString('follow_system');
     }
     return getLocaleText();
   }

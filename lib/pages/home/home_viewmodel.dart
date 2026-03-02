@@ -14,6 +14,7 @@ class HomeViewModel extends GetxController {
   var listData = <HomeListItemData>[].obs;
   int _pageCount = 0;
   var currentUrl = "https://picsum.photos/400/200".obs;
+  var hasMore = true.obs;
 
   @override
   void onInit() {
@@ -34,44 +35,53 @@ class HomeViewModel extends GetxController {
   }
 
   void refreshOrLoad(bool loadMore) {
-    initDataList(loadMore, complete: (loadMore) {
+    if (loadMore && !hasMore.value) {
+      refreshController.loadNoData();
+      return;
+    }
+    initDataList(loadMore, complete: (hasMore) {
       if (loadMore) {
-        refreshController.loadComplete();
+        if (hasMore) {
+          refreshController.loadComplete();
+        } else {
+          refreshController.loadNoData();
+        }
       } else {
         refreshController.refreshCompleted();
+        if (!hasMore) {
+          refreshController.loadNoData();
+        }
       }
     });
   }
 
   Future initDataList(bool loadMore, {ValueChanged<bool>? complete}) async {
-    //  加载更多
     if (loadMore) {
       _pageCount++;
     } else {
-      //  重置页码
       _pageCount = 0;
-      //  刷新数据
       listData.clear();
+      hasMore.value = true;
     }
 
-    _getHomeList(loadMore).then((list) {
-      listData.addAll(list ?? []);
-      complete?.call(loadMore);
+    _getHomeList(loadMore).then((result) {
+      listData.addAll(result.$1 ?? []);
+      hasMore.value = result.$2;
+      complete?.call(result.$2);
       update();
     });
   }
 
   /// 获取数据
-  Future<List<HomeListItemData>?> _getHomeList(bool loadMore) async {
+  Future<(List<HomeListItemData>?, bool)> _getHomeList(bool loadMore) async {
     HomeListModel? data = await WanApi.instance.homeList("$_pageCount");
     if (data != null && data.datas?.isNotEmpty == true) {
-      return data.datas;
+      return (data.datas, !(data.over ?? true));
     } else {
-      //加载更多场景，拿不到数据，页码-1
       if (loadMore && _pageCount > 0) {
         _pageCount--;
       }
-      return [];
+      return (null, false);
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/route/route_path_constant.dart';
 
 import '../../../widgets/my_app_bar.dart';
@@ -16,8 +17,8 @@ class LoginPage extends GetView<LoginViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const MyAppBar(
-        centerTitle: "登录",
+      appBar: MyAppBar(
+        centerTitle: AppStrings.getString('login'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -77,7 +78,7 @@ class LoginPage extends GetView<LoginViewModel> {
                   children: [
                     // 用户名输入框
                     Text(
-                      "账号",
+                      AppStrings.getString('account'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
@@ -91,14 +92,14 @@ class LoginPage extends GetView<LoginViewModel> {
                       controller: controller.nameController,
                       maxLength: 20,
                       keyboardType: TextInputType.text,
-                      hintText: "请输入您的账号",
+                      hintText: AppStrings.getString('input_account_hint'),
                     ),
                     
                     SizedBox(height: 30.h),
                     
                     // 密码输入框
                     Text(
-                      "密码",
+                      AppStrings.getString('password'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
@@ -113,7 +114,7 @@ class LoginPage extends GetView<LoginViewModel> {
                       isInputPwd: true,
                       controller: controller.passwordController,
                       keyboardType: TextInputType.visiblePassword,
-                      hintText: "请输入您的密码",
+                      hintText: AppStrings.getString('input_password_hint'),
                     ),
                     
                     SizedBox(height: 40.h),
@@ -122,7 +123,7 @@ class LoginPage extends GetView<LoginViewModel> {
                     MyButton(
                       key: const Key('login'),
                       onPressed: () => controller.login(),
-                      text: "登录",
+                      text: AppStrings.getString('login'),
                       fontSize: 42.sp,
                       radius: 24.r,
                       minHeight: 96.h,
@@ -136,7 +137,7 @@ class LoginPage extends GetView<LoginViewModel> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "还没有账号？",
+                          AppStrings.getString('no_account_hint'),
                           style: TextStyle(
                             fontSize: 36.sp,
                             color: Colors.grey[600],
@@ -145,7 +146,7 @@ class LoginPage extends GetView<LoginViewModel> {
                         SizedBox(width: 8.w),
                         GestureDetector(
                           child: Text(
-                            "立即注册",
+                            AppStrings.getString('register_now'),
                             key: const Key('noAccountRegister'),
                             style: TextStyle(
                               fontSize: 36.sp,

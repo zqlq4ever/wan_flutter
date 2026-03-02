@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 
@@ -94,7 +95,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
           Icon(Icons.qr_code_scanner, color: Colors.white70, size: 53.r),
           SizedBox(width: 21.w),
           Text(
-            '将二维码放入框内扫描',
+            AppStrings.getString('scan_qr_hint'),
             style: TextStyle(
               color: Colors.white70,
               fontSize: 40.sp,
@@ -115,7 +116,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
       return const SizedBox.shrink();
     }
 
-    final resultText = value.displayValue ?? '扫描成功';
+    final resultText = value.displayValue ?? AppStrings.getString('scan_success');
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 32.w),
@@ -161,7 +162,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
               Clipboard.setData(ClipboardData(text: resultText));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('已复制到剪切板'),
+                  content: Text(AppStrings.getString('copied_to_clipboard')),
                   duration: const Duration(seconds: 1),
                   behavior: SnackBarBehavior.floating,
                 ),
@@ -192,7 +193,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
 
     return Scaffold(
       appBar: MyAppBar(
-        centerTitle: "扫一扫",
+        centerTitle: AppStrings.getString('scan'),
         backgroundColor: Colors.transparent,
         backImgColor: Colors.white,
         titleColor: Colors.white,

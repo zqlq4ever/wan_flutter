@@ -18,8 +18,8 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colours.bg_color,
-      appBar: const MyAppBar(
-        centerTitle: "设置",
+      appBar: MyAppBar(
+        centerTitle: AppStrings.getString('settings'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

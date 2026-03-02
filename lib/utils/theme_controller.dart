@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
+import '../res/app_strings.dart';
 import 'sp_util.dart';
 
 class ThemeController extends GetxController {
@@ -33,11 +34,11 @@ class ThemeController extends GetxController {
   String getThemeModeText() {
     switch (_themeMode.value) {
       case ThemeMode.system:
-        return "跟随系统";
+        return AppStrings.getString('follow_system');
       case ThemeMode.light:
-        return "浅色";
+        return AppStrings.getString('light');
       case ThemeMode.dark:
-        return "深色";
+        return AppStrings.getString('dark');
     }
   }
 }

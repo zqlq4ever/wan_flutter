@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../route/route_path_constant.dart';
@@ -63,7 +64,7 @@ class KnowledgePage extends GetView<KnowledgeViewModel> {
           ),
           SizedBox(width: 20.w),
           Text(
-            "知识体系",
+            AppStrings.getString('feature_knowledge_title'),
             style: TextStyle(
               fontSize: 54.sp,
               fontWeight: FontWeight.bold,

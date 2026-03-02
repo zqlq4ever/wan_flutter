@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../../widgets/my_app_bar.dart';
 import '../../../widgets/my_button.dart';
@@ -15,8 +16,8 @@ class RegisterPage extends GetView<RegisterViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const MyAppBar(
-        centerTitle: "注册",
+      appBar: MyAppBar(
+        centerTitle: AppStrings.getString('register'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -76,7 +77,7 @@ class RegisterPage extends GetView<RegisterViewModel> {
                   children: [
                     // 用户名输入框
                     Text(
-                      "账号",
+                      AppStrings.getString('account'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
@@ -90,14 +91,14 @@ class RegisterPage extends GetView<RegisterViewModel> {
                       controller: controller.nameController,
                       maxLength: 20,
                       keyboardType: TextInputType.text,
-                      hintText: "请输入您的账号",
+                      hintText: AppStrings.getString('input_account_hint'),
                     ),
                     
                     SizedBox(height: 30.h),
                     
                     // 密码输入框
                     Text(
-                      "密码",
+                      AppStrings.getString('password'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
@@ -112,14 +113,14 @@ class RegisterPage extends GetView<RegisterViewModel> {
                       isInputPwd: true,
                       controller: controller.passwordController,
                       keyboardType: TextInputType.visiblePassword,
-                      hintText: '请输入您的密码',
+                      hintText: AppStrings.getString('input_password_hint'),
                     ),
                     
                     SizedBox(height: 30.h),
                     
                     // 确认密码输入框
                     Text(
-                      "确认密码",
+                      AppStrings.getString('confirm_password'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
@@ -134,7 +135,7 @@ class RegisterPage extends GetView<RegisterViewModel> {
                       isInputPwd: true,
                       controller: controller.password2Controller,
                       keyboardType: TextInputType.visiblePassword,
-                      hintText: '请再次输入密码',
+                      hintText: AppStrings.getString('input_password_again_hint'),
                     ),
                     
                     SizedBox(height: 40.h),
@@ -143,7 +144,7 @@ class RegisterPage extends GetView<RegisterViewModel> {
                     MyButton(
                       key: const Key('register'),
                       onPressed: () => controller.register(),
-                      text: "注册",
+                      text: AppStrings.getString('register'),
                       fontSize: 36.sp,
                       radius: 24.r,
                       minHeight: 96.h,

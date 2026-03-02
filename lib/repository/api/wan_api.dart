@@ -64,13 +64,13 @@ class WanApi {
   }
 
   /// 知识体系明细列表数据
-  Future<List<KnowledgeDetailItem>?> knowledgeDetailList(String id, String pageCount) async {
+  Future<KnowledgeDetailListModel?> knowledgeDetailList(String id, String pageCount) async {
     Response response = await DioInstance.instance.get(
       path: "article/list/$pageCount/json",
       param: {"cid": id},
     );
     var model = KnowledgeDetailListModel.fromJson(response.data);
-    return model.datas;
+    return model;
   }
 
   /// 登录
@@ -141,13 +141,10 @@ class WanApi {
   }
 
   /// 获取我的收藏列表
-  Future<List<MyCollectItemModel>?> getMyCollects(String pageCount) async {
+  Future<MyCollectsModel?> getMyCollects(String pageCount) async {
     Response rsp = await DioInstance.instance.get(path: "lg/collect/list/$pageCount/json");
     MyCollectsModel? model = MyCollectsModel.fromJson(rsp.data);
-    if (model.datas != null && model.datas?.isNotEmpty == true) {
-      return model.datas;
-    }
-    return [];
+    return model;
   }
 
   /// 搜索

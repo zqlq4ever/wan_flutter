@@ -12,6 +12,8 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
 
   int _pageCount = 0;
 
+  bool hasMore = true;
+
   /// 初始化 tab 列表
   void initTabs(List<KnowledgeDetailParam>? params) {
     if (params?.isNotEmpty == true) {
@@ -22,21 +24,27 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
   }
 
   /// 知识体系明细列表数据
-  Future getDetailList(String? id, bool loadMore) async {
+  Future<bool> getDetailList(String? id, bool loadMore) async {
     if (loadMore) {
       _pageCount++;
     } else {
       _pageCount = 0;
       detailList.clear();
+      hasMore = true;
     }
-    var list = await WanApi.instance.knowledgeDetailList(id ?? "", "$_pageCount");
-    if (list?.isNotEmpty == true) {
-      detailList.addAll(list ?? []);
+    var model = await WanApi.instance.knowledgeDetailList(id ?? "", "$_pageCount");
+    if (model?.datas?.isNotEmpty == true) {
+      detailList.addAll(model!.datas!);
+      hasMore = !(model.over ?? true);
       notifyListeners();
+      return true;
     } else {
       if (loadMore && _pageCount > 0) {
         _pageCount--;
       }
+      hasMore = false;
+      notifyListeners();
+      return false;
     }
   }
 }

@@ -13,6 +13,7 @@ class CollectionViewModel extends GetxController {
   late RefreshController refreshController;
   var dataList = <MyCollectItemModel>[].obs;
   int _pageCount = 0;
+  var hasMore = true.obs;
 
   @override
   void onInit() {
@@ -36,34 +37,48 @@ class CollectionViewModel extends GetxController {
   }
 
   void refreshOrLoad(bool loadMore) {
-    getMyCollection(loadMore).then((value) {
+    if (loadMore && !hasMore.value) {
+      refreshController.loadNoData();
+      return;
+    }
+    getMyCollection(loadMore).then((hasMoreResult) {
       if (loadMore) {
-        refreshController.loadComplete();
-        return;
+        if (hasMoreResult) {
+          refreshController.loadComplete();
+        } else {
+          refreshController.loadNoData();
+        }
+      } else {
+        refreshController.refreshCompleted();
+        if (!hasMoreResult) {
+          refreshController.loadNoData();
+        }
       }
-
-      refreshController.refreshCompleted();
     });
   }
 
   /// 获取我的收藏列表
-  Future getMyCollection(bool loadMore) async {
+  Future<bool> getMyCollection(bool loadMore) async {
     if (loadMore) {
       _pageCount++;
     } else {
       _pageCount = 0;
       dataList.clear();
+      hasMore.value = true;
     }
 
-    var list = await WanApi.instance.getMyCollects("$_pageCount");
-    if (list != null && list.isNotEmpty == true) {
-      dataList.addAll(list);
-      return;
+    var model = await WanApi.instance.getMyCollects("$_pageCount");
+    if (model?.datas?.isNotEmpty == true) {
+      dataList.addAll(model!.datas!);
+      hasMore.value = !(model.over ?? true);
+      return hasMore.value;
     }
 
     if (loadMore && _pageCount > 0) {
       _pageCount--;
     }
+    hasMore.value = false;
+    return false;
   }
 
   /// 取消收藏文章

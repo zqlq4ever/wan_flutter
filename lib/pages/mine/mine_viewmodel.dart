@@ -19,7 +19,7 @@ class MineViewModel with ChangeNotifier {
     String? name = await SpUtil.getString(Constants.spUserName);
     log("MineViewModel $name");
     if (name == null || name.isEmpty == true) {
-      userName = "未登录";
+      userName = null;
       shouldLogin = true;
     } else {
       userName = name;
@@ -36,7 +36,7 @@ class MineViewModel with ChangeNotifier {
   Future logout() async {
     var success = await WanApi.instance.logout();
     if (success) {
-      userName = "未登录";
+      userName = null;
       shouldLogin = true;
 
       //  清除缓存

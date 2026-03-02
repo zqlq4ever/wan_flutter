@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/about/about_us_viewmodel.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../widgets/my_app_bar.dart';
 import '../../widgets/web/webview_page.dart';
@@ -14,8 +15,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: const MyAppBar(
-        centerTitle: "关于我们",
+      appBar: MyAppBar(
+        centerTitle: AppStrings.getString('about_us'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -77,7 +78,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       SizedBox(height: 30.h),
                       // 应用名称
                       Text(
-                        "玩安卓 Flutter",
+                        AppStrings.getString('app_full_name'),
                         style: TextStyle(
                           fontSize: 48.sp,
                           fontWeight: FontWeight.bold,
@@ -94,7 +95,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
-                            "版本 ${controller.version}",
+                            "${AppStrings.getString('version')} ${controller.version}",
                             style: TextStyle(
                               fontSize: 32.sp,
                               color: Colors.grey[600],
@@ -106,7 +107,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       SizedBox(height: 16.h),
                       // 应用描述
                       Text(
-                        "持续学习中 · 努力提升中",
+                        AppStrings.getString('app_description'),
                         style: TextStyle(
                           fontSize: 32.sp,
                           color: Colors.grey[600],
@@ -139,7 +140,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "应用功能",
+                      AppStrings.getString('app_features'),
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
@@ -150,26 +151,26 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     // 功能列表
                     _buildFeatureItem(
                       icon: Icons.home,
-                      title: "首页资讯",
-                      description: "获取最新的安卓开发资讯和技术文章",
+                      title: AppStrings.getString('feature_home_title'),
+                      description: AppStrings.getString('feature_home_desc'),
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
                       icon: Icons.book,
-                      title: "知识体系",
-                      description: "系统化学习安卓开发知识，构建完整知识体系",
+                      title: AppStrings.getString('feature_knowledge_title'),
+                      description: AppStrings.getString('feature_knowledge_desc'),
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
                       icon: Icons.star,
-                      title: "我的收藏",
-                      description: "收藏喜欢的文章，方便随时查看和学习",
+                      title: AppStrings.getString('my_collection'),
+                      description: AppStrings.getString('feature_collection_desc'),
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
                       icon: Icons.person,
-                      title: "个人中心",
-                      description: "管理个人信息，查看学习记录和成就",
+                      title: AppStrings.getString('feature_profile_title'),
+                      description: AppStrings.getString('feature_profile_desc'),
                     ),
                   ],
                 ),
@@ -197,7 +198,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "开发者信息",
+                      AppStrings.getString('developer_info'),
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
@@ -228,7 +229,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "开发者",
+                                AppStrings.getString('developer'),
                                 style: TextStyle(
                                   fontSize: 37.sp,
                                   color: Colors.grey[600],
@@ -236,7 +237,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                               ),
                               SizedBox(height: 4.h),
                               Text(
-                                "今生挥毫只为你",
+                                AppStrings.getString('developer_name'),
                                 style: TextStyle(
                                   fontSize: 41.sp,
                                   fontWeight: FontWeight.w600,
@@ -285,7 +286,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "其他信息",
+                      AppStrings.getString('other_info'),
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
@@ -295,20 +296,20 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     SizedBox(height: 24.h),
                     _buildInfoItem(
                       icon: Icons.copyright,
-                      title: "版权信息",
-                      value: "© 2026 玩安卓 Flutter",
+                      title: AppStrings.getString('copyright_info'),
+                      value: AppStrings.getString('copyright_value'),
                     ),
                     SizedBox(height: 16.h),
                     _buildInfoItem(
                       icon: Icons.code,
-                      title: "开源协议",
-                      value: "MIT License",
+                      title: AppStrings.getString('open_source_license'),
+                      value: AppStrings.getString('mit_license'),
                     ),
                     SizedBox(height: 16.h),
                     _buildInfoItem(
                       icon: Icons.update,
-                      title: "检查更新",
-                      value: "当前已是最新版本",
+                      title: AppStrings.getString('check_update'),
+                      value: AppStrings.getString('current_latest_version'),
                     ),
                   ],
                 ),
@@ -320,7 +321,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
               Column(
                 children: [
                   Text(
-                    "玩安卓 Flutter",
+                    AppStrings.getString('app_full_name'),
                     style: TextStyle(
                       fontSize: 37.sp,
                       color: Colors.grey[600],
@@ -329,7 +330,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    "持续学习 · 不断进步",
+                    AppStrings.getString('keep_learning'),
                     style: TextStyle(
                       fontSize: 33.sp,
                       color: Colors.grey[500],

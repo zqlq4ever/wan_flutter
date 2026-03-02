@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:wan_android_flutter/pages/knowledge/details/DetailListPage.dart';
+import 'package:wan_android_flutter/pages/knowledge/details/DetailList.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../../repository/model/knowledge_detail_param.dart';
@@ -49,6 +49,7 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
         body: Column(
           children: [
             Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -61,43 +62,39 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
               ),
               child: SafeArea(
                 bottom: false,
-                child: SizedBox(
-                  height: 80.h,
-                  child: TabBar(
-                    dividerHeight: 0,
-                    tabAlignment: TabAlignment.start,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    isScrollable: true,
-                    indicator: BoxDecoration(
-                      color: Colours.app_main,
-                      borderRadius: BorderRadius.circular(20.r),
+                child: Center(
+                  child: SizedBox(
+                    height: 80.h,
+                    child: TabBar(
+                      dividerHeight: 0,
+                      tabAlignment: TabAlignment.center,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      isScrollable: true,
+                      indicator: BoxDecoration(
+                        color: Colours.app_main,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      indicatorPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+                      labelStyle: TextStyle(
+                        fontSize: 34.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontSize: 34.sp,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      controller: tabController,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colours.app_main,
+                      overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                        (Set<WidgetState> states) {
+                          return Colors.transparent;
+                        },
+                      ),
+                      padding: EdgeInsets.zero,
+                      tabs: vm.tabList,
                     ),
-                    // 增加 vertical padding 确保背景框完全包裹文字
-                    indicatorPadding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                    labelPadding: EdgeInsets.symmetric(
-                        horizontal: 16.w, vertical: 8.h), // 增加 vertical padding
-                    labelStyle: TextStyle(
-                      fontSize: 34.sp,
-                      fontWeight: FontWeight.w600,
-                      height: 1.2, // 增加行高确保文字不贴边
-                    ),
-                    unselectedLabelStyle: TextStyle(
-                      fontSize: 34.sp,
-                      fontWeight: FontWeight.normal,
-                      height: 1.2,
-                    ),
-                    controller: tabController,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colours.app_main,
-                    overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                      (Set<WidgetState> states) {
-                        return Colors.transparent;
-                      },
-                    ),
-                    // 移除水平 padding 让 tabBar 可以从屏幕边缘开始
-                    padding: EdgeInsets.symmetric(horizontal: 0),
-                    tabs: vm.tabList,
                   ),
                 ),
               ),
@@ -118,7 +115,7 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
 
   List<Widget> children() {
     return paras.map((e) {
-      return DetailListPage(id: e.id);
+      return DetailList(id: e.id);
     }).toList();
   }
 }

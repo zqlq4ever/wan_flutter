@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/hotkey/hot_key_viewmodel.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/route/route_path_constant.dart';
 
@@ -55,7 +56,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
                   ],
                 ),
                 child: Column(children: [
-                  _titleWidget("搜索热词"),
+                  _titleWidget(AppStrings.getString('search_hot_key')),
                   SizedBox(height: 24.h),
                   _searchHotKeyListView(),
                 ]),
@@ -79,7 +80,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
                   ],
                 ),
                 child: Column(children: [
-                  _titleWidget("常用网站"),
+                  _titleWidget(AppStrings.getString('common_website')),
                   SizedBox(height: 24.h),
                   _commonWebsiteListView(),
                 ]),

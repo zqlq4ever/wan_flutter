@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/KnowledgeDetailsViewModel.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../../repository/model/knowledge_detail_list_model.dart';
@@ -11,18 +12,18 @@ import '../../../widgets/web/webview_page.dart';
 import '../../../widgets/web/webview_widget.dart';
 
 /// 知识体系明细列表
-class DetailListPage extends StatefulWidget {
+class DetailList extends StatefulWidget {
   final String? id;
 
-  const DetailListPage({super.key, this.id});
+  const DetailList({super.key, this.id});
 
   @override
-  State<DetailListPage> createState() {
-    return _DetailListPageState();
+  State<DetailList> createState() {
+    return _DetailListState();
   }
 }
 
-class _DetailListPageState extends State<DetailListPage> {
+class _DetailListState extends State<DetailList> {
   var model = KnowledgeDetailsViewModel();
   late RefreshController _refreshController;
 
@@ -34,11 +35,22 @@ class _DetailListPageState extends State<DetailListPage> {
   }
 
   void refreshOrLoad(bool loadMore) {
+    if (loadMore && !model.hasMore) {
+      _refreshController.loadNoData();
+      return;
+    }
     model.getDetailList(widget.id, loadMore).then((value) {
       if (loadMore) {
-        _refreshController.loadComplete();
+        if (model.hasMore) {
+          _refreshController.loadComplete();
+        } else {
+          _refreshController.loadNoData();
+        }
       } else {
         _refreshController.refreshCompleted();
+        if (!model.hasMore) {
+          _refreshController.loadNoData();
+        }
       }
     });
   }
@@ -56,12 +68,12 @@ class _DetailListPageState extends State<DetailListPage> {
               controller: _refreshController,
               enablePullDown: true,
               enablePullUp: true,
-              header: const ClassicHeader(
-                idleText: '下拉刷新',
-                releaseText: '释放刷新',
-                refreshingText: '刷新中...',
-                completeText: '刷新完成',
-                failedText: '刷新失败',
+              header: ClassicHeader(
+                idleText: AppStrings.getString('pull_down_refresh'),
+                releaseText: AppStrings.getString('release_refresh'),
+                refreshingText: AppStrings.getString('refreshing'),
+                completeText: AppStrings.getString('refresh_complete'),
+                failedText: AppStrings.getString('refresh_failed'),
                 completeDuration: Duration(milliseconds: 100),
                 textStyle: TextStyle(color: Colours.app_main),
                 idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main),
@@ -69,12 +81,12 @@ class _DetailListPageState extends State<DetailListPage> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
                 ),
               ),
-              footer: const ClassicFooter(
-                loadingText: '加载中...',
-                canLoadingText: '释放加载',
-                idleText: '上拉加载更多',
-                noDataText: '没有更多数据',
-                failedText: '加载失败',
+              footer: ClassicFooter(
+                loadingText: AppStrings.getString('loading'),
+                canLoadingText: AppStrings.getString('release_load'),
+                idleText: AppStrings.getString('pull_up_load_more'),
+                noDataText: AppStrings.getString('no_more_data'),
+                failedText: AppStrings.getString('load_failed'),
                 textStyle: TextStyle(color: Colours.app_main),
                 loadingIcon: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),

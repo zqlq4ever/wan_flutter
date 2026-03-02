@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/collection/collection_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../widgets/my_app_bar.dart';
 import '../../widgets/web/webview_page.dart';
@@ -17,8 +18,8 @@ class CollectionPage extends GetView<CollectionViewModel> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: const MyAppBar(
-        centerTitle: "我的收藏",
+      appBar: MyAppBar(
+        centerTitle: AppStrings.getString('my_collection'),
       ),
       body: SafeArea(
         child: SmartRefresher(

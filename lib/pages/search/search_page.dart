@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/search/search_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/search_list_model.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../res/colors.dart';
 import '../../widgets/web/webview_page.dart';
@@ -196,7 +197,7 @@ class SearchPage extends GetView<SearchViewModel> {
                           ),
                           SizedBox(width: 16.w),
                           Text(
-                            item.author ?? item.shareUser ?? "匿名",
+                            item.author ?? item.shareUser ?? AppStrings.getString('anonymous'),
                             style: TextStyle(
                               fontSize: 30.sp,
                               color: Colors.grey[500],

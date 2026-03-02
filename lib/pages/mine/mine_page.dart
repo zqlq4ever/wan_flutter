@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/mine/mine_viewmodel.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../route/route_path_constant.dart';
@@ -159,7 +160,7 @@ class _MinePageState extends State<MinePage> {
             Selector<MineViewModel, String?>(
               builder: (context, value, child) {
                 return Text(
-                  value ?? "点击登录",
+                  value ?? AppStrings.getString('click_login'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 44.sp,
@@ -195,7 +196,7 @@ class _MinePageState extends State<MinePage> {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    "等级: 超级会员",
+                    AppStrings.getString('level_super_member'),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 30.sp,
@@ -218,7 +219,7 @@ class _MinePageState extends State<MinePage> {
           SizedBox(height: 20.h),
           _buildMenuItem(
             icon: Icons.favorite_outline,
-            title: "我的收藏",
+            title: AppStrings.getString('my_collection'),
             onTap: () {
               if (vm.shouldLogin == true) {
                 Get.toNamed(RoutePath.login);
@@ -231,7 +232,7 @@ class _MinePageState extends State<MinePage> {
           Selector<MineViewModel, bool>(builder: (context, value, child) {
             return _buildMenuItem(
               icon: Icons.system_update_outlined,
-              title: "检查更新",
+              title: AppStrings.getString('check_update'),
               showRedDot: value,
               onTap: () {
                 checkAppUpdate();
@@ -243,7 +244,7 @@ class _MinePageState extends State<MinePage> {
           SizedBox(height: 20.h),
           _buildMenuItem(
             icon: Icons.info_outline,
-            title: "关于我们",
+            title: AppStrings.getString('about_us'),
             onTap: () {
               Get.toNamed(RoutePath.aboutUs);
             },
@@ -251,7 +252,7 @@ class _MinePageState extends State<MinePage> {
           SizedBox(height: 20.h),
           _buildMenuItem(
             icon: Icons.settings_outlined,
-            title: "设置",
+            title: AppStrings.getString('settings'),
             onTap: () {
               Get.toNamed(RoutePath.settings);
             },
@@ -357,7 +358,7 @@ class _MinePageState extends State<MinePage> {
                     ),
                   ),
                   child: Text(
-                    "退出登录",
+                    AppStrings.getString('logout'),
                     style: TextStyle(
                       fontSize: 40.sp,
                       fontWeight: FontWeight.w500,
@@ -375,7 +376,7 @@ class _MinePageState extends State<MinePage> {
   void checkAppUpdate() {
     vm.checkUpdate().then((url) {
       if (url == null || url.isEmpty) {
-        showToast("已是最新版本");
+        showToast(AppStrings.getString('already_latest_version'));
         return;
       }
       _showUpdateDialog();

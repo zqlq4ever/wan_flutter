@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/home/home_viewmodel.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 
 import '../../repository/model/home_list_model.dart';
@@ -32,11 +33,11 @@ class HomePage extends GetView<HomeViewModel> {
           controller: controller.refreshController,
           header: ClassicHeader(
             height: 60.h,
-            idleText: '下拉刷新',
-            releaseText: '释放刷新',
-            refreshingText: '刷新中...',
-            completeText: '刷新完成',
-            failedText: '刷新失败',
+            idleText: AppStrings.getString('pull_down_refresh'),
+            releaseText: AppStrings.getString('release_refresh'),
+            refreshingText: AppStrings.getString('refreshing'),
+            completeText: AppStrings.getString('refresh_complete'),
+            failedText: AppStrings.getString('refresh_failed'),
             completeDuration: Duration(milliseconds: 100),
             textStyle: TextStyle(color: Colours.app_main, fontSize: 28.sp),
             idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main, size: 40.r),
@@ -52,11 +53,11 @@ class HomePage extends GetView<HomeViewModel> {
           physics: const ClampingScrollPhysics(),
           footer: ClassicFooter(
             height: 60.h,
-            loadingText: '加载中...',
-            canLoadingText: '释放加载',
-            idleText: '上拉加载更多',
-            noDataText: '没有更多数据',
-            failedText: '加载失败',
+            loadingText: AppStrings.getString('loading'),
+            canLoadingText: AppStrings.getString('release_load'),
+            idleText: AppStrings.getString('pull_up_load_more'),
+            noDataText: AppStrings.getString('no_more_data'),
+            failedText: AppStrings.getString('load_failed'),
             textStyle: TextStyle(color: Colours.app_main, fontSize: 28.sp),
             loadingIcon: SizedBox(
               width: 40.r,
@@ -231,7 +232,7 @@ class HomePage extends GetView<HomeViewModel> {
                     ),
                     SizedBox(width: 24.w),
                     Text(
-                      "搜索文章/项目/博主",
+                      AppStrings.getString('search_hint'),
                       style: TextStyle(
                         fontSize: 41.sp,
                         color: Colors.grey[400],
@@ -363,7 +364,7 @@ class HomePage extends GetView<HomeViewModel> {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        "置顶",
+                        AppStrings.getString('pinned'),
                         style: TextStyle(
                           fontSize: 29.sp,
                           fontWeight: FontWeight.w600,
