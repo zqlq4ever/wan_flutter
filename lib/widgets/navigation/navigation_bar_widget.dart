@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import 'navigation_bar_item.dart';
 
@@ -66,29 +68,26 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colors.white,
-      //  tab 页面
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
       body: IndexedStack(index: _currentIndex, children: widget.tabItems),
-      //  底部导航栏
       bottomNavigationBar: BottomNavigationBar(
         elevation: 3,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
+        backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
+        selectedItemColor: isDark ? Colours.dark_text : Colors.black,
+        unselectedItemColor: isDark ? Colours.dark_text_gray : Colors.grey,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        selectedFontSize: 34.sp, // 选中文本大小
-        unselectedFontSize: 32.sp, // 未选中文本大小
+        selectedFontSize: 34.sp,
+        unselectedFontSize: 32.sp,
         items: _barItemList(),
         onTap: (index) {
-          //  重复事件不处理
           if (_currentIndex == index) {
             return;
           }
-          //  点击切换 page 事件
           widget.onItemChange?.call(index);
           setState(() {
             _currentIndex = index;

@@ -10,22 +10,31 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/home/home_viewmodel.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../../repository/model/home_list_model.dart';
 import '../../route/route_path_constant.dart';
 import '../../widgets/banner/home_banner_widget.dart';
 import '../../widgets/common_styles.dart';
-import '../../widgets/web/webview_page.dart';
-import '../../widgets/web/webview_widget.dart';
+import '../web/webview_page.dart';
+import '../web/webview_widget.dart';
 
 /// 首页文章列表页面
+///
+/// 展示首页Banner和文章列表
+/// 功能：
+/// - 顶部搜索栏：点击跳转搜索页，扫码功能
+/// - Banner轮播图：展示热门文章/广告
+/// - 文章列表：支持下拉刷新和上拉加载更多
+/// - 文章收藏：点击收藏按钮收藏/取消收藏文章
 class HomePage extends GetView<HomeViewModel> {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colours.bg_color,
+      backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
       body: SafeArea(
         child: SmartRefresher(
           enablePullDown: true,
@@ -77,9 +86,9 @@ class HomePage extends GetView<HomeViewModel> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                _topSearchBar(),
+                _topSearchBar(isDark),
                 SizedBox(height: 8.h),
-                _banner(),
+                _banner(isDark),
                 Obx(() {
                   return ListView.builder(
                       padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 24.h),
@@ -90,6 +99,7 @@ class HomePage extends GetView<HomeViewModel> {
                         HomeListItemData? item = controller.listData[index];
                         return _listItem(
                           item: item,
+                          isDark: context.isDark,
                           onItemClick: () {
                             Get.to(
                               WebViewPage(
@@ -118,7 +128,10 @@ class HomePage extends GetView<HomeViewModel> {
     );
   }
 
-  Widget _banner() {
+  /// 构建Banner轮播图
+  ///
+  /// 展示轮播图片，支持点击跳转WebView
+  Widget _banner(bool isDark) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Stack(
@@ -147,11 +160,11 @@ class HomePage extends GetView<HomeViewModel> {
                     ),
                     errorWidget: (context, url, error) => Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
                         borderRadius: BorderRadius.circular(24.r),
                       ),
                       child: Icon(Icons.image,
-                          size: 80.r, color: Colors.grey[400]),
+                          size: 80.r, color: isDark ? Colours.dark_text_gray : Colors.grey[400]),
                     ),
                   ),
                 ),
@@ -191,14 +204,18 @@ class HomePage extends GetView<HomeViewModel> {
     );
   }
 
-  Widget _topSearchBar() {
+  /// 构建顶部搜索栏
+  ///
+  /// 包含搜索框和扫码按钮
+  /// 点击搜索框跳转搜索页，点击扫码按钮跳转扫码页
+  Widget _topSearchBar(bool isDark) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? Colours.dark_card_bg : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -216,18 +233,23 @@ class HomePage extends GetView<HomeViewModel> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.grey[100]!, Colors.grey[50]!],
+                    colors: isDark 
+                        ? [Colours.dark_search_bg, Colours.dark_search_bg]
+                        : [Colors.grey[100]!, Colors.grey[50]!],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(40.r),
-                  border: Border.all(color: Colors.grey[200]!, width: 1),
+                  border: Border.all(
+                    color: isDark ? Colours.dark_divider : Colors.grey[200]!, 
+                    width: 1
+                  ),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.search,
-                      color: Colors.grey[400],
+                      color: isDark ? Colours.dark_text_gray : Colors.grey[400],
                       size: 48.r,
                     ),
                     SizedBox(width: 24.w),
@@ -235,7 +257,7 @@ class HomePage extends GetView<HomeViewModel> {
                       AppStrings.getString('search_hint'),
                       style: TextStyle(
                         fontSize: 41.sp,
-                        color: Colors.grey[400],
+                        color: isDark ? Colours.dark_text_gray : Colors.grey[400],
                       ),
                     ),
                   ],
@@ -262,11 +284,16 @@ class HomePage extends GetView<HomeViewModel> {
     );
   }
 
-  /// 列表 item
+  /// 构建文章列表条目
+  ///
+  /// [item] 文章数据
+  /// [onItemClick] 条目点击回调，跳转文章详情
+  /// [imageClick] 收藏按钮点击回调
   Widget _listItem({
     HomeListItemData? item,
     GestureTapCallback? onItemClick,
     GestureTapCallback? imageClick,
+    required bool isDark,
   }) {
     int randomNumber =
         item?.id?.hashCode ?? DateTime.now().millisecondsSinceEpoch;
@@ -278,11 +305,11 @@ class HomePage extends GetView<HomeViewModel> {
       child: Container(
         margin: EdgeInsets.only(bottom: 24.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? Colours.dark_card_bg : Colors.white,
           borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.06),
               blurRadius: 20,
               offset: const Offset(0, 4),
             ),
@@ -313,14 +340,14 @@ class HomePage extends GetView<HomeViewModel> {
                         fit: BoxFit.cover,
                         imageUrl: imageUrl,
                         placeholder: (context, url) => Container(
-                          color: Colors.grey[200],
+                          color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
                           child: Icon(Icons.person,
-                              color: Colors.grey[400], size: 40.r),
+                              color: isDark ? Colours.dark_text_gray : Colors.grey[400], size: 40.r),
                         ),
                         errorWidget: (context, url, error) => Container(
-                          color: Colors.grey[200],
+                          color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
                           child: Icon(Icons.person,
-                              color: Colors.grey[400], size: 40.r),
+                              color: isDark ? Colours.dark_text_gray : Colors.grey[400], size: 40.r),
                         ),
                       ),
                     ),
@@ -334,7 +361,7 @@ class HomePage extends GetView<HomeViewModel> {
                           name ?? "",
                           style: TextStyle(
                             fontSize: 37.sp,
-                            color: Colors.grey[700],
+                            color: isDark ? Colours.dark_text : Colors.grey[700],
                             fontWeight: FontWeight.w600,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -344,7 +371,7 @@ class HomePage extends GetView<HomeViewModel> {
                           item?.niceShareDate ?? "",
                           style: TextStyle(
                             fontSize: 31.sp,
-                            color: Colors.grey[400],
+                            color: isDark ? Colours.dark_text_gray : Colors.grey[400],
                           ),
                         ),
                       ],
@@ -381,7 +408,7 @@ class HomePage extends GetView<HomeViewModel> {
               child: Text(
                 item?.title ?? "",
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: isDark ? Colours.dark_text : Colors.black87,
                   fontSize: 41.sp,
                   fontWeight: FontWeight.w600,
                   height: 1.5,
@@ -394,7 +421,7 @@ class HomePage extends GetView<HomeViewModel> {
             Container(
               padding: EdgeInsets.fromLTRB(32.w, 24.w, 32.w, 32.w),
               decoration: BoxDecoration(
-                color: Colors.grey[50],
+                color: isDark ? Colours.dark_item_bottom_bg : Colors.grey[50],
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(24.r),
                   bottomRight: Radius.circular(24.r),

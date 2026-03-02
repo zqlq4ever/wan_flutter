@@ -5,19 +5,29 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/collection/collection_viewmodel.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../../widgets/my_app_bar.dart';
-import '../../widgets/web/webview_page.dart';
-import '../../widgets/web/webview_widget.dart';
+import '../../pages/web/webview_page.dart';
+import '../../pages/web/webview_widget.dart';
 
 /// 我的收藏页面
+///
+/// 展示用户收藏的文章列表
+/// 功能：
+/// - 收藏列表展示：标题、作者、描述、分类、时间
+/// - 下拉刷新和上拉加载更多
+/// - 取消收藏：点击爱心按钮取消收藏
+/// - 点击条目跳转WebView查看文章详情
 class CollectionPage extends GetView<CollectionViewModel> {
   const CollectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.grey[50],
       appBar: MyAppBar(
         centerTitle: AppStrings.getString('my_collection'),
       ),
@@ -35,6 +45,7 @@ class CollectionPage extends GetView<CollectionViewModel> {
                 var data = controller.dataList[index];
                 return _collectionItem(
                   data,
+                  isDark: context.isDark,
                   onTap: () => controller.cancelCollect(
                     index,
                     "${data.id}",
@@ -57,16 +68,21 @@ class CollectionPage extends GetView<CollectionViewModel> {
     );
   }
 
-  Widget _collectionItem(MyCollectItemModel? item, {GestureTapCallback? onTap, GestureTapCallback? itemClick}) {
+  /// 构建收藏条目
+  ///
+  /// [item] 收藏文章数据
+  /// [onTap] 取消收藏按钮点击回调
+  /// [itemClick] 条目点击回调，跳转WebView
+  Widget _collectionItem(MyCollectItemModel? item, {GestureTapCallback? onTap, GestureTapCallback? itemClick, required bool isDark}) {
     return GestureDetector(
       onTap: itemClick,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? Colours.dark_card_bg : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -82,7 +98,7 @@ class CollectionPage extends GetView<CollectionViewModel> {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 40.sp,
-                  color: Colors.black,
+                  color: isDark ? Colours.dark_text : Colors.black,
                 ),
               ),
               if (item?.author?.isNotEmpty ?? false) ...[
@@ -112,15 +128,15 @@ class CollectionPage extends GetView<CollectionViewModel> {
                 Container(
                   padding: EdgeInsets.all(20.w),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+                    color: isDark ? Colours.dark_item_bottom_bg : Colors.grey[50],
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: Colors.grey[200]!, width: 1),
+                    border: Border.all(color: isDark ? Colours.dark_divider : Colors.grey[200]!, width: 1),
                   ),
                   child: Text(
                     "${item?.desc}",
                     style: TextStyle(
                       fontSize: 28.sp,
-                      color: Colors.black54,
+                      color: isDark ? Colours.dark_text_gray : Colors.black54,
                       height: 1.6,
                     ),
                     maxLines: 4,
@@ -154,14 +170,14 @@ class CollectionPage extends GetView<CollectionViewModel> {
                       Icon(
                         Icons.access_time_outlined,
                         size: 32.sp,
-                        color: Colors.grey[500],
+                        color: isDark ? Colours.dark_text_gray : Colors.grey[500],
                       ),
                       SizedBox(width: 8.w),
                       Text(
                         "${item?.niceDate}",
                         style: TextStyle(
                           fontSize: 30.sp,
-                          color: Colors.grey[600],
+                          color: isDark ? Colours.dark_text_gray : Colors.grey[600],
                         ),
                       ),
                       SizedBox(width: 20.w),

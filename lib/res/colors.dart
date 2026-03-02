@@ -43,4 +43,16 @@ class Colours {
   static const Color gradient_green = Color(0xFF66BB6A);
   static const Color shadow_green = Color(0x804CAF50);
   static const Color orange = Color(0xFFFF8547);
+
+  static const Color card_bg = Color(0xFFFFFFFF);
+  static const Color dark_card_bg = Color(0xFF2A2B2C);
+
+  static const Color divider = Color(0xFFE5E5E5);
+  static const Color dark_divider = Color(0xFF3D3E3F);
+
+  static const Color search_bg = Color(0xFFF5F5F5);
+  static const Color dark_search_bg = Color(0xFF2A2B2C);
+
+  static const Color item_bottom_bg = Color(0xFFFAFAFA);
+  static const Color dark_item_bottom_bg = Color(0xFF242526);
 }

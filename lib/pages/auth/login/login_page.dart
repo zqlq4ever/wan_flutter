@@ -3,20 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/route/route_path_constant.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../../../widgets/my_app_bar.dart';
 import '../../../widgets/my_button.dart';
 import 'login_viewmodel.dart';
 
-//  登录页面
+/// 登录页面
+///
+/// 用户登录入口
+/// 功能：
+/// - 用户名输入：最大长度20字符
+/// - 密码输入：支持密码显示/隐藏切换
+/// - 登录按钮：点击执行登录操作
+/// - 注册入口：跳转注册页面
 class LoginPage extends GetView<LoginViewModel> {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
       appBar: MyAppBar(
         centerTitle: AppStrings.getString('login'),
       ),
@@ -51,25 +61,26 @@ class LoginPage extends GetView<LoginViewModel> {
                 ),
                 child: Center(
                   child: Icon(
-                  Icons.person,
-                  size: 90.r,
-                  color: Colors.white,
-                ),
+                    Icons.person,
+                    size: 90.r,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              
+
               // 登录表单
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(30.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30.r),
+                  color: isDark ? Colours.dark_card_bg : Colors.white,
+                  borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 20,
-                      offset: const Offset(0, 5),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -82,7 +93,7 @@ class LoginPage extends GetView<LoginViewModel> {
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: isDark ? Colours.dark_text : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -94,16 +105,16 @@ class LoginPage extends GetView<LoginViewModel> {
                       keyboardType: TextInputType.text,
                       hintText: AppStrings.getString('input_account_hint'),
                     ),
-                    
+
                     SizedBox(height: 30.h),
-                    
+
                     // 密码输入框
                     Text(
                       AppStrings.getString('password'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: isDark ? Colours.dark_text : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -116,9 +127,9 @@ class LoginPage extends GetView<LoginViewModel> {
                       keyboardType: TextInputType.visiblePassword,
                       hintText: AppStrings.getString('input_password_hint'),
                     ),
-                    
+
                     SizedBox(height: 40.h),
-                    
+
                     // 登录按钮
                     MyButton(
                       key: const Key('login'),
@@ -129,9 +140,9 @@ class LoginPage extends GetView<LoginViewModel> {
                       minHeight: 96.h,
                       fontWeight: FontWeight.w600,
                     ),
-                    
+
                     SizedBox(height: 30.h),
-                    
+
                     // 注册链接
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -140,7 +151,9 @@ class LoginPage extends GetView<LoginViewModel> {
                           AppStrings.getString('no_account_hint'),
                           style: TextStyle(
                             fontSize: 36.sp,
-                            color: Colors.grey[600],
+                            color: isDark
+                                ? Colours.dark_text_gray
+                                : Colors.grey[600],
                           ),
                         ),
                         SizedBox(width: 8.w),
@@ -161,7 +174,7 @@ class LoginPage extends GetView<LoginViewModel> {
                   ],
                 ),
               ),
-              
+
               SizedBox(height: 60.h),
             ],
           ),

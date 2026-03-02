@@ -211,7 +211,7 @@ class _MyTextFieldState extends State<MyTextField> {
       decoration: BoxDecoration(
         border: Border.all(
           color: isFocused ? themeData.primaryColor : Colors.grey[200]!,
-          width: 2,
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(16.r),
       ),

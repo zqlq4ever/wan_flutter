@@ -14,8 +14,8 @@ import '../pages/collection/collection_viewmodel.dart';
 import '../pages/scan/scan_page.dart';
 import '../pages/search/search_page.dart';
 import '../pages/home_bottom_tab.dart';
-import '../widgets/web/webview_page.dart';
-import '../widgets/web/webview_widget.dart';
+import '../pages/web/webview_page.dart';
+import '../pages/web/webview_widget.dart';
 import 'route_path_constant.dart';
 
 class RoutePageUtil {

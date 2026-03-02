@@ -6,20 +6,30 @@ import 'package:wan_android_flutter/repository/model/search_list_model.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../res/colors.dart';
-import '../../widgets/web/webview_page.dart';
-import '../../widgets/web/webview_widget.dart';
+import '../../utils/theme_util.dart';
+import '../../pages/web/webview_page.dart';
+import '../../pages/web/webview_widget.dart';
 
-/// 搜索页
+/// 搜索页面
+///
+/// 展示搜索结果列表，支持关键词搜索
+/// 功能：
+/// - 搜索框输入关键词进行搜索
+/// - 清空按钮快速清除搜索内容
+/// - 搜索结果列表展示（带排名样式）
+/// - 点击条目跳转WebView查看详情
 class SearchPage extends GetView<SearchViewModel> {
   const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
       appBar: _buildAppBar(context),
       body: SafeArea(
         child: _searchListWidget(
+          isDark: isDark,
           onItemTap: (item) {
             Get.to(
               WebViewPage(
@@ -34,9 +44,14 @@ class SearchPage extends GetView<SearchViewModel> {
     );
   }
 
+  /// 构建AppBar，包含返回按钮和搜索输入框
+  ///
+  /// [context] 构建上下文
+  /// 返回PreferredSizeWidget类型的AppBar
   PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final isDark = context.isDark;
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
       elevation: 0,
       titleSpacing: 3.w,
       leading: IconButton(
@@ -50,7 +65,7 @@ class SearchPage extends GetView<SearchViewModel> {
       title: Container(
         height: 80.h,
         decoration: BoxDecoration(
-          color: Colors.grey[100]!,
+          color: isDark ? Colours.dark_search_bg : Colors.grey[100]!,
           borderRadius: BorderRadius.circular(40.r),
         ),
         padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -59,7 +74,7 @@ class SearchPage extends GetView<SearchViewModel> {
           cursorColor: Colours.app_main,
           controller: controller.editController,
           style: TextStyle(
-            color: Colors.black,
+            color: isDark ? Colours.dark_text : Colors.black,
             fontSize: 40.sp,
             fontWeight: FontWeight.w300,
           ),
@@ -82,7 +97,7 @@ class SearchPage extends GetView<SearchViewModel> {
             focusedBorder: InputBorder.none,
             prefixIcon: Container(
               alignment: Alignment.center,
-              child: Icon(Icons.search, color: Colors.grey, size: 60.r),
+              child: Icon(Icons.search, color: isDark ? Colours.dark_text_gray : Colors.grey, size: 60.r),
             ),
             prefixIconConstraints: BoxConstraints.tightFor(
               width: 60.r,
@@ -98,7 +113,7 @@ class SearchPage extends GetView<SearchViewModel> {
                         controller.hasText.value = false;
                         controller.searchList();
                       },
-                      child: Icon(Icons.clear, size: 60.r, color: Colors.grey),
+                      child: Icon(Icons.clear, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
                     ),
                   )),
             ),
@@ -112,8 +127,13 @@ class SearchPage extends GetView<SearchViewModel> {
     );
   }
 
+  /// 构建搜索结果列表
+  ///
+  /// [onItemTap] 条目点击回调，传递搜索结果项数据
+  /// 返回搜索结果列表Widget
   Widget _searchListWidget({
     required ValueChanged<SearchListItemModel?> onItemTap,
+    required bool isDark,
   }) {
     var list = controller.dataList;
     return Obx(() {
@@ -127,11 +147,11 @@ class SearchPage extends GetView<SearchViewModel> {
             child: Container(
               margin: EdgeInsets.only(bottom: 20.h),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? Colours.dark_card_bg : Colors.white,
                 borderRadius: BorderRadius.circular(24.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),
@@ -148,7 +168,7 @@ class SearchPage extends GetView<SearchViewModel> {
                         width: 56.r,
                         height: 56.r,
                         decoration: BoxDecoration(
-                          color: _getRankColor(index),
+                          color: _getRankColor(index, isDark),
                           borderRadius: BorderRadius.circular(16.r),
                         ),
                         alignment: Alignment.center,
@@ -167,7 +187,7 @@ class SearchPage extends GetView<SearchViewModel> {
                           item.title?.trim() ?? "",
                           style: TextStyle(
                             fontSize: 44.sp,
-                            color: Colors.black87,
+                            color: isDark ? Colours.dark_text : Colors.black87,
                             fontWeight: FontWeight.w500,
                             height: 1.4,
                           ),
@@ -179,7 +199,7 @@ class SearchPage extends GetView<SearchViewModel> {
                       Icon(
                         Icons.arrow_forward_ios,
                         size: 56.sp,
-                        color: Colors.grey[300],
+                        color: isDark ? Colours.dark_text_gray : Colors.grey[300],
                       ),
                     ],
                   ),
@@ -193,28 +213,28 @@ class SearchPage extends GetView<SearchViewModel> {
                           Icon(
                             Icons.article_outlined,
                             size: 48.sp,
-                            color: Colors.grey[400],
+                            color: isDark ? Colours.dark_text_gray : Colors.grey[400],
                           ),
                           SizedBox(width: 16.w),
                           Text(
                             item.author ?? item.shareUser ?? AppStrings.getString('anonymous'),
                             style: TextStyle(
                               fontSize: 30.sp,
-                              color: Colors.grey[500],
+                              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
                             ),
                           ),
                           SizedBox(width: 48.w),
                           Icon(
                             Icons.access_time,
                             size: 48.sp,
-                            color: Colors.grey[400],
+                            color: isDark ? Colours.dark_text_gray : Colors.grey[400],
                           ),
                           SizedBox(width: 16.w),
                           Text(
                             item.niceDate ?? "",
                             style: TextStyle(
                               fontSize: 30.sp,
-                              color: Colors.grey[500],
+                              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
                             ),
                           ),
                         ],
@@ -230,13 +250,21 @@ class SearchPage extends GetView<SearchViewModel> {
     });
   }
 
-  Color _getRankColor(int index) {
+  /// 获取排名背景颜色
+  ///
+  /// [index] 列表索引位置
+  /// 前三名使用特殊颜色（金、银、铜），其余使用灰色
+  Color _getRankColor(int index, bool isDark) {
     if (index == 0) return Colors.orange;
     if (index == 1) return Colors.grey[400]!;
     if (index == 2) return Colors.brown[300]!;
-    return Colors.grey[200]!;
+    return isDark ? Colours.dark_bg_gray : Colors.grey[200]!;
   }
 
+  /// 获取排名文字颜色
+  ///
+  /// [index] 列表索引位置
+  /// 前三名使用白色文字，其余使用灰色
   Color _getRankTextColor(int index) {
     if (index == 0) return Colors.white;
     if (index == 1) return Colors.white;

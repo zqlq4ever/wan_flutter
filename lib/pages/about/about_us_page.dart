@@ -3,18 +3,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/about/about_us_viewmodel.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../../widgets/my_app_bar.dart';
-import '../../widgets/web/webview_page.dart';
-import '../../widgets/web/webview_widget.dart';
+import '../../pages/web/webview_page.dart';
+import '../../pages/web/webview_widget.dart';
 
+/// 关于我们页面
+///
+/// 展示应用信息和开发者信息
+/// 内容：
+/// - 应用信息：图标、名称、版本号、描述
+/// - 功能介绍：首页、知识体系、收藏、个人中心
+/// - 开发者信息：开发者名称、邮箱、GitHub链接
+/// - 其他信息：版权信息、开源协议、版本更新
 class AboutUsPage extends GetView<AboutUsViewModel> {
   const AboutUsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.grey[50],
       appBar: MyAppBar(
         centerTitle: AppStrings.getString('about_us'),
       ),
@@ -23,18 +34,17 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 头部区域 - 应用信息
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? Colours.dark_card_bg : Colors.white,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(30.r),
                     bottomRight: Radius.circular(30.r),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
+                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -45,7 +55,6 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // 应用图标
                       Container(
                         width: 180.r,
                         height: 180.r,
@@ -76,41 +85,38 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                         ),
                       ),
                       SizedBox(height: 30.h),
-                      // 应用名称
                       Text(
                         AppStrings.getString('app_full_name'),
                         style: TextStyle(
                           fontSize: 48.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: isDark ? Colours.dark_text : Colors.black,
                         ),
                       ),
                       SizedBox(height: 12.h),
-                      // 版本信息
                       Obx(() {
                         return Container(
                           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
                             "${AppStrings.getString('version')} ${controller.version}",
                             style: TextStyle(
                               fontSize: 32.sp,
-                              color: Colors.grey[600],
+                              color: isDark ? Colours.dark_text_gray : Colors.grey[600],
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         );
                       }),
                       SizedBox(height: 16.h),
-                      // 应用描述
                       Text(
                         AppStrings.getString('app_description'),
                         style: TextStyle(
                           fontSize: 32.sp,
-                          color: Colors.grey[600],
+                          color: isDark ? Colours.dark_text_gray : Colors.grey[600],
                         ),
                       ),
                     ],
@@ -120,17 +126,16 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
 
               SizedBox(height: 40.h),
 
-              // 功能介绍区域
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
                 margin: EdgeInsets.symmetric(horizontal: 24.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? Colours.dark_card_bg : Colors.white,
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
+                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -144,33 +149,36 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: isDark ? Colours.dark_text : Colors.black,
                       ),
                     ),
                     SizedBox(height: 24.h),
-                    // 功能列表
                     _buildFeatureItem(
                       icon: Icons.home,
                       title: AppStrings.getString('feature_home_title'),
                       description: AppStrings.getString('feature_home_desc'),
+                      isDark: isDark,
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
                       icon: Icons.book,
                       title: AppStrings.getString('feature_knowledge_title'),
                       description: AppStrings.getString('feature_knowledge_desc'),
+                      isDark: isDark,
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
                       icon: Icons.star,
                       title: AppStrings.getString('my_collection'),
                       description: AppStrings.getString('feature_collection_desc'),
+                      isDark: isDark,
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
                       icon: Icons.person,
                       title: AppStrings.getString('feature_profile_title'),
                       description: AppStrings.getString('feature_profile_desc'),
+                      isDark: isDark,
                     ),
                   ],
                 ),
@@ -178,17 +186,16 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
 
               SizedBox(height: 32.h),
 
-              // 开发者信息区域
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
                 margin: EdgeInsets.symmetric(horizontal: 24.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? Colours.dark_card_bg : Colors.white,
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
+                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -202,7 +209,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: isDark ? Colours.dark_text : Colors.black,
                       ),
                     ),
                     SizedBox(height: 24.h),
@@ -232,7 +239,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                                 AppStrings.getString('developer'),
                                 style: TextStyle(
                                   fontSize: 37.sp,
-                                  color: Colors.grey[600],
+                                  color: isDark ? Colours.dark_text_gray : Colors.grey[600],
                                 ),
                               ),
                               SizedBox(height: 4.h),
@@ -241,7 +248,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                                 style: TextStyle(
                                   fontSize: 41.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black,
+                                  color: isDark ? Colours.dark_text : Colors.black,
                                 ),
                               ),
                             ],
@@ -250,7 +257,6 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       ],
                     ),
                     SizedBox(height: 24.h),
-                    // 联系方式
                     _buildContactItem(
                       icon: Icons.email,
                       value: "zqlq4ever@163.com",
@@ -266,17 +272,16 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
 
               SizedBox(height: 32.h),
 
-              // 其他信息区域
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
                 margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? Colours.dark_card_bg : Colors.white,
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
+                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -290,7 +295,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: isDark ? Colours.dark_text : Colors.black,
                       ),
                     ),
                     SizedBox(height: 24.h),
@@ -317,14 +322,13 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
 
               SizedBox(height: 60.h),
 
-              // 底部版权信息
               Column(
                 children: [
                   Text(
                     AppStrings.getString('app_full_name'),
                     style: TextStyle(
                       fontSize: 37.sp,
-                      color: Colors.grey[600],
+                      color: isDark ? Colours.dark_text_gray : Colors.grey[600],
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -333,7 +337,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     AppStrings.getString('keep_learning'),
                     style: TextStyle(
                       fontSize: 33.sp,
-                      color: Colors.grey[500],
+                      color: isDark ? Colours.dark_text_gray : Colors.grey[500],
                     ),
                   ),
                   SizedBox(height: 40.h),
@@ -346,11 +350,16 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
     );
   }
 
-  // 功能项构建方法
+  /// 构建功能介绍项
+  ///
+  /// [icon] 功能图标
+  /// [title] 功能标题
+  /// [description] 功能描述
   Widget _buildFeatureItem({
     required IconData icon,
     required String title,
     required String description,
+    required bool isDark,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,7 +389,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                 style: TextStyle(
                   fontSize: 41.sp,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: isDark ? Colours.dark_text : Colors.black,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -388,7 +397,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                 description,
                 style: TextStyle(
                   fontSize: 35.sp,
-                  color: Colors.grey[600],
+                  color: isDark ? Colours.dark_text_gray : Colors.grey[600],
                   height: 1.5,
                 ),
               ),
@@ -399,7 +408,11 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
     );
   }
 
-  // 联系项构建方法
+  /// 构建联系方式项
+  ///
+  /// [icon] 联系方式图标
+  /// [value] 联系方式值（邮箱或链接）
+  /// 链接类型可点击跳转WebView
   Widget _buildContactItem({
     required IconData icon,
     required String value,
@@ -439,7 +452,11 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
     );
   }
 
-  // 信息项构建方法
+  /// 构建信息项
+  ///
+  /// [icon] 信息图标
+  /// [title] 信息标题
+  /// [value] 信息值
   Widget _buildInfoItem({
     required IconData icon,
     required String title,

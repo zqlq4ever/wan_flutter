@@ -5,6 +5,8 @@ import 'package:wan_android_flutter/pages/hotkey/hot_key_page.dart';
 import 'package:wan_android_flutter/pages/knowledge/knowledge_page.dart';
 import 'package:wan_android_flutter/pages/knowledge/knowledge_viewmodel.dart';
 import 'package:wan_android_flutter/pages/mine/mine_page.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../widgets/navigation/navigation_bar_widget.dart';
 import 'home/home_viewmodel.dart';
@@ -43,10 +45,11 @@ class _BottomTabState extends State<HomeBottomTab> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
       appBar: null,
       extendBody: true,
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
       body: NavigationBarWidget(
         tabItems: tabItems,
         tabLabels: tabLabels,

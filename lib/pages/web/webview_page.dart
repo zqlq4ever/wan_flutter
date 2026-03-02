@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 import 'package:wan_android_flutter/widgets/loading.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
-import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
+import 'webview_widget.dart';
 
 /// 显示网页资源的页面
 class WebViewPage extends StatefulWidget {
@@ -34,7 +36,9 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage> {
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
       appBar: MyAppBar(
         centerTitle: widget.title ?? "",
       ),

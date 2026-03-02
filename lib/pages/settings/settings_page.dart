@@ -4,20 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/utils/theme_controller.dart';
 import 'package:wan_android_flutter/utils/locale_controller.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../widgets/my_app_bar.dart';
 
+/// 设置页面
+///
+/// 展示应用设置选项，包括：
+/// - 通用设置：深色模式、语言切换
+/// - 隐私安全：隐私政策、用户协议、清除缓存
+/// - 其他：版本信息
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colours.bg_color,
+      backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
       appBar: MyAppBar(
         centerTitle: AppStrings.getString('settings'),
       ),
@@ -28,50 +37,59 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionTitle(AppStrings.getString('general_settings')),
+                _buildSectionTitle(AppStrings.getString('general_settings'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
-                  _buildThemeModeItem(),
-                  _buildLanguageItem(),
-                ]),
+                  _buildThemeModeItem(isDark),
+                  _buildLanguageItem(isDark),
+                ], isDark),
                 SizedBox(height: 32.h),
-                _buildSectionTitle(AppStrings.getString('privacy_security')),
+                _buildSectionTitle(AppStrings.getString('privacy_security'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
                   _buildSettingsItem(
                     icon: Icons.lock_outline,
                     title: AppStrings.getString('privacy_policy'),
+                    isDark: isDark,
                     onTap: () {},
                   ),
                   _buildSettingsItem(
                     icon: Icons.description_outlined,
                     title: AppStrings.getString('user_agreement'),
+                    isDark: isDark,
                     onTap: () {},
                   ),
-                  _buildClearCacheItem(),
-                ]),
+                  _buildClearCacheItem(isDark),
+                ], isDark),
                 SizedBox(height: 32.h),
-                _buildSectionTitle(AppStrings.getString('other')),
+                _buildSectionTitle(AppStrings.getString('other'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
-                  _buildSettingsItem(
-                    icon: Icons.info_outline,
-                    title: AppStrings.getString('version_info'),
-                    trailing: Text(
-                      "v1.0.0",
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 40.sp,
-                      ),
-                    ),
+                  FutureBuilder<PackageInfo>(
+                    future: PackageInfo.fromPlatform(),
+                    builder: (context, snapshot) {
+                      final version = snapshot.data?.version ?? "...";
+                      return _buildSettingsItem(
+                        icon: Icons.info_outline,
+                        title: AppStrings.getString('version_info'),
+                        isDark: isDark,
+                        trailing: Text(
+                          "v$version",
+                          style: TextStyle(
+                            color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+                            fontSize: 40.sp,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ]),
+                ], isDark),
                 SizedBox(height: 60.h),
                 Center(
                   child: Text(
-                    "玩安卓 © 2026",
+                    "玩安卓 © ${DateTime.now().year}",
                     style: TextStyle(
-                      color: Colors.grey[400],
+                      color: isDark ? Colours.dark_text_gray : Colors.grey[400],
                       fontSize: 40.sp,
                     ),
                   ),
@@ -85,21 +103,25 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildThemeModeItem() {
+  /// 构建深色模式设置项
+  ///
+  /// 显示当前主题模式，点击可选择跟随系统/浅色/深色模式
+  Widget _buildThemeModeItem(bool isDark) {
     return Obx(() {
       final controller = ThemeController.to;
       return _buildSettingsItem(
         icon: Icons.dark_mode_outlined,
         title: AppStrings.getString('dark_mode'),
+        isDark: isDark,
         trailing: GestureDetector(
-          onTap: () => _showThemeModeDialog(controller),
+          onTap: () => _showThemeModeDialog(controller, isDark),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 controller.getThemeModeText(),
                 style: TextStyle(
-                  color: Colors.grey[500],
+                  color: isDark ? Colours.dark_text_gray : Colors.grey[500],
                   fontSize: 40.sp,
                 ),
               ),
@@ -107,31 +129,32 @@ class SettingsPage extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 30.r,
-                color: Colors.grey[300],
+                color: isDark ? Colours.dark_text_gray : Colors.grey[300],
               ),
             ],
           ),
         ),
-        onTap: () => _showThemeModeDialog(controller),
+        onTap: () => _showThemeModeDialog(controller, isDark),
       );
     });
   }
 
-  Widget _buildLanguageItem() {
+  Widget _buildLanguageItem(bool isDark) {
     return Obx(() {
       final controller = LocaleController.to;
       return _buildSettingsItem(
         icon: Icons.language_outlined,
         title: AppStrings.getString('language'),
+        isDark: isDark,
         trailing: GestureDetector(
-          onTap: () => _showLanguageDialog(controller),
+          onTap: () => _showLanguageDialog(controller, isDark),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 controller.getLocaleText(),
                 style: TextStyle(
-                  color: Colors.grey[500],
+                  color: isDark ? Colours.dark_text_gray : Colors.grey[500],
                   fontSize: 40.sp,
                 ),
               ),
@@ -139,20 +162,28 @@ class SettingsPage extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 30.r,
-                color: Colors.grey[300],
+                color: isDark ? Colours.dark_text_gray : Colors.grey[300],
               ),
             ],
           ),
         ),
-        onTap: () => _showLanguageDialog(controller),
+        onTap: () => _showLanguageDialog(controller, isDark),
       );
     });
   }
 
-  void _showThemeModeDialog(ThemeController controller) {
+  /// 显示主题模式选择对话框
+  ///
+  /// [controller] 主题控制器
+  /// 提供跟随系统、浅色、深色三种选项
+  void _showThemeModeDialog(ThemeController controller, bool isDark) {
     Get.dialog(
       AlertDialog(
-        title: Text(AppStrings.getString('select_dark_mode')),
+        backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
+        title: Text(
+          AppStrings.getString('select_dark_mode'),
+          style: TextStyle(color: isDark ? Colours.dark_text : Colors.black87),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -180,10 +211,18 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  void _showLanguageDialog(LocaleController controller) {
+  /// 显示语言选择对话框
+  ///
+  /// [controller] 语言控制器
+  /// 提供中文、英文两种选项
+  void _showLanguageDialog(LocaleController controller, bool isDark) {
     Get.dialog(
       AlertDialog(
-        title: Text(AppStrings.getString('select_language')),
+        backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
+        title: Text(
+          AppStrings.getString('select_language'),
+          style: TextStyle(color: isDark ? Colours.dark_text : Colors.black87),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -205,6 +244,12 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  /// 构建主题模式选项
+  ///
+  /// [text] 选项文本
+  /// [mode] 主题模式
+  /// [currentMode] 当前选中的主题模式
+  /// [onTap] 点击回调
   Widget _buildThemeModeOption(
     String text,
     ThemeMode mode,
@@ -240,6 +285,12 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  /// 构建语言选项
+  ///
+  /// [text] 选项文本
+  /// [locale] 语言区域
+  /// [currentLocale] 当前选中的语言
+  /// [onTap] 点击回调
   Widget _buildLanguageOption(
     String text,
     Locale locale,
@@ -275,26 +326,34 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildClearCacheItem() {
+  /// 构建清除缓存设置项
+  ///
+  /// 显示当前缓存大小，点击可清除缓存
+  Widget _buildClearCacheItem(bool isDark) {
     return _buildSettingsItem(
       icon: Icons.storage_outlined,
       title: AppStrings.getString('clear_cache'),
+      isDark: isDark,
       trailing: FutureBuilder<String>(
         future: _getCacheSize(),
         builder: (context, snapshot) {
           return Text(
             snapshot.data ?? "...",
             style: TextStyle(
-              color: Colors.grey[500],
+              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
               fontSize: 40.sp,
             ),
           );
         },
       ),
-      onTap: () => _showClearCacheDialog(),
+      onTap: () => _showClearCacheDialog(isDark),
     );
   }
 
+  /// 获取缓存大小
+  ///
+  /// 遍历缓存目录计算总大小
+  /// 返回格式化后的缓存大小字符串
   Future<String> _getCacheSize() async {
     try {
       final directory = Directory('${Directory.current.path}/cache');
@@ -313,6 +372,10 @@ class SettingsPage extends StatelessWidget {
     return "0B";
   }
 
+  /// 格式化字节数为可读字符串
+  ///
+  /// [bytes] 字节数
+  /// 返回 B/KB/MB/GB 格式的字符串
   String _formatBytes(int bytes) {
     if (bytes < 1024) {
       return "$bytes B";
@@ -325,15 +388,26 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
-  void _showClearCacheDialog() {
+  /// 显示清除缓存确认对话框
+  void _showClearCacheDialog(bool isDark) {
     Get.dialog(
       AlertDialog(
-        title: Text(AppStrings.getString('clear_cache')),
-        content: Text(AppStrings.getString('clear_cache_confirm')),
+        backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
+        title: Text(
+          AppStrings.getString('clear_cache'),
+          style: TextStyle(color: isDark ? Colours.dark_text : Colors.black87),
+        ),
+        content: Text(
+          AppStrings.getString('clear_cache_confirm'),
+          style: TextStyle(color: isDark ? Colours.dark_text_gray : Colors.grey[600]),
+        ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text(AppStrings.getString('cancel')),
+            child: Text(
+              AppStrings.getString('cancel'),
+              style: TextStyle(color: isDark ? Colours.dark_text_gray : Colors.grey[600]),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -351,6 +425,9 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  /// 清除缓存
+  ///
+  /// 删除缓存目录下的所有文件
   Future<void> _clearCache() async {
     try {
       final directory = Directory('${Directory.current.path}/cache');
@@ -366,28 +443,34 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
-  Widget _buildSectionTitle(String title) {
+  /// 构建分区标题
+  ///
+  /// [title] 标题文本
+  Widget _buildSectionTitle(String title, bool isDark) {
     return Padding(
       padding: EdgeInsets.only(left: 8.w),
       child: Text(
         title,
         style: TextStyle(
           fontSize: 46.sp,
-          color: Colors.grey[600],
+          color: isDark ? Colours.dark_text_gray : Colors.grey[600],
           fontWeight: FontWeight.w600,
         ),
       ),
     );
   }
 
-  Widget _buildSettingsCard(List<Widget> children) {
+  /// 构建设置卡片容器
+  ///
+  /// [children] 卡片内的子组件列表
+  Widget _buildSettingsCard(List<Widget> children, bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? Colours.dark_card_bg : Colors.white,
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -404,6 +487,7 @@ class SettingsPage extends StatelessWidget {
     required String title,
     Widget? trailing,
     VoidCallback? onTap,
+    required bool isDark,
   }) {
     return Material(
       color: Colors.transparent,
@@ -433,7 +517,7 @@ class SettingsPage extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: 40.sp,
-                    color: Colors.black87,
+                    color: isDark ? Colours.dark_text : Colors.black87,
                   ),
                 ),
               ),
@@ -442,7 +526,7 @@ class SettingsPage extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 34.r,
-                  color: Colors.grey[300],
+                  color: isDark ? Colours.dark_text_gray : Colors.grey[300],
                 ),
             ],
           ),

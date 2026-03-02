@@ -3,19 +3,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/pages/auth/widgets/my_text_field.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../../../widgets/my_app_bar.dart';
 import '../../../widgets/my_button.dart';
 import 'register_viewmodel.dart';
 
 /// 账号注册页面
+///
+/// 新用户注册入口
+/// 功能：
+/// - 用户名输入：最大长度20字符
+/// - 密码输入：支持密码显示/隐藏切换
+/// - 确认密码：二次确认密码
+/// - 注册按钮：点击执行注册操作
 class RegisterPage extends GetView<RegisterViewModel> {
   const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
       appBar: MyAppBar(
         centerTitle: AppStrings.getString('register'),
       ),
@@ -25,7 +35,6 @@ class RegisterPage extends GetView<RegisterViewModel> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 应用图标
               Container(
                 margin: EdgeInsets.only(top: 40.h, bottom: 50.h),
                 width: 180.r,
@@ -57,16 +66,15 @@ class RegisterPage extends GetView<RegisterViewModel> {
                 ),
               ),
               
-              // 注册表单
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(30.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? Colours.dark_card_bg : Colors.white,
                   borderRadius: BorderRadius.circular(30.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
+                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 5),
                     ),
@@ -75,13 +83,12 @@ class RegisterPage extends GetView<RegisterViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 用户名输入框
                     Text(
                       AppStrings.getString('account'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: isDark ? Colours.dark_text : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -96,13 +103,12 @@ class RegisterPage extends GetView<RegisterViewModel> {
                     
                     SizedBox(height: 30.h),
                     
-                    // 密码输入框
                     Text(
                       AppStrings.getString('password'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: isDark ? Colours.dark_text : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -118,13 +124,12 @@ class RegisterPage extends GetView<RegisterViewModel> {
                     
                     SizedBox(height: 30.h),
                     
-                    // 确认密码输入框
                     Text(
                       AppStrings.getString('confirm_password'),
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: isDark ? Colours.dark_text : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 12.h),
@@ -140,7 +145,6 @@ class RegisterPage extends GetView<RegisterViewModel> {
                     
                     SizedBox(height: 40.h),
                     
-                    // 注册按钮
                     MyButton(
                       key: const Key('register'),
                       onPressed: () => controller.register(),

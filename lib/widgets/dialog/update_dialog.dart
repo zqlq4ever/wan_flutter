@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
-import 'package:wan_android_flutter/widgets/web/webview_page.dart';
-import 'package:wan_android_flutter/widgets/web/webview_widget.dart';
+import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
+import 'package:wan_android_flutter/pages/web/webview_page.dart';
+import 'package:wan_android_flutter/pages/web/webview_widget.dart';
 
 class UpdateDialog extends StatefulWidget {
   const UpdateDialog({super.key});
@@ -18,12 +20,16 @@ class UpdateDialog extends StatefulWidget {
 class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMixin {
   final CancelToken _cancelToken = CancelToken();
   final double _value = 0;
-  late List<AnimationController> _floatControllers;
-  late List<Animation<double>> _floatAnimations;
   late AnimationController _waveController;
   late AnimationController _colorController;
   late math.Random _random;
   int _currentColorIndex = 0;
+
+  late List<AnimationController> _pathControllers;
+  late List<List<Offset>> _paths;
+  late List<Animation<double>> _pathAnimations;
+  late AnimationController _iconFloatController;
+  late Animation<double> _iconFloatAnimation;
 
   final List<List<Color>> _colorPairs = [
     [const Color(0xFF6366F1), const Color(0xFF8B5CF6), const Color(0xFFA855F7), const Color(0xFFD946EF)],
@@ -32,6 +38,15 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
     [const Color(0xFF8B5CF6), const Color(0xFF7C3AED), const Color(0xFF6D28D9), const Color(0xFF5B21B6)],
     [const Color(0xFF06B6D4), const Color(0xFF0891B2), const Color(0xFF0E7490), const Color(0xFF155E75)],
     [const Color(0xFFF472B6), const Color(0xFFE879F9), const Color(0xFFA855F7), const Color(0xFF7C3AED)],
+  ];
+
+  final List<List<Color>> _darkColorPairs = [
+    [const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280), const Color(0xFF9CA3AF)],
+    [const Color(0xFF1F2937), const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280)],
+    [const Color(0xFF111827), const Color(0xFF1F2937), const Color(0xFF374151), const Color(0xFF4B5563)],
+    [const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280), const Color(0xFF9CA3AF)],
+    [const Color(0xFF1F2937), const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280)],
+    [const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280), const Color(0xFF9CA3AF)],
   ];
 
   @override
@@ -50,27 +65,83 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
       vsync: this,
     )..repeat(reverse: true);
 
-    _floatControllers = List.generate(5, (index) {
+    _pathControllers = List.generate(4, (index) {
       return AnimationController(
-        duration: Duration(seconds: 2 + _random.nextInt(3)),
+        duration: Duration(seconds: 10 + _random.nextInt(10)),
         vsync: this,
       )..repeat(reverse: true);
     });
 
-    _floatAnimations = _floatControllers.map((controller) {
-      final begin = _random.nextDouble() * 15;
-      final end = begin + 5 + _random.nextDouble() * 10;
-      return Tween<double>(begin: begin, end: end).animate(
+    _paths = _generateRandomPaths(4);
+    _pathAnimations = _pathControllers.map((controller) {
+      return Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: controller, curve: Curves.easeInOut),
       );
     }).toList();
+
+    _iconFloatController = AnimationController(
+      duration: Duration(seconds: 2 + _random.nextInt(3)),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    final iconBegin = _random.nextDouble() * 15;
+    final iconEnd = iconBegin + 5 + _random.nextDouble() * 10;
+    _iconFloatAnimation = Tween<double>(begin: iconBegin, end: iconEnd).animate(
+      CurvedAnimation(parent: _iconFloatController, curve: Curves.easeInOut),
+    );
+  }
+
+  List<List<Offset>> _generateRandomPaths(int count) {
+    final List<List<Offset>> allPaths = [];
+    final headerWidth = 280.0;
+    final headerHeight = 280.0;
+
+    for (int i = 0; i < count; i++) {
+      final path = <Offset>[];
+      final controlPointCount = 3 + _random.nextInt(3);
+
+      double x = _random.nextDouble() * headerWidth * 0.3;
+      double y = _random.nextDouble() * headerHeight * 0.5;
+      path.add(Offset(x, y));
+
+      for (int j = 0; j < controlPointCount; j++) {
+        x = _random.nextDouble() * headerWidth * 0.8 + headerWidth * 0.1;
+        y = _random.nextDouble() * headerHeight * 0.8 + headerHeight * 0.1;
+        path.add(Offset(x, y));
+      }
+
+      x = _random.nextDouble() * headerWidth * 0.3 + headerWidth * 0.5;
+      y = _random.nextDouble() * headerHeight * 0.5;
+      path.add(Offset(x, y));
+
+      allPaths.add(path);
+    }
+
+    return allPaths;
+  }
+
+  Offset _getPositionOnPath(List<Offset> path, double t) {
+    if (path.length < 2) return path.first;
+
+    final totalSegments = path.length - 1;
+    final segment = (t * totalSegments).floor().clamp(0, totalSegments - 1);
+    final segmentT = (t * totalSegments) - segment;
+
+    final p0 = path[segment];
+    final p1 = path[segment + 1];
+
+    return Offset(
+      p0.dx + (p1.dx - p0.dx) * segmentT,
+      p0.dy + (p1.dy - p0.dy) * segmentT,
+    );
   }
 
   @override
   void dispose() {
     _waveController.dispose();
     _colorController.dispose();
-    for (final controller in _floatControllers) {
+    _iconFloatController.dispose();
+    for (final controller in _pathControllers) {
       controller.dispose();
     }
     if (!_cancelToken.isCancelled && _value != 1) {
@@ -81,6 +152,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth - 100.w * 2;
 
@@ -92,11 +164,11 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
           child: Container(
             width: dialogWidth,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? Colours.dark_card_bg : Colors.white,
               borderRadius: BorderRadius.circular(40.r),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
+                  color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.15),
                   blurRadius: 30,
                   spreadRadius: 5,
                 ),
@@ -105,8 +177,8 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildHeader(),
-                _buildContent(context),
+                _buildHeader(isDark),
+                _buildContent(context, isDark),
               ],
             ),
           ),
@@ -115,7 +187,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isDark) {
     return Container(
       width: double.infinity,
       height: 280.h,
@@ -127,16 +199,16 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
       ),
       child: Stack(
         children: [
-          _buildAnimatedBackground(),
+          _buildAnimatedBackground(isDark),
           _buildFlowingCircles(),
           _buildWaveEffect(),
-          _buildHeaderContent(),
+          _buildHeaderContent(isDark),
         ],
       ),
     );
   }
 
-  Widget _buildAnimatedBackground() {
+  Widget _buildAnimatedBackground(bool isDark) {
     return AnimatedBuilder(
       animation: _colorController,
       builder: (context, child) {
@@ -145,7 +217,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: _getInterpolatedColors(),
+              colors: _getInterpolatedColors(isDark),
             ),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(40.r),
@@ -157,10 +229,11 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
     );
   }
 
-  List<Color> _getInterpolatedColors() {
-    final nextIndex = (_currentColorIndex + 1) % _colorPairs.length;
-    final currentColors = _colorPairs[_currentColorIndex];
-    final nextColors = _colorPairs[nextIndex];
+  List<Color> _getInterpolatedColors(bool isDark) {
+    final colorPairs = isDark ? _darkColorPairs : _colorPairs;
+    final nextIndex = (_currentColorIndex + 1) % colorPairs.length;
+    final currentColors = colorPairs[_currentColorIndex];
+    final nextColors = colorPairs[nextIndex];
     final t = _colorController.value;
 
     return List.generate(4, (i) {
@@ -170,13 +243,17 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
 
   Widget _buildFlowingCircles() {
     return AnimatedBuilder(
-      animation: Listenable.merge(_floatControllers),
+      animation: Listenable.merge(_pathControllers),
       builder: (context, child) {
+        final positions = List.generate(4, (index) {
+          return _getPositionOnPath(_paths[index], _pathAnimations[index].value);
+        });
+
         return Stack(
           children: [
             Positioned(
-              right: -30.w + _floatAnimations[0].value * 2,
-              top: 20.h + _floatAnimations[0].value,
+              right: positions[0].dx,
+              top: positions[0].dy,
               child: Container(
                 width: 120.r,
                 height: 120.r,
@@ -194,8 +271,8 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               ),
             ),
             Positioned(
-              left: -20.w - _floatAnimations[1].value,
-              bottom: 40.h + _floatAnimations[1].value * 1.5,
+              left: positions[1].dx,
+              bottom: positions[1].dy,
               child: Container(
                 width: 100.r,
                 height: 100.r,
@@ -213,8 +290,8 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               ),
             ),
             Positioned(
-              right: 60.w,
-              bottom: 60.h - _floatAnimations[2].value * 0.5,
+              right: positions[2].dx,
+              bottom: positions[2].dy,
               child: Container(
                 width: 60.r,
                 height: 60.r,
@@ -225,8 +302,8 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               ),
             ),
             Positioned(
-              left: 80.w + _floatAnimations[3].value,
-              top: 60.h - _floatAnimations[3].value,
+              left: positions[3].dx,
+              top: positions[3].dy,
               child: Container(
                 width: 40.r,
                 height: 40.r,
@@ -259,30 +336,30 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
     );
   }
 
-  Widget _buildHeaderContent() {
+  Widget _buildHeaderContent(bool isDark) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AnimatedBuilder(
-            animation: _floatAnimations[4],
+            animation: _iconFloatAnimation,
             builder: (context, child) {
               return Transform.translate(
-                offset: Offset(0, -_floatAnimations[4].value * 0.5),
+                offset: Offset(0, -_iconFloatAnimation.value * 0.5),
                 child: Container(
                   width: 90.r,
                   height: 90.r,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? Colours.dark_card_bg : Colors.white,
                     borderRadius: BorderRadius.circular(24.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
+                        color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.2),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
                       BoxShadow(
-                        color: Colors.white.withValues(alpha: 0.3),
+                        color: (isDark ? Colors.white : Colors.white).withValues(alpha: isDark ? 0.1 : 0.3),
                         blurRadius: 15,
                         spreadRadius: -5,
                       ),
@@ -291,7 +368,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                   child: Icon(
                     Icons.system_update_alt_rounded,
                     size: 45.r,
-                    color: const Color(0xFF8B5CF6),
+                    color: isDark ? Colours.dark_text : const Color(0xFF8B5CF6),
                   ),
                 ),
               );
@@ -339,7 +416,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, bool isDark) {
     return Padding(
       padding: EdgeInsets.all(40.w),
       child: Column(
@@ -354,10 +431,9 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      const Color(0xFF8B5CF6),
-                      const Color(0xFFD946EF),
-                    ],
+                    colors: isDark
+                        ? [Colours.dark_text_gray, Colours.dark_text]
+                        : [const Color(0xFF8B5CF6), const Color(0xFFD946EF)],
                   ),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
@@ -368,7 +444,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                 style: TextStyle(
                   fontSize: 36.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colours.dark_text : Colors.black87,
                 ),
               ),
             ],
@@ -377,7 +453,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
           Container(
             constraints: BoxConstraints(maxHeight: 280.h),
             decoration: BoxDecoration(
-              color: Colors.grey[50],
+              color: isDark ? Colours.dark_bg_color : Colors.grey[50],
               borderRadius: BorderRadius.circular(20.r),
             ),
             padding: EdgeInsets.all(24.w),
@@ -385,22 +461,22 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildUpdateItem(AppStrings.getString('update_item_1')),
-                  _buildUpdateItem(AppStrings.getString('update_item_2')),
-                  _buildUpdateItem(AppStrings.getString('update_item_3')),
-                  _buildUpdateItem(AppStrings.getString('update_item_4')),
+                  _buildUpdateItem(AppStrings.getString('update_item_1'), isDark),
+                  _buildUpdateItem(AppStrings.getString('update_item_2'), isDark),
+                  _buildUpdateItem(AppStrings.getString('update_item_3'), isDark),
+                  _buildUpdateItem(AppStrings.getString('update_item_4'), isDark),
                 ],
               ),
             ),
           ),
           SizedBox(height: 36.h),
-          _buildButtons(context),
+          _buildButtons(context, isDark),
         ],
       ),
     );
   }
 
-  Widget _buildUpdateItem(String text) {
+  Widget _buildUpdateItem(String text, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h),
       child: Row(
@@ -412,10 +488,9 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
             height: 12.r,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF8B5CF6),
-                  const Color(0xFFD946EF),
-                ],
+                colors: isDark
+                    ? [Colours.dark_text_gray, Colours.dark_text]
+                    : [const Color(0xFF8B5CF6), const Color(0xFFD946EF)],
               ),
               shape: BoxShape.circle,
             ),
@@ -426,7 +501,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               text,
               style: TextStyle(
                 fontSize: 32.sp,
-                color: Colors.grey[700],
+                color: isDark ? Colours.dark_text_gray : Colors.grey[700],
                 height: 1.5,
               ),
             ),
@@ -436,13 +511,14 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
     );
   }
 
-  Widget _buildButtons(BuildContext context) {
+  Widget _buildButtons(BuildContext context, bool isDark) {
     return Row(
       children: [
         Expanded(
           child: _buildButton(
             text: AppStrings.getString('later'),
             isPrimary: false,
+            isDark: isDark,
             onTap: () => Navigator.pop(context),
           ),
         ),
@@ -451,6 +527,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
           child: _buildButton(
             text: AppStrings.getString('update_now'),
             isPrimary: true,
+            isDark: isDark,
             onTap: () {
               Navigator.pop(context);
               Get.to(
@@ -470,6 +547,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
   Widget _buildButton({
     required String text,
     required bool isPrimary,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -482,24 +560,23 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               ? LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [
-                    const Color(0xFF8B5CF6),
-                    const Color(0xFFD946EF),
-                  ],
+                  colors: isDark
+                      ? [Colours.dark_text_gray, Colours.dark_text]
+                      : [const Color(0xFF8B5CF6), const Color(0xFFD946EF)],
                 )
               : null,
-          color: isPrimary ? null : Colors.grey[50],
+          color: isPrimary ? null : (isDark ? Colours.dark_bg_color : Colors.grey[50]),
           borderRadius: BorderRadius.circular(48.r),
           border: isPrimary
               ? null
               : Border.all(
-                  color: Colors.grey[300]!,
+                  color: isDark ? Colours.dark_divider : Colors.grey[300]!,
                   width: 1.5,
                 ),
           boxShadow: isPrimary
               ? [
                   BoxShadow(
-                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+                    color: (isDark ? Colours.dark_text : const Color(0xFF8B5CF6)).withValues(alpha: isDark ? 0.3 : 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -522,7 +599,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               style: TextStyle(
                 fontSize: 38.sp,
                 fontWeight: FontWeight.w600,
-                color: isPrimary ? Colors.white : Colors.grey[600],
+                color: isPrimary ? Colors.white : (isDark ? Colours.dark_text_gray : Colors.grey[600]),
               ),
             ),
           ],

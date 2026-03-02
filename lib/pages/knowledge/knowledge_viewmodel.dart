@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/repository/api/wan_api.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_detail_param.dart';
@@ -11,10 +10,10 @@ class KnowledgeViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _getKnowledgeList();
+    getData();
   }
 
-  Future _getKnowledgeList() async {
+  Future getData() async {
     var resp = await WanApi.instance.knowledgeList();
     if (resp != null && resp.isNotEmpty == true) {
       list.clear();

@@ -7,10 +7,15 @@ import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/mine/mine_viewmodel.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 
 import '../../route/route_path_constant.dart';
 import '../../widgets/dialog/update_dialog.dart';
 
+/// 我的页面
+///
+/// 展示用户个人信息和功能菜单
+/// 包含：用户头像、用户名、会员等级、功能菜单列表、退出登录按钮
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
 
@@ -20,6 +25,7 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage> {
   var vm = MineViewModel();
+  bool _isDialogShowing = false;
 
   @override
   void initState() {
@@ -29,10 +35,11 @@ class _MinePageState extends State<MinePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return ChangeNotifierProvider(
       create: (context) => vm,
       child: Scaffold(
-        backgroundColor: Colours.bg_color,
+        backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
         body: Column(
           children: [
             _buildHeaderBackground(),
@@ -54,7 +61,11 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
+  /// 构建头部背景区域
+  ///
+  /// 包含渐变背景、装饰圆形和用户信息
   Widget _buildHeaderBackground() {
+    final isDark = context.isDark;
     return Container(
       width: double.infinity,
       height: 560.h,
@@ -62,37 +73,30 @@ class _MinePageState extends State<MinePage> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colours.app_main,
-            Colours.app_main.withValues(alpha: 0.8),
-          ],
+          colors: isDark
+              ? [
+                  Color(0xFF2A2A2A),
+                  Color(0xFF1A1A1A),
+                ]
+              : [
+                  Colours.app_main,
+                  Colours.app_main.withValues(alpha: 0.8),
+                ],
         ),
       ),
       child: Stack(
         children: [
-          Positioned(
+          _buildDecorCircle(
             right: -50.w,
             top: MediaQuery.of(context).padding.top - 30.h,
-            child: Container(
-              width: 300.w,
-              height: 300.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.1),
-              ),
-            ),
+            size: 300.w,
+            alpha: isDark ? 0.08 : 0.1,
           ),
-          Positioned(
+          _buildDecorCircle(
             left: -30.w,
             bottom: 50.h,
-            child: Container(
-              width: 200.w,
-              height: 200.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.08),
-              ),
-            ),
+            size: 200.w,
+            alpha: isDark ? 0.05 : 0.08,
           ),
           _buildUserInfo(),
         ],
@@ -100,6 +104,35 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
+  /// 构建装饰圆形
+  Widget _buildDecorCircle({
+    double? right,
+    double? left,
+    double? top,
+    double? bottom,
+    required double size,
+    required double alpha,
+  }) {
+    return Positioned(
+      right: right,
+      left: left,
+      top: top,
+      bottom: bottom,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: alpha),
+        ),
+      ),
+    );
+  }
+
+  /// 构建用户信息区域
+  ///
+  /// 包含头像、用户名、会员等级标签
+  /// 未登录时点击头像跳转登录页
   Widget _buildUserInfo() {
     return SizedBox(
       width: double.infinity,
@@ -109,108 +142,127 @@ class _MinePageState extends State<MinePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 60.h),
-            Selector<MineViewModel, bool>(
-              selector: (context, vm) => vm.shouldLogin ?? true,
-              builder: (context, shouldLogin, child) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    if (shouldLogin) {
-                      Get.toNamed(RoutePath.login);
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.15),
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        width: 160.r,
-                        height: 160.r,
-                        fit: BoxFit.cover,
-                        imageUrl: "https://picsum.photos/100/100",
-                        placeholder: (context, url) => Container(
-                          width: 160.r,
-                          height: 160.r,
-                          color: Colors.grey[200],
-                          child: Icon(Icons.person, size: 60.r, color: Colors.grey),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          width: 160.r,
-                          height: 160.r,
-                          color: Colors.grey[200],
-                          child: Icon(Icons.person, size: 60.r, color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+            _buildUserAvatar(),
             SizedBox(height: 24.h),
-            Selector<MineViewModel, String?>(
-              builder: (context, value, child) {
-                return Text(
-                  value ?? AppStrings.getString('click_login'),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 44.sp,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        offset: const Offset(0, 2),
-                        blurRadius: 4,
-                      ),
-                    ],
-                  ),
-                );
-              },
-              selector: (context, value) {
-                return value.userName;
-              },
-            ),
+            _buildUserName(),
             SizedBox(height: 20.h),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.verified_user_outlined,
-                    color: Colors.white,
-                    size: 28.r,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    AppStrings.getString('level_super_member'),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildMemberBadge(),
           ],
         ),
       ),
     );
   }
 
+  /// 构建用户头像
+  Widget _buildUserAvatar() {
+    return Selector<MineViewModel, bool>(
+      selector: (context, vm) => vm.shouldLogin ?? true,
+      builder: (context, shouldLogin, child) {
+        final isDark = context.isDark;
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            if (shouldLogin) {
+              Get.toNamed(RoutePath.login);
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.all(8.r),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: CachedNetworkImage(
+                width: 160.r,
+                height: 160.r,
+                fit: BoxFit.cover,
+                imageUrl: "https://picsum.photos/100/100",
+                placeholder: (context, url) => Container(
+                  width: 160.r,
+                  height: 160.r,
+                  color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+                  child: Icon(Icons.person, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 160.r,
+                  height: 160.r,
+                  color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+                  child: Icon(Icons.person, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 构建用户名
+  Widget _buildUserName() {
+    return Selector<MineViewModel, String?>(
+      builder: (context, value, child) {
+        return Text(
+          value ?? AppStrings.getString('click_login'),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 44.sp,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+        );
+      },
+      selector: (context, value) {
+        return value.userName;
+      },
+    );
+  }
+
+  /// 构建会员等级标签
+  Widget _buildMemberBadge() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(30.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.verified_user_outlined,
+            color: Colors.white,
+            size: 28.r,
+          ),
+          SizedBox(width: 8.w),
+          Text(
+            AppStrings.getString('level_super_member'),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建菜单区域
+  ///
+  /// 包含：我的收藏、检查更新、关于我们、设置
   Widget _buildMenuSection() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -262,19 +314,26 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
+  /// 构建菜单项
+  ///
+  /// [icon] 图标
+  /// [title] 标题
+  /// [onTap] 点击回调
+  /// [showRedDot] 是否显示红点
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
     required GestureTapCallback onTap,
     bool? showRedDot,
   }) {
+    final isDark = context.isDark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? Colours.dark_card_bg : Colors.white,
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -309,7 +368,7 @@ class _MinePageState extends State<MinePage> {
                     title,
                     style: TextStyle(
                       fontSize: 40.sp,
-                      color: Colors.black87,
+                      color: isDark ? Colours.dark_text : Colors.black87,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -327,7 +386,7 @@ class _MinePageState extends State<MinePage> {
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 32.r,
-                  color: Colors.grey[300],
+                  color: isDark ? Colours.dark_text_gray : Colors.grey[300],
                 ),
               ],
             ),
@@ -337,7 +396,11 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
+  /// 构建退出登录按钮
+  ///
+  /// 仅在已登录状态下显示
   Widget _buildLogoutButton() {
+    final isDark = context.isDark;
     return Selector<MineViewModel, bool>(builder: (context, value, child) {
       return !value
           ? Padding(
@@ -350,7 +413,7 @@ class _MinePageState extends State<MinePage> {
                     vm.logout();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
                     foregroundColor: Colors.red,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -374,6 +437,7 @@ class _MinePageState extends State<MinePage> {
   }
 
   void checkAppUpdate() {
+    if (_isDialogShowing) return;
     vm.checkUpdate().then((url) {
       if (url == null || url.isEmpty) {
         showToast(AppStrings.getString('already_latest_version'));
@@ -384,10 +448,14 @@ class _MinePageState extends State<MinePage> {
   }
 
   void _showUpdateDialog() {
+    if (_isDialogShowing) return;
+    _isDialogShowing = true;
     showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (_) => const UpdateDialog(),
-    );
+    ).whenComplete(() {
+      _isDialogShowing = false;
+    });
   }
 }
