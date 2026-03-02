@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
-import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/utils/theme_util.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 
 /// 扫描页面
@@ -80,24 +80,49 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+  /// 获取渐变颜色
+  /// 浅色模式：鲜艳的紫蓝渐变
+  /// 深色模式：柔和的青蓝渐变（与黑色背景更协调）
+  List<Color> _getGradientColors(bool isDark, {double alpha = 1.0}) {
+    if (isDark) {
+      return [
+        Color(0xFF00BCD4).withValues(alpha: alpha),
+        Color(0xFF009688).withValues(alpha: alpha),
+      ];
+    }
+    return [
+      Color(0xFF667eea).withValues(alpha: alpha),
+      Color(0xFF764ba2).withValues(alpha: alpha),
+    ];
+  }
+
   /// 扫描提示组件
   /// 始终显示在底部，提示用户将二维码放入框内
-  Widget _scanHint() {
+  Widget _scanHint(bool isDark) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 42.w, vertical: 21.h),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.6),
+        gradient: LinearGradient(
+          colors: _getGradientColors(isDark, alpha: 0.9),
+        ),
         borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: _getGradientColors(isDark).first.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.qr_code_scanner, color: Colors.white70, size: 53.r),
+          Icon(Icons.qr_code_scanner, color: Colors.white, size: 53.r),
           SizedBox(width: 21.w),
           Text(
             AppStrings.getString('scan_qr_hint'),
             style: TextStyle(
-              color: Colors.white70,
+              color: Colors.white,
               fontSize: 40.sp,
             ),
           ),
@@ -111,7 +136,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   /// 功能：
   /// - 点击复制按钮复制到剪切板
   /// - 支持展开/折叠，展开后最多显示5行
-  Widget _scanResult(Barcode? value) {
+  Widget _scanResult(Barcode? value, bool isDark) {
     if (value == null) {
       return const SizedBox.shrink();
     }
@@ -122,8 +147,17 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
       margin: EdgeInsets.symmetric(horizontal: 32.w),
       padding: EdgeInsets.symmetric(horizontal: 42.w, vertical: 21.h),
       decoration: BoxDecoration(
-        color: Colours.app_main.withValues(alpha: 0.9),
+        gradient: LinearGradient(
+          colors: _getGradientColors(isDark),
+        ),
         borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: _getGradientColors(isDark).first.withValues(alpha: 0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -152,7 +186,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
               padding: EdgeInsets.all(16.w),
               child: Icon(
                 _isResultExpanded ? Icons.expand_less : Icons.expand_more,
-                color: Colors.white70,
+                color: Colors.white.withValues(alpha: 0.8),
                 size: 64.r,
               ),
             ),
@@ -170,7 +204,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
             },
             child: Padding(
               padding: EdgeInsets.all(16.w),
-              child: Icon(Icons.copy, color: Colors.white70, size: 53.r),
+              child: Icon(Icons.copy, color: Colors.white.withValues(alpha: 0.8), size: 53.r),
             ),
           ),
         ],
@@ -190,6 +224,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final isDark = context.isDark;
 
     return Scaffold(
       appBar: MyAppBar(
@@ -203,7 +238,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
       body: Stack(
         children: [
           MobileScanner(onDetect: _handleBarcode),
-          _buildScanLine(screenHeight),
+          _buildScanLine(screenHeight, isDark),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -212,9 +247,9 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _scanResult(_barcode),
+                  _scanResult(_barcode, isDark),
                   SizedBox(height: 21.h),
-                  _scanHint(),
+                  _scanHint(isDark),
                 ],
               ),
             ),
@@ -230,10 +265,11 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   /// - 带渐变效果的扫描线
   /// - 从屏幕1/4处扫描到3/4处
   /// - 动画完成后隐藏
-  Widget _buildScanLine(double screenHeight) {
+  Widget _buildScanLine(double screenHeight, bool isDark) {
     if (!_showScanLine) {
       return const SizedBox.shrink();
     }
+    final gradientColors = _getGradientColors(isDark);
     return AnimatedBuilder(
       animation: _scanAnimation,
       builder: (context, child) {
@@ -247,16 +283,16 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
               gradient: LinearGradient(
                 colors: [
                   Colors.transparent,
-                  Colours.app_main.withValues(alpha: 0.8),
-                  Colours.app_main,
-                  Colours.app_main.withValues(alpha: 0.8),
+                  gradientColors.first.withValues(alpha: 0.8),
+                  gradientColors.last,
+                  gradientColors.first.withValues(alpha: 0.8),
                   Colors.transparent,
                 ],
                 stops: const [0, 0.2, 0.5, 0.8, 1],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colours.app_main.withValues(alpha: 0.6),
+                  color: gradientColors.last.withValues(alpha: 0.6),
                   blurRadius: 12,
                   spreadRadius: 4,
                 ),

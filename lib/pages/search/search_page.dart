@@ -59,6 +59,7 @@ class SearchPage extends GetView<SearchViewModel> {
           "assets/images/icon_back.png",
           width: 60.r,
           height: 60.r,
+          color: isDark ? Colors.white.withValues(alpha: 0.7) : Colours.text,
         ),
         onPressed: () => Get.back(),
       ),

@@ -32,7 +32,7 @@ class KnowledgeDetailsViewModel with ChangeNotifier {
       detailList.clear();
       hasMore = true;
     }
-    var model = await WanApi.instance.knowledgeDetailList(id ?? "", "$_pageCount");
+    var model = await WanApi.instance.knowledgeDetailList(id ?? "", _pageCount);
     if (model?.datas?.isNotEmpty == true) {
       detailList.addAll(model!.datas!);
       hasMore = !(model.over ?? true);

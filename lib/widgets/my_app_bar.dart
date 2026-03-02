@@ -74,7 +74,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.all(12.0),
             icon: Image.asset(
               backImg,
-              color: backImgColor ?? ThemeUtils.getIconColor(context),
+              color: backImgColor ?? (context.isDark ? Colors.white.withValues(alpha: 0.7) : ThemeUtils.getIconColor(context)),
             ),
           )
         : Gaps.empty;

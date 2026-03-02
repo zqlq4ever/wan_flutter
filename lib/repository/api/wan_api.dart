@@ -1,197 +1,256 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wan_android_flutter/network/api_exception.dart';
+import 'package:wan_android_flutter/network/dio_client.dart';
+import 'package:wan_android_flutter/repository/model/app_check_update_model.dart';
+import 'package:wan_android_flutter/repository/model/common_website_model.dart';
 import 'package:wan_android_flutter/repository/model/home_banner_bean.dart';
 import 'package:wan_android_flutter/repository/model/home_list_model.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_detail_list_model.dart';
 import 'package:wan_android_flutter/repository/model/knowledge_list_model.dart';
 import 'package:wan_android_flutter/repository/model/my_collects_model.dart';
+import 'package:wan_android_flutter/repository/model/search_hot_key_model.dart';
+import 'package:wan_android_flutter/repository/model/search_list_model.dart';
+import 'package:wan_android_flutter/repository/model/user_info_model.dart';
 import 'package:wan_android_flutter/repository/url_path_contants.dart';
 
-import '../../network/dio_util.dart';
-import '../model/app_check_update_model.dart';
-import '../model/common_website_model.dart';
-import '../model/search_hot_key_model.dart';
-import '../model/search_list_model.dart';
-import '../model/user_info_model.dart';
-
+/// 玩Android API服务
+///
+/// 封装所有API请求，提供统一的调用入口
+/// 使用单例模式管理
 class WanApi {
-  static WanApi? _instance;
+  WanApi._();
 
-  // 私有构造函数，防止外部实例化
-  WanApi._internal();
-
-  // 提供一个静态方法来获取实例
-  static WanApi get instance {
-    _instance ??= WanApi._internal();
-    return _instance!;
-  }
+  /// 单例实例
+  static final WanApi instance = WanApi._();
 
   /// 获取首页文章列表
-  Future<HomeListModel?> homeList(String pageCount) async {
-    Response response = await DioInstance.instance.get(
-      path: "article/list/$pageCount/json",
-      param: {"page_size": 10},
-    );
-    return HomeListModel.fromJson(response.data);
+  ///
+  /// [page] 页码，从0开始
+  Future<HomeListModel?> homeList(int page) async {
+    try {
+      final response = await DioClient.instance.get(
+        'article/list/$page/json',
+        queryParameters: {'page_size': 10},
+      );
+      return HomeListModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
-  /// 获取首页 banner 数据
-  Future<List<HomeBannerBean>?>? getBannerList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathBanner);
-    var model = HomeBannerListModel.fromJson(response.data);
-    return model.list;
+  /// 获取首页Banner数据
+  Future<List<HomeBannerBean>?> getBannerList() async {
+    try {
+      final response = await DioClient.instance.get(UrlPathConstants.pathBanner);
+      final model = HomeBannerListModel.fromJson(response.data);
+      return model.list;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
   /// 获取搜索热词
   Future<List<SearchHotKeyModel>?> searchHotKeys() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathHotkey);
-    var model = SearchHotKeyListModel.fromJson(response.data);
-    return model.list;
+    try {
+      final response = await DioClient.instance.get(UrlPathConstants.pathHotkey);
+      final model = SearchHotKeyListModel.fromJson(response.data);
+      return model.list;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
   /// 获取常用网站
   Future<List<CommonWebsiteModel>?> commonWebsiteList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathWebsite);
-    var model = CommonWebsiteListModel.fromJson(response.data);
-    return model.list;
+    try {
+      final response = await DioClient.instance.get(UrlPathConstants.pathWebsite);
+      final model = CommonWebsiteListModel.fromJson(response.data);
+      return model.list;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
-  /// 知识体系列表
+  /// 获取知识体系列表
   Future<List<KnowledgeModel>?> knowledgeList() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathTree);
-    var model = KnowledgeListModel.fromJson(response.data);
-    return model.list;
+    try {
+      final response = await DioClient.instance.get(UrlPathConstants.pathTree);
+      final model = KnowledgeListModel.fromJson(response.data);
+      return model.list;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
-  /// 知识体系明细列表数据
-  Future<KnowledgeDetailListModel?> knowledgeDetailList(String id, String pageCount) async {
-    Response response = await DioInstance.instance.get(
-      path: "article/list/$pageCount/json",
-      param: {"cid": id},
-    );
-    var model = KnowledgeDetailListModel.fromJson(response.data);
-    return model;
+  /// 获取知识体系明细列表
+  ///
+  /// [id] 知识体系分类ID
+  /// [page] 页码，从0开始
+  Future<KnowledgeDetailListModel?> knowledgeDetailList(String id, int page) async {
+    try {
+      final response = await DioClient.instance.get(
+        'article/list/$page/json',
+        queryParameters: {'cid': id},
+      );
+      return KnowledgeDetailListModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
-  /// 登录
-  Future<UserInfoModel?> login(String? name, String? pwd) async {
-    Response response = await DioInstance.instance.post(
-      path: UrlPathConstants.pathLogin,
-      queryParameters: {
-        "username": name,
-        "password": pwd,
-      },
-    );
-    return UserInfoModel.fromJson(response.data);
+  /// 用户登录
+  ///
+  /// [username] 用户名
+  /// [password] 密码
+  Future<UserInfoModel?> login(String? username, String? password) async {
+    try {
+      final response = await DioClient.instance.post(
+        UrlPathConstants.pathLogin,
+        queryParameters: {
+          'username': username,
+          'password': password,
+        },
+      );
+      return UserInfoModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
-  /// 注册
-  Future<UserInfoModel?> register(String? name, String? pwd, String? pwdTwice) async {
-    Response response = await DioInstance.instance.post(
-      path: UrlPathConstants.pathRegister,
-      queryParameters: {
-        "username": name,
-        "password": pwd,
-        "repassword": pwdTwice,
-      },
-    );
-    return UserInfoModel.fromJson(response.data);
+  /// 用户注册
+  ///
+  /// [username] 用户名
+  /// [password] 密码
+  /// [repassword] 确认密码
+  Future<UserInfoModel?> register(String? username, String? password, String? repassword) async {
+    try {
+      final response = await DioClient.instance.post(
+        UrlPathConstants.pathRegister,
+        queryParameters: {
+          'username': username,
+          'password': password,
+          'repassword': repassword,
+        },
+      );
+      return UserInfoModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
   }
 
-  /// 登出
+  /// 用户登出
   Future<bool> logout() async {
-    Response response = await DioInstance.instance.get(path: UrlPathConstants.pathLogout);
-    if (response.data != null && response.data == true) {
-      return true;
+    try {
+      final response = await DioClient.instance.get(UrlPathConstants.pathLogout);
+      return response.data == true;
+    } on DioException catch (e) {
+      throw _handleError(e);
     }
-    return false;
   }
 
-  /// 收藏
+  /// 收藏文章
+  ///
+  /// [id] 文章ID
   Future<bool> collect(String id) async {
-    Response response = await DioInstance.instance.post(path: "lg/collect/$id/json");
-    if (response.data != null && response.data == true) {
-      return true;
+    try {
+      final response = await DioClient.instance.post('lg/collect/$id/json');
+      return response.data == true;
+    } on DioException catch (e) {
+      throw _handleError(e);
     }
-    return false;
   }
 
-  /// 取消收藏文章 (首页列表)
+  /// 取消收藏文章（首页列表）
+  ///
+  /// [id] 文章原始ID
   Future<bool> cancelCollect(String id) async {
-    Response response = await DioInstance.instance.post(path: "lg/uncollect_originId/$id/json");
-    if (response.data != null && response.data == true) {
-      return true;
+    try {
+      final response = await DioClient.instance.post('lg/uncollect_originId/$id/json');
+      return response.data == true;
+    } on DioException catch (e) {
+      throw _handleError(e);
     }
-    return false;
   }
 
-  /// 取消收藏文章 (我的收藏)
-  Future<bool> cancelCollect2(
-    String id,
-    String originId,
-  ) async {
-    Response response = await DioInstance.instance.post(
-      path: "lg/uncollect/$id/json",
-      queryParameters: {"originId": originId},
-    );
-    if (response.data != null && response.data == true) {
-      return true;
+  /// 取消收藏文章（我的收藏）
+  ///
+  /// [id] 收藏记录ID
+  /// [originId] 文章原始ID
+  Future<bool> cancelCollectFromMyList(String id, String originId) async {
+    try {
+      final response = await DioClient.instance.post(
+        'lg/uncollect/$id/json',
+        queryParameters: {'originId': originId},
+      );
+      return response.data == true;
+    } on DioException catch (e) {
+      throw _handleError(e);
     }
-    return false;
   }
 
   /// 获取我的收藏列表
-  Future<MyCollectsModel?> getMyCollects(String pageCount) async {
-    Response rsp = await DioInstance.instance.get(path: "lg/collect/list/$pageCount/json");
-    MyCollectsModel? model = MyCollectsModel.fromJson(rsp.data);
-    return model;
-  }
-
-  /// 搜索
-  Future<List<SearchListItemModel>?> search({required String keyWord}) async {
-    Response rsp = await DioInstance.instance.post(
-      path: UrlPathConstants.pathQueryArticle,
-      queryParameters: {"k": keyWord},
-    );
-    SearchListModel? model = SearchListModel.fromJson(rsp.data);
-    if (model.datas != null && model.datas?.isNotEmpty == true) {
-      return model.datas;
+  ///
+  /// [page] 页码，从0开始
+  Future<MyCollectsModel?> getMyCollects(int page) async {
+    try {
+      final response = await DioClient.instance.get('lg/collect/list/$page/json');
+      return MyCollectsModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
     }
-    return [];
   }
 
-  /// 检查 app 新版本
+  /// 搜索文章
+  ///
+  /// [keyword] 搜索关键词
+  Future<List<SearchListItemModel>> search(String keyword) async {
+    try {
+      final response = await DioClient.instance.post(
+        UrlPathConstants.pathQueryArticle,
+        queryParameters: {'k': keyword},
+      );
+      final model = SearchListModel.fromJson(response.data);
+      return model.datas ?? [];
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// 检查APP更新
   Future<AppCheckUpdateModel?> checkUpdate() async {
-    // 根据平台设置不同的baseUrl
-    String pgyerBaseUrl = UrlPathConstants.hostPgyer;
-    String wanandroidBaseUrl = UrlPathConstants.hostWanandroid;
-    
-    // Web平台使用直接URL，不通过代理
-    if (kIsWeb) {
-      DioInstance.instance.changeBaseUrl(pgyerBaseUrl);
-      Response response = await DioInstance.instance.post(
-        path: UrlPathConstants.pathCheckUpgrade,
+    final originalBaseUrl = DioClient.instance.baseUrl;
+
+    try {
+      DioClient.instance.changeBaseUrl(UrlPathConstants.hostPgyer);
+      final response = await DioClient.instance.post(
+        UrlPathConstants.pathCheckUpgrade,
         queryParameters: {
-          "_api_key": "57c543d258a34f8565748561de50b6e6",
-          "appKey": "2639f784ce9ee850532074b7b0534e62",
+          '_api_key': '57c543d258a34f8565748561de50b6e6',
+          'appKey': '2639f784ce9ee850532074b7b0534e62',
         },
       );
-
-      DioInstance.instance.changeBaseUrl('/api/');
       return AppCheckUpdateModel.fromJson(response.data);
-    } else {
-      // 非Web平台使用正常逻辑
-      DioInstance.instance.changeBaseUrl(pgyerBaseUrl);
-      Response response = await DioInstance.instance.post(
-        path: UrlPathConstants.pathCheckUpgrade,
-        queryParameters: {
-          "_api_key": "57c543d258a34f8565748561de50b6e6",
-          "appKey": "2639f784ce9ee850532074b7b0534e62",
-        },
-      );
-
-      DioInstance.instance.changeBaseUrl(wanandroidBaseUrl);
-      return AppCheckUpdateModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    } finally {
+      if (kIsWeb) {
+        DioClient.instance.changeBaseUrl('/api/');
+      } else {
+        DioClient.instance.changeBaseUrl(originalBaseUrl);
+      }
     }
+  }
+
+  /// 统一错误处理
+  ApiException _handleError(DioException e) {
+    final apiException = e.apiException;
+    if (apiException != null) {
+      return apiException;
+    }
+    return ApiException(
+      code: e.response?.statusCode,
+      message: e.message ?? '网络请求失败',
+    );
   }
 }

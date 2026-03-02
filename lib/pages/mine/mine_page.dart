@@ -79,8 +79,8 @@ class _MinePageState extends State<MinePage> {
                   Color(0xFF1A1A1A),
                 ]
               : [
-                  Colours.app_main,
-                  Colours.app_main.withValues(alpha: 0.8),
+                  Color(0xFF667eea),
+                  Color(0xFF764ba2),
                 ],
         ),
       ),
@@ -90,13 +90,19 @@ class _MinePageState extends State<MinePage> {
             right: -50.w,
             top: MediaQuery.of(context).padding.top - 30.h,
             size: 300.w,
-            alpha: isDark ? 0.08 : 0.1,
+            alpha: isDark ? 0.08 : 0.15,
           ),
           _buildDecorCircle(
             left: -30.w,
             bottom: 50.h,
             size: 200.w,
-            alpha: isDark ? 0.05 : 0.08,
+            alpha: isDark ? 0.05 : 0.1,
+          ),
+          _buildDecorCircle(
+            right: 80.w,
+            bottom: 100.h,
+            size: 120.w,
+            alpha: isDark ? 0.03 : 0.08,
           ),
           _buildUserInfo(),
         ],

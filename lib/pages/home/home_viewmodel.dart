@@ -74,7 +74,7 @@ class HomeViewModel extends GetxController {
 
   /// 获取数据
   Future<(List<HomeListItemData>?, bool)> _getHomeList(bool loadMore) async {
-    HomeListModel? data = await WanApi.instance.homeList("$_pageCount");
+    HomeListModel? data = await WanApi.instance.homeList(_pageCount);
     if (data != null && data.datas?.isNotEmpty == true) {
       return (data.datas, !(data.over ?? true));
     } else {

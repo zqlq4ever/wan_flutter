@@ -67,7 +67,7 @@ class CollectionViewModel extends GetxController {
       hasMore.value = true;
     }
 
-    var model = await WanApi.instance.getMyCollects("$_pageCount");
+    var model = await WanApi.instance.getMyCollects(_pageCount);
     if (model?.datas?.isNotEmpty == true) {
       dataList.addAll(model!.datas!);
       hasMore.value = !(model.over ?? true);
@@ -87,7 +87,7 @@ class CollectionViewModel extends GetxController {
     String? id,
     String? originId,
   ) async {
-    bool success = await WanApi.instance.cancelCollect2(id ?? "", originId ?? "-1");
+    bool success = await WanApi.instance.cancelCollectFromMyList(id ?? "", originId ?? "-1");
     if (success) {
       try {
         dataList.remove(dataList[index]);

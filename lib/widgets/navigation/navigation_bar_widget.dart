@@ -26,28 +26,28 @@ class NavigationBarWidget extends StatefulWidget {
     }
   }
 
-  //界面集合
+  /// 界面集合
   final List<Widget> tabItems;
 
-  //标题集合
+  /// 标题集合
   final List<String> tabLabels;
 
-  //未选中icon
+  /// 未选中icon
   final List<String> tabIcons;
 
-  //选中icon
+  /// 选中icon
   final List<String> tabActiveIcons;
 
-  //当前页面下标
+  /// 当前页面下标
   final int currentIndex;
 
-  //底部导航栏切换事件
+  /// 底部导航栏切换事件
   final ValueChanged<int>? onItemChange;
 
-  //页面主题
+  /// 页面主题
   final ThemeData? themeData;
 
-  //底部导航栏icon宽高
+  /// 底部导航栏icon宽高
   final double? bottomBarIconWidth;
   final double? bottomBarIconHeight;
 
@@ -75,15 +75,15 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 3,
         backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
-        selectedItemColor: isDark ? Colours.dark_text : Colors.black,
-        unselectedItemColor: isDark ? Colours.dark_text_gray : Colors.grey,
+        selectedItemColor: isDark ? Colors.white : Colours.app_main,
+        unselectedItemColor: isDark ? Colors.white.withValues(alpha: 0.6) : Colors.grey,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         selectedFontSize: 34.sp,
         unselectedFontSize: 32.sp,
-        items: _barItemList(),
+        items: _barItemList(isDark),
         onTap: (index) {
           if (_currentIndex == index) {
             return;
@@ -98,7 +98,9 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
   }
 
   /// 底部导航栏集合
-  List<BottomNavigationBarItem> _barItemList() {
+  ///
+  /// [isDark] 是否为深色模式
+  List<BottomNavigationBarItem> _barItemList(bool isDark) {
     List<BottomNavigationBarItem> items = [];
 
     for (var i = 0; i < widget.tabItems.length; i++) {
@@ -110,10 +112,16 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             height: widget.bottomBarIconHeight ?? 64.r,
           ),
         ),
-        icon: Image.asset(
-          widget.tabIcons[i],
-          width: widget.bottomBarIconWidth ?? 60.r,
-          height: widget.bottomBarIconHeight ?? 60.r,
+        icon: ColorFiltered(
+          colorFilter: ColorFilter.mode(
+            isDark ? Colors.white.withValues(alpha: 0.6) : Colors.grey,
+            BlendMode.srcIn,
+          ),
+          child: Image.asset(
+            widget.tabIcons[i],
+            width: widget.bottomBarIconWidth ?? 60.r,
+            height: widget.bottomBarIconHeight ?? 60.r,
+          ),
         ),
         label: widget.tabLabels[i],
       );

@@ -59,29 +59,18 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                         width: 180.r,
                         height: 180.r,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.blueAccent.withValues(alpha: 0.8),
-                              Colors.purpleAccent.withValues(alpha: 0.8),
-                            ],
-                          ),
+                          color: isDark ? Colours.dark_card_bg : Colors.white,
                           borderRadius: BorderRadius.circular(36.r),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.blueAccent.withValues(alpha: 0.3),
-                              blurRadius: 24,
-                              offset: const Offset(0, 12),
+                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
                             ),
                           ],
                         ),
                         child: Center(
-                          child: Icon(
-                            Icons.flutter_dash,
-                            size: 100.r,
-                            color: Colors.white,
-                          ),
+                          child: FlutterLogo(size: 120.r),
                         ),
                       ),
                       SizedBox(height: 30.h),

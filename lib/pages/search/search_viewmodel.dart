@@ -48,9 +48,9 @@ class SearchViewModel extends GetxController {
   }
 
   Future searchList([String? keyWord = ""]) async {
-    List<SearchListItemModel>? list = await WanApi.instance.search(keyWord: keyWord ?? "");
-    if (list?.isNotEmpty == true) {
-      dataList.value = list ?? [];
+    List<SearchListItemModel> list = await WanApi.instance.search(keyWord ?? "");
+    if (list.isNotEmpty) {
+      dataList.value = list;
     }
   }
 
