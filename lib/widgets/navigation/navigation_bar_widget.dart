@@ -7,126 +7,126 @@ import 'navigation_bar_item.dart';
 
 /// 底部导航栏组件
 class NavigationBarWidget extends StatefulWidget {
-  NavigationBarWidget({
+  /// 创建底部导航栏组件
+  ///
+  /// [currentIndex] 当前选中的页面索引
+  /// [tabLabels] 导航栏项标题列表
+  /// [tabIcons] 未选中状态的图标路径列表
+  /// [tabActiveIcons] 选中状态的图标路径列表
+  /// [onItemChange] 导航栏项切换回调
+  /// [bottomBarIconWidth] 图标宽度
+  /// [bottomBarIconHeight] 图标高度
+  const NavigationBarWidget({
     super.key,
-    required this.tabItems,
+    required this.currentIndex,
     required this.tabLabels,
     required this.tabIcons,
     required this.tabActiveIcons,
-    this.currentIndex = 0,
-    this.themeData,
     this.onItemChange,
     this.bottomBarIconWidth,
     this.bottomBarIconHeight,
-  }) {
-    if (tabItems.length != tabLabels.length &&
-        tabItems.length != tabIcons.length &&
-        tabItems.length != tabActiveIcons.length) {
-      throw Exception("tabItems、tabLabels、tabIcons、tabActiveIcon length must same！ ");
-    }
-  }
-
-  /// 界面集合
-  final List<Widget> tabItems;
-
-  /// 标题集合
-  final List<String> tabLabels;
-
-  /// 未选中icon
-  final List<String> tabIcons;
-
-  /// 选中icon
-  final List<String> tabActiveIcons;
+  }) : assert(tabLabels.length == tabIcons.length && tabLabels.length == tabActiveIcons.length,
+            'tabLabels、tabIcons、tabActiveIcons 长度必须相同！');
 
   /// 当前页面下标
   final int currentIndex;
 
-  /// 底部导航栏切换事件
+  /// 标题集合
+  final List<String> tabLabels;
+
+  /// 未选中icon路径集合
+  final List<String> tabIcons;
+
+  /// 选中icon路径集合
+  final List<String> tabActiveIcons;
+
+  /// 底部导航栏切换事件回调
   final ValueChanged<int>? onItemChange;
 
-  /// 页面主题
-  final ThemeData? themeData;
-
-  /// 底部导航栏icon宽高
+  /// 底部导航栏icon宽度
   final double? bottomBarIconWidth;
+
+  /// 底部导航栏icon高度
   final double? bottomBarIconHeight;
 
   @override
-  State<StatefulWidget> createState() {
-    return _NavigationBarWidgetState();
-  }
+  State<NavigationBarWidget> createState() => _NavigationBarWidgetState();
 }
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
-  late int _currentIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentIndex = widget.currentIndex;
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    return Scaffold(
-      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
-      body: IndexedStack(index: _currentIndex, children: widget.tabItems),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 3,
-        backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
-        selectedItemColor: isDark ? Colors.white : Colours.app_main,
-        unselectedItemColor: isDark ? Colors.white.withValues(alpha: 0.6) : Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        selectedFontSize: 34.sp,
-        unselectedFontSize: 32.sp,
-        items: _barItemList(isDark),
-        onTap: (index) {
-          if (_currentIndex == index) {
-            return;
-          }
-          widget.onItemChange?.call(index);
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+    final themeData = Theme.of(context);
+
+    return BottomNavigationBar(
+      elevation: 3,
+      backgroundColor: _getBackgroundColor(isDark),
+      selectedItemColor: _getSelectedItemColor(isDark, themeData),
+      unselectedItemColor: _getUnselectedItemColor(isDark),
+      type: BottomNavigationBarType.fixed,
+      currentIndex: widget.currentIndex,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
+      selectedFontSize: 34.sp,
+      unselectedFontSize: 32.sp,
+      items: _buildNavigationItems(isDark),
+      onTap: _handleItemTap,
+    );
+  }
+
+  /// 获取导航栏背景颜色
+  Color _getBackgroundColor(bool isDark) =>
+      isDark ? Colours.dark_card_bg : Colors.white;
+
+  /// 获取选中项颜色
+  Color _getSelectedItemColor(bool isDark, ThemeData themeData) =>
+      isDark ? Colors.white : themeData.primaryColor;
+
+  /// 获取未选中项颜色
+  Color _getUnselectedItemColor(bool isDark) =>
+      isDark ? Colors.white.withValues(alpha: 0.6) : Colors.grey;
+
+  /// 处理导航栏项点击事件
+  void _handleItemTap(int index) {
+    if (widget.currentIndex == index) return;
+    widget.onItemChange?.call(index);
+  }
+
+  /// 构建导航栏项列表
+  List<BottomNavigationBarItem> _buildNavigationItems(bool isDark) {
+    return List.generate(widget.tabLabels.length, (index) {
+      return BottomNavigationBarItem(
+        activeIcon: _buildActiveIcon(index),
+        icon: _buildInactiveIcon(index, isDark),
+        label: widget.tabLabels[index],
+      );
+    });
+  }
+
+  /// 构建选中状态的图标
+  Widget _buildActiveIcon(int index) {
+    return NavigationBarItem(
+      builder: (_) => Image.asset(
+        widget.tabActiveIcons[index],
+        width: widget.bottomBarIconWidth ?? 64.r,
+        height: widget.bottomBarIconHeight ?? 64.r,
       ),
     );
   }
 
-  /// 底部导航栏集合
-  ///
-  /// [isDark] 是否为深色模式
-  List<BottomNavigationBarItem> _barItemList(bool isDark) {
-    List<BottomNavigationBarItem> items = [];
-
-    for (var i = 0; i < widget.tabItems.length; i++) {
-      var item = BottomNavigationBarItem(
-        activeIcon: NavigationBarItem(
-          builder: (_) => Image.asset(
-            widget.tabActiveIcons[i],
-            width: widget.bottomBarIconWidth ?? 64.r,
-            height: widget.bottomBarIconHeight ?? 64.r,
-          ),
-        ),
-        icon: ColorFiltered(
-          colorFilter: ColorFilter.mode(
-            isDark ? Colors.white.withValues(alpha: 0.6) : Colors.grey,
-            BlendMode.srcIn,
-          ),
-          child: Image.asset(
-            widget.tabIcons[i],
-            width: widget.bottomBarIconWidth ?? 60.r,
-            height: widget.bottomBarIconHeight ?? 60.r,
-          ),
-        ),
-        label: widget.tabLabels[i],
-      );
-      items.add(item);
-    }
-    return items;
+  /// 构建未选中状态的图标
+  Widget _buildInactiveIcon(int index, bool isDark) {
+    return ColorFiltered(
+      colorFilter: ColorFilter.mode(
+        isDark ? Colors.black.withValues(alpha: 0.5) : Colors.grey,
+        BlendMode.srcIn,
+      ),
+      child: Image.asset(
+        widget.tabIcons[index],
+        width: widget.bottomBarIconWidth ?? 60.r,
+        height: widget.bottomBarIconHeight ?? 60.r,
+      ),
+    );
   }
 }

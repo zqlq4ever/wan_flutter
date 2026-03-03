@@ -40,6 +40,7 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = ThemeUtils.isDark(context);
+    final primaryColor = Theme.of(context).primaryColor;
     return TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
@@ -55,14 +56,14 @@ class MyButton extends StatelessWidget {
           // 背景颜色
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return disabledBackgroundColor ?? (isDark ? Colours.dark_button_disabled : Colours.button_disabled);
+              return disabledBackgroundColor ?? primaryColor.withValues(alpha: 0.5);
             }
-            return backgroundColor ?? (isDark ? Colours.dark_app_main : Colours.app_main);
+            return backgroundColor ?? primaryColor;
           }),
           // 水波纹
           overlayColor: WidgetStateProperty.resolveWith((states) {
             final color = textColor ?? (isDark ? Colours.dark_button_text : Colors.white);
-            return Color.fromARGB((color.alpha * 0.12).round(), color.red, color.green, color.blue);
+            return color.withValues(alpha: 0.12);
           }),
           // 按钮最小大小
           minimumSize: (minWidth == null || minHeight == null)

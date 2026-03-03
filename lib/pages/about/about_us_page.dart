@@ -24,6 +24,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: isDark ? Colours.dark_bg_color : Colors.grey[50],
       appBar: MyAppBar(
@@ -147,6 +148,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       title: AppStrings.getString('feature_home_title'),
                       description: AppStrings.getString('feature_home_desc'),
                       isDark: isDark,
+                      primaryColor: primaryColor,
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
@@ -154,6 +156,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       title: AppStrings.getString('feature_knowledge_title'),
                       description: AppStrings.getString('feature_knowledge_desc'),
                       isDark: isDark,
+                      primaryColor: primaryColor,
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
@@ -161,6 +164,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       title: AppStrings.getString('my_collection'),
                       description: AppStrings.getString('feature_collection_desc'),
                       isDark: isDark,
+                      primaryColor: primaryColor,
                     ),
                     SizedBox(height: 24.h),
                     _buildFeatureItem(
@@ -168,6 +172,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       title: AppStrings.getString('feature_profile_title'),
                       description: AppStrings.getString('feature_profile_desc'),
                       isDark: isDark,
+                      primaryColor: primaryColor,
                     ),
                   ],
                 ),
@@ -208,14 +213,14 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                           width: 80.r,
                           height: 80.r,
                           decoration: BoxDecoration(
-                            color: Colors.blueAccent.withValues(alpha: 0.1),
+                            color: primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Center(
                             child: Icon(
                               Icons.person,
                               size: 48.r,
-                              color: Colors.blueAccent,
+                              color: primaryColor,
                             ),
                           ),
                         ),
@@ -249,11 +254,13 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     _buildContactItem(
                       icon: Icons.email,
                       value: "zqlq4ever@163.com",
+                      primaryColor: primaryColor,
                     ),
                     SizedBox(height: 16.h),
                     _buildContactItem(
                       icon: Icons.link,
                       value: "https://github.com/zqlq4ever",
+                      primaryColor: primaryColor,
                     ),
                   ],
                 ),
@@ -292,18 +299,21 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       icon: Icons.copyright,
                       title: AppStrings.getString('copyright_info'),
                       value: AppStrings.getString('copyright_value'),
+                      primaryColor: primaryColor,
                     ),
                     SizedBox(height: 16.h),
                     _buildInfoItem(
                       icon: Icons.code,
                       title: AppStrings.getString('open_source_license'),
                       value: AppStrings.getString('mit_license'),
+                      primaryColor: primaryColor,
                     ),
                     SizedBox(height: 16.h),
                     _buildInfoItem(
                       icon: Icons.update,
                       title: AppStrings.getString('check_update'),
                       value: AppStrings.getString('current_latest_version'),
+                      primaryColor: primaryColor,
                     ),
                   ],
                 ),
@@ -349,6 +359,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
     required String title,
     required String description,
     required bool isDark,
+    required Color primaryColor,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,14 +368,14 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
           width: 60.r,
           height: 60.r,
           decoration: BoxDecoration(
-            color: Colors.blueAccent.withValues(alpha: 0.1),
+            color: primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Center(
             child: Icon(
               icon,
               size: 36.r,
-              color: Colors.blueAccent,
+              color: primaryColor,
             ),
           ),
         ),
@@ -405,6 +416,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
   Widget _buildContactItem({
     required IconData icon,
     required String value,
+    required Color primaryColor,
   }) {
     final isLink = value.startsWith('http');
     return Row(
@@ -432,7 +444,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
               value,
               style: TextStyle(
                 fontSize: 37.sp,
-                color: isLink ? Colors.blueAccent : Colors.grey[700],
+                color: isLink ? primaryColor : Colors.grey[700],
               ),
             ),
           ),
@@ -450,6 +462,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
     required IconData icon,
     required String title,
     required String value,
+    required Color primaryColor,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -475,7 +488,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
           value,
           style: TextStyle(
             fontSize: 37.sp,
-            color: Colors.blueAccent,
+            color: primaryColor,
             fontWeight: FontWeight.w500,
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:wan_android_flutter/res/colors.dart';
+import 'package:wan_android_flutter/res/theme_color.dart';
 import 'package:wan_android_flutter/utils/theme_controller.dart';
 import 'package:wan_android_flutter/utils/locale_controller.dart';
 import 'package:wan_android_flutter/utils/theme_util.dart';
@@ -13,12 +14,6 @@ import 'package:wan_android_flutter/res/app_strings.dart';
 
 import '../../widgets/my_app_bar.dart';
 
-/// 设置页面
-///
-/// 展示应用设置选项，包括：
-/// - 通用设置：深色模式、语言切换
-/// - 隐私安全：隐私政策、用户协议、清除缓存
-/// - 其他：版本信息
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -40,26 +35,29 @@ class SettingsPage extends StatelessWidget {
                 _buildSectionTitle(AppStrings.getString('general_settings'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
-                  _buildThemeModeItem(isDark),
-                  _buildLanguageItem(isDark),
+                  _buildThemeModeItem(context, isDark),
+                  _buildThemeColorItem(context, isDark),
+                  _buildLanguageItem(context, isDark),
                 ], isDark),
                 SizedBox(height: 32.h),
                 _buildSectionTitle(AppStrings.getString('privacy_security'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
                   _buildSettingsItem(
+                    context: context,
                     icon: Icons.lock_outline,
                     title: AppStrings.getString('privacy_policy'),
                     isDark: isDark,
                     onTap: () {},
                   ),
                   _buildSettingsItem(
+                    context: context,
                     icon: Icons.description_outlined,
                     title: AppStrings.getString('user_agreement'),
                     isDark: isDark,
                     onTap: () {},
                   ),
-                  _buildClearCacheItem(isDark),
+                  _buildClearCacheItem(context, isDark),
                 ], isDark),
                 SizedBox(height: 32.h),
                 _buildSectionTitle(AppStrings.getString('other'), isDark),
@@ -70,6 +68,7 @@ class SettingsPage extends StatelessWidget {
                     builder: (context, snapshot) {
                       final version = snapshot.data?.version ?? "...";
                       return _buildSettingsItem(
+                        context: context,
                         icon: Icons.info_outline,
                         title: AppStrings.getString('version_info'),
                         isDark: isDark,
@@ -103,18 +102,16 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 构建深色模式设置项
-  ///
-  /// 显示当前主题模式，点击可选择跟随系统/浅色/深色模式
-  Widget _buildThemeModeItem(bool isDark) {
+  Widget _buildThemeModeItem(BuildContext context, bool isDark) {
     return Obx(() {
       final controller = ThemeController.to;
       return _buildSettingsItem(
+        context: context,
         icon: Icons.dark_mode_outlined,
         title: AppStrings.getString('dark_mode'),
         isDark: isDark,
         trailing: GestureDetector(
-          onTap: () => _showThemeModeDialog(controller, isDark),
+          onTap: () => _showThemeModeDialog(context, controller, isDark),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -134,20 +131,61 @@ class SettingsPage extends StatelessWidget {
             ],
           ),
         ),
-        onTap: () => _showThemeModeDialog(controller, isDark),
+        onTap: () => _showThemeModeDialog(context, controller, isDark),
       );
     });
   }
 
-  Widget _buildLanguageItem(bool isDark) {
+  Widget _buildThemeColorItem(BuildContext context, bool isDark) {
+    return Obx(() {
+      final controller = ThemeController.to;
+      final themeColor = controller.themeColor;
+      return _buildSettingsItem(
+        context: context,
+        icon: Icons.palette_outlined,
+        title: AppStrings.getString('theme_color'),
+        isDark: isDark,
+        trailing: GestureDetector(
+          onTap: () => _showThemeColorPicker(context, isDark),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 50.r,
+                height: 50.r,
+                decoration: BoxDecoration(
+                  color: themeColor.color,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isDark ? Colors.white24 : Colors.black12,
+                    width: 1,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 30.r,
+                color: isDark ? Colours.dark_text_gray : Colors.grey[300],
+              ),
+            ],
+          ),
+        ),
+        onTap: () => _showThemeColorPicker(context, isDark),
+      );
+    });
+  }
+
+  Widget _buildLanguageItem(BuildContext context, bool isDark) {
     return Obx(() {
       final controller = LocaleController.to;
       return _buildSettingsItem(
+        context: context,
         icon: Icons.language_outlined,
         title: AppStrings.getString('language'),
         isDark: isDark,
         trailing: GestureDetector(
-          onTap: () => _showLanguageDialog(controller, isDark),
+          onTap: () => _showLanguageDialog(context, controller, isDark),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -167,16 +205,13 @@ class SettingsPage extends StatelessWidget {
             ],
           ),
         ),
-        onTap: () => _showLanguageDialog(controller, isDark),
+        onTap: () => _showLanguageDialog(context, controller, isDark),
       );
     });
   }
 
-  /// 显示主题模式选择对话框
-  ///
-  /// [controller] 主题控制器
-  /// 提供跟随系统、浅色、深色三种选项
-  void _showThemeModeDialog(ThemeController controller, bool isDark) {
+  void _showThemeModeDialog(BuildContext context, ThemeController controller, bool isDark) {
+    final primaryColor = Theme.of(context).primaryColor;
     Get.dialog(
       AlertDialog(
         backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
@@ -191,18 +226,21 @@ class SettingsPage extends StatelessWidget {
               AppStrings.getString('follow_system'),
               ThemeMode.system,
               controller.themeMode,
+              primaryColor,
               () => controller.setThemeMode(ThemeMode.system),
             ),
             _buildThemeModeOption(
               AppStrings.getString('light'),
               ThemeMode.light,
               controller.themeMode,
+              primaryColor,
               () => controller.setThemeMode(ThemeMode.light),
             ),
             _buildThemeModeOption(
               AppStrings.getString('dark'),
               ThemeMode.dark,
               controller.themeMode,
+              primaryColor,
               () => controller.setThemeMode(ThemeMode.dark),
             ),
           ],
@@ -211,11 +249,129 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 显示语言选择对话框
-  ///
-  /// [controller] 语言控制器
-  /// 提供中文、英文两种选项
-  void _showLanguageDialog(LocaleController controller, bool isDark) {
+  void _showThemeColorPicker(BuildContext context, bool isDark) {
+    final controller = ThemeController.to;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(32.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 80.w,
+                  height: 8.h,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white24 : Colors.black12,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: 32.h),
+              Text(
+                AppStrings.getString('select_theme_color'),
+                style: TextStyle(
+                  fontSize: 48.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colours.dark_text : Colors.black87,
+                ),
+              ),
+              SizedBox(height: 48.h),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 32.h,
+                  crossAxisSpacing: 32.w,
+                  childAspectRatio: 0.9,
+                ),
+                itemCount: ThemeColor.presetColors.length,
+                itemBuilder: (context, index) {
+                  final color = ThemeColor.presetColors[index];
+                  return Obx(() => _buildColorItem(
+                    color,
+                    controller.themeColor.key == color.key,
+                    isDark,
+                    () => controller.setThemeColor(color),
+                  ));
+                },
+              ),
+              SizedBox(height: 48.h),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildColorItem(
+    ThemeColor themeColor,
+    bool isSelected,
+    bool isDark,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 100.r,
+            height: 100.r,
+            decoration: BoxDecoration(
+              color: themeColor.color,
+              shape: BoxShape.circle,
+              border: isSelected
+                  ? Border.all(
+                      color: isDark ? Colors.white : Colors.black87,
+                      width: 4,
+                    )
+                  : null,
+              boxShadow: [
+                BoxShadow(
+                  color: themeColor.color.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: isSelected
+                ? Icon(
+                    Icons.check,
+                    color: _getCheckColor(themeColor.color),
+                    size: 50.r,
+                  )
+                : null,
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            themeColor.name,
+            style: TextStyle(
+              fontSize: 32.sp,
+              color: isDark ? Colours.dark_text_gray : Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getCheckColor(Color backgroundColor) {
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? Colors.black87 : Colors.white;
+  }
+
+  void _showLanguageDialog(BuildContext context, LocaleController controller, bool isDark) {
+    final primaryColor = Theme.of(context).primaryColor;
     Get.dialog(
       AlertDialog(
         backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
@@ -230,12 +386,14 @@ class SettingsPage extends StatelessWidget {
               AppStrings.getString('chinese'),
               const Locale('zh', 'CN'),
               controller.locale,
+              primaryColor,
               () => controller.setLocale(const Locale('zh', 'CN')),
             ),
             _buildLanguageOption(
               AppStrings.getString('english'),
               const Locale('en', 'US'),
               controller.locale,
+              primaryColor,
               () => controller.setLocale(const Locale('en', 'US')),
             ),
           ],
@@ -244,16 +402,11 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 构建主题模式选项
-  ///
-  /// [text] 选项文本
-  /// [mode] 主题模式
-  /// [currentMode] 当前选中的主题模式
-  /// [onTap] 点击回调
   Widget _buildThemeModeOption(
     String text,
     ThemeMode mode,
     ThemeMode currentMode,
+    Color primaryColor,
     VoidCallback onTap,
   ) {
     final isSelected = mode == currentMode;
@@ -276,7 +429,7 @@ class SettingsPage extends StatelessWidget {
             if (isSelected)
               Icon(
                 Icons.check,
-                color: Colours.app_main,
+                color: primaryColor,
                 size: 50.r,
               ),
           ],
@@ -285,16 +438,11 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 构建语言选项
-  ///
-  /// [text] 选项文本
-  /// [locale] 语言区域
-  /// [currentLocale] 当前选中的语言
-  /// [onTap] 点击回调
   Widget _buildLanguageOption(
     String text,
     Locale locale,
     Locale currentLocale,
+    Color primaryColor,
     VoidCallback onTap,
   ) {
     final isSelected = locale.languageCode == currentLocale.languageCode;
@@ -317,7 +465,7 @@ class SettingsPage extends StatelessWidget {
             if (isSelected)
               Icon(
                 Icons.check,
-                color: Colours.app_main,
+                color: primaryColor,
                 size: 50.r,
               ),
           ],
@@ -326,11 +474,9 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 构建清除缓存设置项
-  ///
-  /// 显示当前缓存大小，点击可清除缓存
-  Widget _buildClearCacheItem(bool isDark) {
+  Widget _buildClearCacheItem(BuildContext context, bool isDark) {
     return _buildSettingsItem(
+      context: context,
       icon: Icons.storage_outlined,
       title: AppStrings.getString('clear_cache'),
       isDark: isDark,
@@ -346,14 +492,10 @@ class SettingsPage extends StatelessWidget {
           );
         },
       ),
-      onTap: () => _showClearCacheDialog(isDark),
+      onTap: () => _showClearCacheDialog(context, isDark),
     );
   }
 
-  /// 获取缓存大小
-  ///
-  /// 遍历缓存目录计算总大小
-  /// 返回格式化后的缓存大小字符串
   Future<String> _getCacheSize() async {
     try {
       final directory = Directory('${Directory.current.path}/cache');
@@ -372,10 +514,6 @@ class SettingsPage extends StatelessWidget {
     return "0B";
   }
 
-  /// 格式化字节数为可读字符串
-  ///
-  /// [bytes] 字节数
-  /// 返回 B/KB/MB/GB 格式的字符串
   String _formatBytes(int bytes) {
     if (bytes < 1024) {
       return "$bytes B";
@@ -388,8 +526,7 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
-  /// 显示清除缓存确认对话框
-  void _showClearCacheDialog(bool isDark) {
+  void _showClearCacheDialog(BuildContext context, bool isDark) {
     Get.dialog(
       AlertDialog(
         backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
@@ -425,9 +562,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 清除缓存
-  ///
-  /// 删除缓存目录下的所有文件
   Future<void> _clearCache() async {
     try {
       final directory = Directory('${Directory.current.path}/cache');
@@ -443,9 +577,6 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
-  /// 构建分区标题
-  ///
-  /// [title] 标题文本
   Widget _buildSectionTitle(String title, bool isDark) {
     return Padding(
       padding: EdgeInsets.only(left: 8.w),
@@ -460,9 +591,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  /// 构建设置卡片容器
-  ///
-  /// [children] 卡片内的子组件列表
   Widget _buildSettingsCard(List<Widget> children, bool isDark) {
     return Container(
       decoration: BoxDecoration(
@@ -483,12 +611,14 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildSettingsItem({
+    required BuildContext context,
     required IconData icon,
     required String title,
     Widget? trailing,
     VoidCallback? onTap,
     required bool isDark,
   }) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -502,12 +632,12 @@ class SettingsPage extends StatelessWidget {
                 width: 80.r,
                 height: 80.r,
                 decoration: BoxDecoration(
-                  color: Colours.app_main.withValues(alpha: 0.1),
+                  color: primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Icon(
                   icon,
-                  color: Colours.app_main,
+                  color: primaryColor,
                   size: 50.r,
                 ),
               ),

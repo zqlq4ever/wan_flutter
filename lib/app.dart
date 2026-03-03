@@ -10,7 +10,6 @@ import 'package:wan_android_flutter/route/route_path_constant.dart';
 import 'utils/theme_controller.dart';
 import 'utils/locale_controller.dart';
 
-/// 设计尺寸
 Size get designSize {
   return const Size(1080, 1920);
 }
@@ -57,6 +56,7 @@ class _AppWrapperState extends State<_AppWrapper> {
         AppInit.localeController,
       ]),
       builder: (context, child) {
+        final themeColor = AppInit.themeController.themeColor;
         return GetMaterialApp(
           title: 'WanAndroid',
           themeMode: AppInit.themeController.themeMode,
@@ -68,33 +68,41 @@ class _AppWrapperState extends State<_AppWrapper> {
             GlobalCupertinoLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
-          theme: ThemeData(
-            useMaterial3: true,
-            primaryColor: Colours.app_main,
-            scaffoldBackgroundColor: Colors.white,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colours.app_main,
-              primary: Colours.app_main,
-              surface: Colors.white,
-            ),
-          ),
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            primaryColor: Colours.app_main,
-            brightness: Brightness.dark,
-            scaffoldBackgroundColor: Colours.dark_bg_color,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colours.app_main,
-              primary: Colours.app_main,
-              brightness: Brightness.dark,
-              surface: Colours.dark_bg_color,
-            ),
-          ),
+          theme: _buildLightTheme(themeColor.color),
+          darkTheme: _buildDarkTheme(themeColor.color),
           initialRoute: RoutePath.tab,
           defaultTransition: Transition.rightToLeftWithFade,
           getPages: RoutePageUtil.pages,
         );
       },
+    );
+  }
+
+  ThemeData _buildLightTheme(Color seedColor) {
+    return ThemeData(
+      useMaterial3: true,
+      primaryColor: seedColor,
+      scaffoldBackgroundColor: Colors.white,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: seedColor,
+        primary: seedColor,
+        surface: Colors.white,
+      ),
+    );
+  }
+
+  ThemeData _buildDarkTheme(Color seedColor) {
+    return ThemeData(
+      useMaterial3: true,
+      primaryColor: seedColor,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: Colours.dark_bg_color,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: seedColor,
+        primary: seedColor,
+        brightness: Brightness.dark,
+        surface: Colours.dark_bg_color,
+      ),
     );
   }
 }

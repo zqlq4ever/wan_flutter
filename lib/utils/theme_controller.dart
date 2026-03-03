@@ -3,20 +3,25 @@ import 'package:get/get.dart';
 
 import '../constants.dart';
 import '../res/app_strings.dart';
+import '../res/theme_color.dart';
 import 'sp_util.dart';
 
 class ThemeController extends GetxController {
   static ThemeController get to => Get.find();
 
   final _themeMode = ThemeMode.system.obs;
+  final _themeColor = Rx<ThemeColor>(ThemeColor.presetColors.first);
 
   ThemeMode get themeMode => _themeMode.value;
+  ThemeColor get themeColor => _themeColor.value;
 
   @override
   void onInit() {
     super.onInit();
     ever(_themeMode, (_) => update());
+    ever(_themeColor, (_) => update());
     _loadThemeMode();
+    _loadThemeColor();
   }
 
   Future<void> _loadThemeMode() async {
@@ -40,5 +45,21 @@ class ThemeController extends GetxController {
       case ThemeMode.dark:
         return AppStrings.getString('dark');
     }
+  }
+
+  Future<void> _loadThemeColor() async {
+    final key = await SpUtil.getString(Constants.spThemeColor);
+    if (key != null) {
+      _themeColor.value = ThemeColor.fromKey(key);
+    }
+  }
+
+  Future<void> setThemeColor(ThemeColor color) async {
+    _themeColor.value = color;
+    await SpUtil.saveString(Constants.spThemeColor, color.key);
+  }
+
+  String getThemeColorName() {
+    return _themeColor.value.name;
   }
 }

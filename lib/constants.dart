@@ -19,4 +19,7 @@ class Constants {
   //  国家代码
   static const String spLanguageCountry = "SP_LANGUAGE_COUNTRY";
 
+  //  主题色
+  static const String spThemeColor = "SP_THEME_COLOR";
+
 }

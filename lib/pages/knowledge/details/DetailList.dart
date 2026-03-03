@@ -90,6 +90,7 @@ class _DetailListState extends State<DetailList> {
   /// 包含下拉刷新 Header 和上拉加载 Footer
   /// 支持国际化文本显示
   Widget _buildRefreshList(KnowledgeDetailsViewModel value) {
+    final primaryColor = Theme.of(context).primaryColor;
     return SmartRefresher(
       controller: _refreshController,
       enablePullDown: true,
@@ -101,10 +102,10 @@ class _DetailListState extends State<DetailList> {
         completeText: AppStrings.getString('refresh_complete'),
         failedText: AppStrings.getString('refresh_failed'),
         completeDuration: Duration(milliseconds: 100),
-        textStyle: TextStyle(color: Colours.app_main),
-        idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main),
+        textStyle: TextStyle(color: primaryColor),
+        idleIcon: Icon(Icons.arrow_downward, color: primaryColor),
         refreshingIcon: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+          valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
         ),
       ),
       footer: ClassicFooter(
@@ -113,9 +114,9 @@ class _DetailListState extends State<DetailList> {
         idleText: AppStrings.getString('pull_up_load_more'),
         noDataText: AppStrings.getString('no_more_data'),
         failedText: AppStrings.getString('load_failed'),
-        textStyle: TextStyle(color: Colours.app_main),
+        textStyle: TextStyle(color: primaryColor),
         loadingIcon: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+          valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
         ),
       ),
       onRefresh: () {
@@ -200,6 +201,7 @@ class _DetailListState extends State<DetailList> {
   /// 构建文章底部信息（作者和发布时间）
   Widget _buildItemFooter(KnowledgeDetailItem item) {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return Container(
       padding: EdgeInsets.fromLTRB(28.w, 0, 28.w, 28.w),
       child: Row(
@@ -207,14 +209,14 @@ class _DetailListState extends State<DetailList> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: Colours.app_main.withValues(alpha: 0.1),
+              color: primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Text(
               item.shareUser ?? "",
               style: TextStyle(
                 fontSize: 30.sp,
-                color: Colours.app_main,
+                color: primaryColor,
                 fontWeight: FontWeight.w500,
               ),
             ),

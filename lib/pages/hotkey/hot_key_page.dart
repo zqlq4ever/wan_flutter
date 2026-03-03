@@ -53,6 +53,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return ChangeNotifierProvider(
       create: (context) => vm,
       child: Scaffold(
@@ -65,10 +66,15 @@ class _HotKeyPageState extends State<HotKeyPage> {
               refreshingText: AppStrings.getString('refreshing'),
               completeText: AppStrings.getString('refresh_complete'),
               failedText: AppStrings.getString('refresh_failed'),
+              textStyle: TextStyle(color: primaryColor),
+              idleIcon: Icon(Icons.arrow_downward, color: primaryColor),
               refreshingIcon: SizedBox(
                 width: 20.w,
                 height: 20.h,
-                child: const CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                ),
               ),
             ),
             child: SmartRefresher(
@@ -94,9 +100,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
                       ),
                       child: Column(
                         children: [
-                          _titleWidget(AppStrings.getString('search_hot_key'), isDark),
+                          _titleWidget(AppStrings.getString('search_hot_key'), isDark, primaryColor),
                           SizedBox(height: 24.h),
-                          _searchHotKeyListView(isDark),
+                          _searchHotKeyListView(isDark, primaryColor),
                         ],
                       ),
                     ),
@@ -117,9 +123,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
                       ),
                       child: Column(
                         children: [
-                          _titleWidget(AppStrings.getString('common_website'), isDark),
+                          _titleWidget(AppStrings.getString('common_website'), isDark, primaryColor),
                           SizedBox(height: 24.h),
-                          _commonWebsiteListView(isDark),
+                          _commonWebsiteListView(isDark, primaryColor),
                         ],
                       ),
                     ),
@@ -137,6 +143,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
   Widget _titleWidget(
     String title,
     bool isDark,
+    Color primaryColor,
   ) {
     return Container(
       width: double.infinity,
@@ -147,7 +154,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
             width: 8.w,
             height: 36.h,
             decoration: BoxDecoration(
-              color: Colours.app_main,
+              color: primaryColor,
               borderRadius: BorderRadius.circular(4.r),
             ),
           ),
@@ -169,7 +176,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
     );
   }
 
-  Widget _searchHotKeyListView(bool isDark) {
+  Widget _searchHotKeyListView(bool isDark, Color primaryColor) {
     return Consumer<HotKeyViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
@@ -178,6 +185,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
               keyword,
               isDark: isDark,
               isHot: index < 3,
+              primaryColor: primaryColor,
               onTap: () {
                 Get.toNamed(RoutePath.search, arguments: {"keyword": keyword});
               },
@@ -187,11 +195,11 @@ class _HotKeyPageState extends State<HotKeyPage> {
     });
   }
 
-  Widget _commonWebsiteListView(bool isDark) {
+  Widget _commonWebsiteListView(bool isDark, Color primaryColor) {
     return Consumer<HotKeyViewModel>(builder: (context, value, child) {
       return _gridview(
           itemBuilder: (context, index) {
-            return _item(value.websiteList[index].name, isDark: isDark, onTap: () {
+            return _item(value.websiteList[index].name, isDark: isDark, primaryColor: primaryColor, onTap: () {
               Get.to(
                 WebViewPage(
                     loadResource: value.websiteList[index].link ?? "",
@@ -233,6 +241,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
     GestureTapCallback? onTap,
     bool isHot = false,
     required bool isDark,
+    required Color primaryColor,
   }) {
     return Material(
       color: Colors.transparent,
@@ -241,10 +250,10 @@ class _HotKeyPageState extends State<HotKeyPage> {
         borderRadius: BorderRadius.circular(16.r),
         child: Container(
           decoration: BoxDecoration(
-            color: isHot ? Colours.app_main.withValues(alpha: 0.1) : (isDark ? Colours.dark_bg_gray : Colors.grey[100]),
+            color: isHot ? primaryColor.withValues(alpha: 0.1) : (isDark ? Colours.dark_bg_gray : Colors.grey[100]),
             borderRadius: BorderRadius.circular(16.r),
             border: isHot
-                ? Border.all(color: Colours.app_main.withValues(alpha: 0.3), width: 1)
+                ? Border.all(color: primaryColor.withValues(alpha: 0.3), width: 1)
                 : null,
           ),
           alignment: Alignment.center,
@@ -254,7 +263,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 33.sp,
-              color: isHot ? Colours.app_main : (isDark ? Colours.dark_text : Colors.black87),
+              color: isHot ? primaryColor : (isDark ? Colours.dark_text : Colors.black87),
               fontWeight: isHot ? FontWeight.w600 : FontWeight.w500,
             ),
             maxLines: 1,

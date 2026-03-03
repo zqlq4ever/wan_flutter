@@ -47,12 +47,13 @@ class _KnowledgePageState extends State<KnowledgePage> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(isDark),
+            _buildHeader(isDark, primaryColor),
             SizedBox(height: 20.h),
             Expanded(
               child: RefreshConfiguration(
@@ -62,14 +63,19 @@ class _KnowledgePageState extends State<KnowledgePage> {
                   refreshingText: AppStrings.getString('refreshing'),
                   completeText: AppStrings.getString('refresh_complete'),
                   failedText: AppStrings.getString('refresh_failed'),
+                  textStyle: TextStyle(color: primaryColor),
+                  idleIcon: Icon(Icons.arrow_downward, color: primaryColor),
                   refreshingIcon: SizedBox(
                     width: 20.w,
                     height: 20.h,
-                    child: const CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    ),
                   ),
                 ),
                 child: Obx(() {
-                  return _buildKnowledgeList(isDark);
+                  return _buildKnowledgeList(isDark, primaryColor);
                 }),
               ),
             ),
@@ -82,7 +88,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
   /// 构建页面头部
   ///
   /// 显示"知识体系"标题，带有左侧主题色竖条装饰
-  Widget _buildHeader(bool isDark) {
+  Widget _buildHeader(bool isDark, Color primaryColor) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 32.h),
@@ -102,7 +108,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
             width: 8.w,
             height: 40.h,
             decoration: BoxDecoration(
-              color: Colours.app_main,
+              color: primaryColor,
               borderRadius: BorderRadius.circular(4.r),
             ),
           ),
@@ -123,7 +129,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
   /// 构建知识体系列表
   ///
   /// 使用 ListView 展示所有一级分类
-  Widget _buildKnowledgeList(bool isDark) {
+  Widget _buildKnowledgeList(bool isDark, Color primaryColor) {
     return SmartRefresher(
       controller: _refreshController,
       onRefresh: _onRefresh,
@@ -132,12 +138,12 @@ class _KnowledgePageState extends State<KnowledgePage> {
         shrinkWrap: true,
         itemCount: controller.list.length,
         itemBuilder: (context, index) {
-          return _buildKnowledgeItem(controller.list[index], context.isDark);
+          return _buildKnowledgeItem(controller.list[index], context.isDark, primaryColor);
         }),
     );
   }
 
-  Widget _buildKnowledgeItem(KnowledgeModel? item, bool isDark) {
+  Widget _buildKnowledgeItem(KnowledgeModel? item, bool isDark, Color primaryColor) {
     return GestureDetector(
       onTap: () {
         Get.toNamed(
@@ -161,7 +167,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildItemHeader(item),
+            _buildItemHeader(item, primaryColor),
             SizedBox(height: 20.h),
             _buildChildrenTags(item?.children, isDark),
           ],
@@ -173,7 +179,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
   /// 构建分类项头部
   ///
   /// 显示一级分类名称和右侧箭头图标
-  Widget _buildItemHeader(KnowledgeModel? item) {
+  Widget _buildItemHeader(KnowledgeModel? item, Color primaryColor) {
     return Padding(
       padding: EdgeInsets.fromLTRB(28.w, 28.w, 28.w, 0),
       child: Row(
@@ -183,7 +189,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
               item?.name ?? "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colours.app_main,
+                color: primaryColor,
                 fontSize: 44.sp,
               ),
             ),
@@ -191,13 +197,13 @@ class _KnowledgePageState extends State<KnowledgePage> {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: Colours.app_main.withValues(alpha: 0.1),
+              color: primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               Icons.arrow_forward_ios,
               size: 28.r,
-              color: Colours.app_main,
+              color: primaryColor,
             ),
           ),
         ],

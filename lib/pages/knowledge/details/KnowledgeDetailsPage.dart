@@ -82,6 +82,7 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
   /// 选中状态显示绿色圆角背景
   Widget _buildTabBar() {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -105,7 +106,7 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
               indicator: BoxDecoration(
-                color: Colours.app_main,
+                color: primaryColor,
                 borderRadius: BorderRadius.circular(20.r),
               ),
               indicatorPadding: EdgeInsets.zero,
@@ -120,7 +121,7 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
               ),
               controller: tabController,
               labelColor: Colors.white,
-              unselectedLabelColor: Colours.app_main,
+              unselectedLabelColor: primaryColor,
               overlayColor: WidgetStateProperty.resolveWith<Color?>(
                 (Set<WidgetState> states) {
                   return Colors.transparent;

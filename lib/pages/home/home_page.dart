@@ -33,6 +33,7 @@ class HomePage extends GetView<HomeViewModel> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
       body: SafeArea(
@@ -48,14 +49,14 @@ class HomePage extends GetView<HomeViewModel> {
             completeText: AppStrings.getString('refresh_complete'),
             failedText: AppStrings.getString('refresh_failed'),
             completeDuration: Duration(milliseconds: 100),
-            textStyle: TextStyle(color: Colours.app_main, fontSize: 28.sp),
-            idleIcon: Icon(Icons.arrow_downward, color: Colours.app_main, size: 40.r),
+            textStyle: TextStyle(color: primaryColor, fontSize: 28.sp),
+            idleIcon: Icon(Icons.arrow_downward, color: primaryColor, size: 40.r),
             refreshingIcon: SizedBox(
               width: 40.r,
               height: 40.r,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
               ),
             ),
           ),
@@ -67,13 +68,13 @@ class HomePage extends GetView<HomeViewModel> {
             idleText: AppStrings.getString('pull_up_load_more'),
             noDataText: AppStrings.getString('no_more_data'),
             failedText: AppStrings.getString('load_failed'),
-            textStyle: TextStyle(color: Colours.app_main, fontSize: 28.sp),
+            textStyle: TextStyle(color: primaryColor, fontSize: 28.sp),
             loadingIcon: SizedBox(
               width: 40.r,
               height: 40.r,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colours.app_main),
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
               ),
             ),
           ),
@@ -88,7 +89,7 @@ class HomePage extends GetView<HomeViewModel> {
               children: [
                 _topSearchBar(isDark),
                 SizedBox(height: 8.h),
-                _banner(isDark),
+                _banner(isDark, primaryColor),
                 Obx(() {
                   return ListView.builder(
                       padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 24.h),
@@ -100,6 +101,7 @@ class HomePage extends GetView<HomeViewModel> {
                         return _listItem(
                           item: item,
                           isDark: context.isDark,
+                          primaryColor: Theme.of(context).primaryColor,
                           onItemClick: () {
                             Get.to(
                               WebViewPage(
@@ -131,7 +133,7 @@ class HomePage extends GetView<HomeViewModel> {
   /// 构建Banner轮播图
   ///
   /// 展示轮播图片，支持点击跳转WebView
-  Widget _banner(bool isDark) {
+  Widget _banner(bool isDark, Color primaryColor) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Stack(
@@ -150,8 +152,8 @@ class HomePage extends GetView<HomeViewModel> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colours.app_main.withValues(alpha: 0.3),
-                            Colours.app_main.withValues(alpha: 0.6)
+                            primaryColor.withValues(alpha: 0.3),
+                            primaryColor.withValues(alpha: 0.6)
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -294,6 +296,7 @@ class HomePage extends GetView<HomeViewModel> {
     GestureTapCallback? onItemClick,
     GestureTapCallback? imageClick,
     required bool isDark,
+    required Color primaryColor,
   }) {
     int randomNumber =
         item?.id?.hashCode ?? DateTime.now().millisecondsSinceEpoch;
@@ -329,7 +332,7 @@ class HomePage extends GetView<HomeViewModel> {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colours.app_main.withValues(alpha: 0.2),
+                          color: primaryColor.withValues(alpha: 0.2),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -384,8 +387,8 @@ class HomePage extends GetView<HomeViewModel> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colours.app_main,
-                            Colours.app_main.withValues(alpha: 0.8)
+                            primaryColor,
+                            primaryColor.withValues(alpha: 0.8)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(20.r),
@@ -432,14 +435,14 @@ class HomePage extends GetView<HomeViewModel> {
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: Colours.app_main.withValues(alpha: 0.1),
+                    color: primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
                     "${item?.superChapterName ?? ""} • ${item?.chapterName ?? ""}",
                     style: TextStyle(
                         fontSize: 31.sp,
-                        color: Colours.app_main,
+                        color: primaryColor,
                         fontWeight: FontWeight.w500),
                   ),
                 ),

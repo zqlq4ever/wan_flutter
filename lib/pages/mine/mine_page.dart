@@ -333,6 +333,7 @@ class _MinePageState extends State<MinePage> {
     bool? showRedDot,
   }) {
     final isDark = context.isDark;
+    final primaryColor = Theme.of(context).primaryColor;
     return Container(
       decoration: BoxDecoration(
         color: isDark ? Colours.dark_card_bg : Colors.white,
@@ -359,12 +360,12 @@ class _MinePageState extends State<MinePage> {
                   width: 100.r,
                   height: 100.r,
                   decoration: BoxDecoration(
-                    color: Colours.app_main.withValues(alpha: 0.1),
+                    color: primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Icon(
                     icon,
-                    color: Colours.app_main,
+                    color: primaryColor,
                     size: 60.r,
                   ),
                 ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../res/app_strings.dart';
 import '../../../res/colors.dart';
 import '../../../res/gaps.dart';
 import '../../../utils/device_util.dart';
@@ -59,7 +60,17 @@ class _MyTextFieldState extends State<MyTextField> {
 
     /// 监听输入改变
     widget.controller.addListener(isEmpty);
+    
+    /// 监听焦点变化
+    widget.focusNode?.addListener(_onFocusChange);
+    
     super.initState();
+  }
+
+  void _onFocusChange() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void isEmpty() {
@@ -77,6 +88,7 @@ class _MyTextFieldState extends State<MyTextField> {
   void dispose() {
     _subscription?.cancel();
     widget.controller.removeListener(isEmpty);
+    widget.focusNode?.removeListener(_onFocusChange);
     super.dispose();
   }
 
@@ -126,23 +138,30 @@ class _MyTextFieldState extends State<MyTextField> {
         errorBorder: InputBorder.none,
         focusedErrorBorder: InputBorder.none,
       ),
+      onTap: () {
+        /// Android 设备点击输入框时确保键盘弹出
+        /// 解决手动收起键盘后再次点击输入框键盘不弹出的问题
+        if (Device.isAndroid) {
+          final hasFocus = widget.focusNode?.hasFocus ?? false;
+          if (hasFocus) {
+            /// 如果已经有焦点但键盘没弹出，先取消焦点再重新获取
+            widget.focusNode?.unfocus();
+            Future.delayed(const Duration(milliseconds: 100), () {
+              widget.focusNode?.requestFocus();
+            });
+          } else {
+            widget.focusNode?.requestFocus();
+          }
+        }
+      },
     );
-
-    /// 个别Android机型（华为、vivo）的密码安全键盘不弹出问题（已知小米正常），临时修复方法：https://github.com/flutter/flutter/issues/68571 (issues/61446)
-    /// 怀疑是安全键盘与三方输入法之间的切换冲突问题。
-    if (Device.isAndroid) {
-      textField = Listener(
-        onPointerDown: (e) => FocusScope.of(context).requestFocus(widget.focusNode),
-        child: textField,
-      );
-    }
 
     Widget? clearButton;
 
     if (_isShowDelete) {
       clearButton = Semantics(
-        label: '清空',
-        hint: '清空输入框',
+        label: AppStrings.getString('clear'),
+        hint: AppStrings.getString('clear_input_hint'),
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath("icon_delete"),
@@ -157,8 +176,8 @@ class _MyTextFieldState extends State<MyTextField> {
     late Widget pwdVisible;
     if (widget.isInputPwd) {
       pwdVisible = Semantics(
-        label: '密码可见开关',
-        hint: '密码是否可见',
+        label: AppStrings.getString('password_visibility_toggle'),
+        hint: AppStrings.getString('password_visibility_hint'),
         child: GestureDetector(
           child: Image.asset(
             ImageUtil.getImgPath(_isShowPwd ? 'icon_display' : 'icon_hide'),
@@ -180,7 +199,7 @@ class _MyTextFieldState extends State<MyTextField> {
         key: const Key('getVerificationCode'),
         onPressed: _clickable ? _getVCode : null,
         fontSize: 12.sp,
-        text: _clickable ? "获取验证码" : '（$_currentSecond s）',
+        text: _clickable ? AppStrings.getString('get_verification_code') : '（$_currentSecond s）',
         textColor: themeData.primaryColor,
         disabledTextColor: isDark ? Colours.dark_text : Colors.white,
         backgroundColor: Colors.transparent,
@@ -196,13 +215,6 @@ class _MyTextFieldState extends State<MyTextField> {
       );
     }
 
-    // 添加焦点监听器，当焦点变化时更新状态
-    widget.focusNode?.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-    
     // 监听焦点状态
     final isFocused = widget.focusNode?.hasFocus ?? false;
 

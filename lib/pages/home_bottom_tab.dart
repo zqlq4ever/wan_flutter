@@ -37,6 +37,8 @@ class _BottomTabState extends State<HomeBottomTab> {
     "assets/images/icon_mine_selected.png"
   ];
 
+  int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -48,13 +50,21 @@ class _BottomTabState extends State<HomeBottomTab> {
     final isDark = context.isDark;
     return Scaffold(
       appBar: null,
-      extendBody: true,
       backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
-      body: NavigationBarWidget(
-        tabItems: tabItems,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: tabItems,
+      ),
+      bottomNavigationBar: NavigationBarWidget(
+        currentIndex: _currentIndex,
         tabLabels: tabLabels,
         tabIcons: tabIcons,
         tabActiveIcons: tabActiveIcons,
+        onItemChange: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
     );
   }

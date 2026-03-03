@@ -3,7 +3,6 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../res/colors.dart';
 import 'banner_controller.dart';
 import 'banner_logic.dart';
 
@@ -34,6 +33,7 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return StreamBuilder(
         initialData: widget.controller?.logic.state,
         stream: widget.controller?.logic.getStream(),
@@ -53,13 +53,13 @@ class _BannerWidgetState extends State<BannerWidget> {
                   duration: 1000,
                   scale: 0.8,
                   pagination: SwiperPagination(
-                builder: DotSwiperPaginationBuilder(
-                  activeColor: Colours.app_main, // 选中时的颜色 - 第三方库属性，暂不替换
-                  color: Colors.grey, // 未选中时的颜色
-                  size: 8.0, // 指示器大小
-                  activeSize: 10.0, // 选中时的大小
-                ),
-              ),
+                    builder: DotSwiperPaginationBuilder(
+                      activeColor: primaryColor, // 选中时的颜色
+                      color: Colors.grey, // 未选中时的颜色
+                      size: 8.0, // 指示器大小
+                      activeSize: 10.0, // 选中时的大小
+                    ),
+                  ),
                   itemCount: snapshot.data?.bannerList?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     return Card(
