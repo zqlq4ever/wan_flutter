@@ -147,7 +147,7 @@ class HomePage extends GetView<HomeViewModel> {
                   borderRadius: BorderRadius.circular(24.r),
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: controller.currentUrl.value,
+                    imageUrl: controller.currentUrl,
                     placeholder: (context, url) => Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(

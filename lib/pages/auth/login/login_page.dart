@@ -119,19 +119,22 @@ class LoginPage extends GetView<LoginViewModel> {
                       SizedBox(height: 40.h),
 
                       // 登录按钮
-                      MyButton(
+                      Obx(() => MyButton(
                         key: const Key('login'),
-                        onPressed: () {
-                          // 登录前隐藏键盘
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          controller.login();
-                        },
-                        text: AppStrings.getString('login'),
+                        onPressed: controller.clickable.value && !controller.isLoading.value
+                            ? () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                controller.login();
+                              }
+                            : null,
+                        text: controller.isLoading.value 
+                            ? AppStrings.getString('logging_in')
+                            : AppStrings.getString('login'),
                         fontSize: 42.sp,
                         radius: 24.r,
                         minHeight: 96.h,
                         fontWeight: FontWeight.w600,
-                      ),
+                      )),
 
                       SizedBox(height: 30.h),
 

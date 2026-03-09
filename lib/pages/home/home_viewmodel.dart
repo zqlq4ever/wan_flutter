@@ -1,41 +1,46 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-
-import '../../repository/api/wan_api.dart';
-import '../../repository/model/home_list_model.dart';
-import '../../widgets/banner/banner_controller.dart';
+import 'package:wan_android_flutter/repository/api/wan_api.dart';
+import 'package:wan_android_flutter/repository/model/home_list_model.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/widgets/banner/banner_controller.dart';
 
 class HomeViewModel extends GetxController {
   final BannerController bannerController = BannerController();
   late final RefreshController refreshController;
-  var listData = <HomeListItemData>[].obs;
+  
+  final _listData = <HomeListItemData>[].obs;
+  List<HomeListItemData> get listData => _listData;
+  
   int _pageCount = 0;
-  var currentUrl = "https://picsum.photos/400/200".obs;
-  var hasMore = true.obs;
+  
+  final _currentUrl = "https://picsum.photos/400/200".obs;
+  String get currentUrl => _currentUrl.value;
+  
+  final _hasMore = true.obs;
+  bool get hasMore => _hasMore.value;
 
   @override
   void onInit() {
     super.onInit();
-    log("HomeViewModel  onInit");
     refreshController = RefreshController(initialRefresh: false);
     bannerController.setIndexChangeListener((url) {
-      currentUrl.value = url;
+      _currentUrl.value = url;
     });
     initDataList(false);
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    log("HomeViewModel  dispose");
+  void onClose() {
     refreshController.dispose();
+    bannerController.dispose();
+    super.onClose();
   }
 
   void refreshOrLoad(bool loadMore) {
-    if (loadMore && !hasMore.value) {
+    if (loadMore && !_hasMore.value) {
       refreshController.loadNoData();
       return;
     }
@@ -55,51 +60,64 @@ class HomeViewModel extends GetxController {
     });
   }
 
-  Future initDataList(bool loadMore, {ValueChanged<bool>? complete}) async {
+  Future<void> initDataList(bool loadMore, {ValueChanged<bool>? complete}) async {
     if (loadMore) {
       _pageCount++;
     } else {
       _pageCount = 0;
-      listData.clear();
-      hasMore.value = true;
+      _listData.clear();
+      _hasMore.value = true;
     }
 
     _getHomeList(loadMore).then((result) {
-      listData.addAll(result.$1 ?? []);
-      hasMore.value = result.$2;
+      _listData.addAll(result.$1 ?? []);
+      _hasMore.value = result.$2;
       complete?.call(result.$2);
       update();
     });
   }
 
-  /// 获取数据
   Future<(List<HomeListItemData>?, bool)> _getHomeList(bool loadMore) async {
-    HomeListModel? data = await WanApi.instance.homeList(_pageCount);
-    if (data != null && data.datas?.isNotEmpty == true) {
-      return (data.datas, !(data.over ?? true));
-    } else {
+    try {
+      HomeListModel? data = await WanApi.instance.homeList(_pageCount);
+      if (data != null && data.datas?.isNotEmpty == true) {
+        return (data.datas, !(data.over ?? true));
+      } else {
+        if (loadMore && _pageCount > 0) {
+          _pageCount--;
+        }
+        return (null, false);
+      }
+    } catch (e) {
       if (loadMore && _pageCount > 0) {
         _pageCount--;
       }
+      showToast(AppStrings.getString('network_error'));
       return (null, false);
     }
   }
 
-  /// 收藏文章
-  Future collect(int index, String? id) async {
-    bool success = await WanApi.instance.collect(id ?? "");
-    if (success) {
-      listData[index].collect = true;
-      update([id ?? ""]);
+  Future<void> collect(int index, String? id) async {
+    try {
+      bool success = await WanApi.instance.collect(id ?? "");
+      if (success && index >= 0 && index < _listData.length) {
+        _listData[index].collect = true;
+        update([id ?? ""]);
+      }
+    } catch (e) {
+      showToast(AppStrings.getString('network_error'));
     }
   }
 
-  /// 取消收藏文章
-  Future cancelCollect(int index, String? id) async {
-    bool success = await WanApi.instance.cancelCollect(id ?? "");
-    if (success) {
-      listData[index].collect = false;
-      update([id ?? ""]);
+  Future<void> cancelCollect(int index, String? id) async {
+    try {
+      bool success = await WanApi.instance.cancelCollect(id ?? "");
+      if (success && index >= 0 && index < _listData.length) {
+        _listData[index].collect = false;
+        update([id ?? ""]);
+      }
+    } catch (e) {
+      showToast(AppStrings.getString('network_error'));
     }
   }
 }

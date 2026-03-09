@@ -124,19 +124,22 @@ class RegisterPage extends GetView<RegisterViewModel> {
                       
                       SizedBox(height: 40.h),
                       
-                      MyButton(
+                      Obx(() => MyButton(
                         key: const Key('register'),
-                        onPressed: () {
-                          // 注册前隐藏键盘
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          controller.register();
-                        },
-                        text: AppStrings.getString('register'),
+                        onPressed: controller.clickable.value && !controller.isLoading.value
+                            ? () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                controller.register();
+                              }
+                            : null,
+                        text: controller.isLoading.value 
+                            ? AppStrings.getString('registering')
+                            : AppStrings.getString('register'),
                         fontSize: 36.sp,
                         radius: 24.r,
                         minHeight: 96.h,
                         fontWeight: FontWeight.w600,
-                      ),
+                      )),
                       
                       SizedBox(height: 60.h),
                     ],

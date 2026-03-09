@@ -98,6 +98,12 @@ class AppStrings {
       'password_visibility_toggle': '密码可见开关',
       'password_visibility_hint': '密码是否可见',
       'get_verification_code': '获取验证码',
+      'login_error': '登录异常',
+      'register_error': '注册异常',
+      'register_success': '注册成功,开始登录吧~',
+      'network_error': '网络错误，请稍后重试',
+      'logging_in': '登录中...',
+      'registering': '注册中...',
     },
     'en': {
       'app_name': 'WanAndroid',
@@ -195,6 +201,12 @@ class AppStrings {
       'password_visibility_toggle': 'Password visibility toggle',
       'password_visibility_hint': 'Toggle password visibility',
       'get_verification_code': 'Get Code',
+      'login_error': 'Login failed',
+      'register_error': 'Registration failed',
+      'register_success': 'Registration successful, please login',
+      'network_error': 'Network error, please try again later',
+      'logging_in': 'Logging in...',
+      'registering': 'Registering...',
     },
   };
 

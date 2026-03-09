@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AboutUsViewModel extends GetxController {
-  var version = "".obs;
+  final _version = "".obs;
+  String get version => _version.value;
 
   @override
   void onInit() {
@@ -12,9 +11,12 @@ class AboutUsViewModel extends GetxController {
     getVersion();
   }
 
-  Future getVersion() async {
-    var info = await PackageInfo.fromPlatform();
-    version.value = info.version;
-    log("getVersion : ${info.version}");
+  Future<void> getVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      _version.value = info.version;
+    } catch (e) {
+      _version.value = "";
+    }
   }
 }
