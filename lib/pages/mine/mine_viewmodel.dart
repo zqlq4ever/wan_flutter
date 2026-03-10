@@ -1,100 +1,97 @@
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wan_android_flutter/constants.dart';
 import 'package:wan_android_flutter/repository/api/wan_api.dart';
+import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/utils/sp_util.dart';
 
-import '../../repository/model/app_check_update_model.dart';
+class MineViewModel extends GetxController {
+  final _userName = Rxn<String>();
+  final _shouldLogin = true.obs;
+  final _needUpdate = false.obs;
+  final _isLoading = false.obs;
 
-class MineViewModel with ChangeNotifier {
-  String? userName;
-  bool? shouldLogin;
-  bool needUpdate = false;
+  String? get userName => _userName.value;
 
-  Future initData() async {
-    String? name = await SpUtil.getString(Constants.spUserName);
-    log("MineViewModel $name");
-    if (name == null || name.isEmpty == true) {
-      userName = null;
-      shouldLogin = true;
-    } else {
-      userName = name;
-      shouldLogin = false;
-    }
+  bool get shouldLogin => _shouldLogin.value;
 
-    //是否显示更新红点
-    shouldShowUpdateDot();
+  bool get needUpdate => _needUpdate.value;
 
-    notifyListeners();
+  bool get isLoading => _isLoading.value;
+
+  @override
+  void onInit() {
+    super.onInit();
+    initData();
   }
 
-  /// 退出登录
-  Future logout() async {
-    var success = await WanApi.instance.logout();
-    if (success) {
-      userName = null;
-      shouldLogin = true;
-
-      //  清除缓存
-      SpUtil.remove(Constants.spUserName);
-      SpUtil.remove(Constants.spCookieList);
-      notifyListeners();
-    } else {
-      showToast("网络异常");
-    }
-  }
-
-  // 显示红点
-  Future shouldShowUpdateDot() async {
-    var packInfo = await PackageInfo.fromPlatform();
-    //  获取当前 app 的版本 code
-    String versionCode = packInfo.buildNumber;
-    //  获取保存的新版本 code
-    String newVerCode = await SpUtil.getString(Constants.spNewAppVersion);
-    if ((int.tryParse(versionCode) ?? 0) >= (int.tryParse(newVerCode) ?? 0)) {
-      //  当前已是最新版本
-      needUpdate = false;
-    } else {
-      //  有新版本，显示红点
-      needUpdate = true;
-    }
-  }
-
-  /// 检查更新
-  Future<String?> checkUpdate() async {
-    var packInfo = await PackageInfo.fromPlatform();
-    //  获取当前 app 的版本 code
-    String versionCode = packInfo.buildNumber;
-
-    AppCheckUpdateModel? model = await WanApi.instance.checkUpdate();
-    //  线上版本的 code
-    String onlineAppVerCode = model?.data?.buildVersionNo ?? "0";
+  Future<void> initData() async {
+    _isLoading.value = true;
     try {
-      //  如果当前版本小于线上版本，需要更新
-      if ((int.tryParse(versionCode) ?? 0) < ((int.tryParse(onlineAppVerCode) ?? 0))) {
-        SpUtil.saveString(Constants.spNewAppVersion, onlineAppVerCode);
-        return model?.data?.downloadURL;
+      final name = await SpUtil.getString(Constants.spUserName);
+      _userName.value = (name?.isNotEmpty == true) ? name : null;
+      _shouldLogin.value = _userName.value == null;
+      await _checkUpdateDot();
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final success = await WanApi.instance.logout();
+      if (success) {
+        _userName.value = null;
+        _shouldLogin.value = true;
+        await Future.wait([
+          SpUtil.remove(Constants.spUserName),
+          SpUtil.remove(Constants.spCookieList),
+        ]);
       } else {
-        SpUtil.saveString(Constants.spNewAppVersion, versionCode);
-        return null;
+        showToast(AppStrings.getString('network_error'));
       }
     } catch (e) {
-      log("checkUpdate error = $e");
-      SpUtil.saveString(Constants.spNewAppVersion, versionCode);
+      showToast(AppStrings.getString('network_error'));
+    }
+  }
+
+  Future<void> _checkUpdateDot() async {
+    try {
+      final packInfo = await PackageInfo.fromPlatform();
+      final currentVersion = int.tryParse(packInfo.buildNumber) ?? 0;
+      final newVersion = int.tryParse(await SpUtil.getString(Constants.spNewAppVersion) ?? "0") ?? 0;
+      _needUpdate.value = currentVersion < newVersion;
+    } catch (e) {
+      _needUpdate.value = false;
+    }
+  }
+
+  Future<String?> checkUpdate() async {
+    try {
+      final packInfo = await PackageInfo.fromPlatform();
+      final currentVersion = int.tryParse(packInfo.buildNumber) ?? 0;
+      final model = await WanApi.instance.checkUpdate();
+      final onlineVersion = int.tryParse(model?.data?.buildVersionNo ?? "0") ?? 0;
+
+      if (currentVersion < onlineVersion) {
+        await SpUtil.saveString(Constants.spNewAppVersion, model?.data?.buildVersionNo ?? "");
+        return model?.data?.downloadURL;
+      }
+      await SpUtil.saveString(Constants.spNewAppVersion, packInfo.buildNumber);
+      return null;
+    } catch (e) {
       return null;
     }
   }
 
-  /// 跳转到外部浏览器打开
-  Future jumpToOutLink(String? url) async {
-    final uri = Uri.parse(url ?? "");
+  Future<bool> openUrl(String? url) async {
+    if (url == null || url.isEmpty) return false;
+    final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       return launchUrl(uri);
     }
-    return null;
+    return false;
   }
 }

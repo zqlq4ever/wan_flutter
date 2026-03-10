@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:wan_android_flutter/pages/knowledge/details/KnowledgeDetailsViewModel.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/utils/theme_util.dart';
 
-import '../../../repository/model/knowledge_detail_list_model.dart';
 import '../../../pages/web/webview_page.dart';
 import '../../../pages/web/webview_widget.dart';
+import '../../../repository/model/knowledge_detail_list_model.dart';
 
-/// 知识体系文章列表组件
-///
-/// 用于展示知识体系某个分类下的文章列表
-/// 支持下拉刷新和上拉加载更多
-/// 当没有更多数据时，显示"没有更多数据"提示
 class DetailList extends StatefulWidget {
-  /// 分类 ID，用于请求对应分类的文章列表
   final String? id;
 
   const DetailList({super.key, this.id});
@@ -30,40 +23,39 @@ class DetailList extends StatefulWidget {
 }
 
 class _DetailListState extends State<DetailList> {
-  /// 视图模型，管理文章列表数据和分页状态
-  var model = KnowledgeDetailsViewModel();
-
-  /// 刷新控制器，管理下拉刷新和上拉加载状态
+  late final KnowledgeDetailsViewModel vm;
   late RefreshController _refreshController;
 
   @override
   void initState() {
-    _refreshController = RefreshController(initialRefresh: false);
     super.initState();
-    // 页面初始化时加载第一页数据
+    vm = Get.put(KnowledgeDetailsViewModel(), tag: widget.id);
+    _refreshController = RefreshController(initialRefresh: false);
     refreshOrLoad(false);
   }
 
-  /// 刷新或加载更多数据
-  ///
-  /// [loadMore] true 表示加载更多，false 表示刷新
-  /// 根据 hasMore 状态控制是否允许加载更多
-  /// 加载完成后更新 RefreshController 状态
+  @override
+  void dispose() {
+    Get.delete<KnowledgeDetailsViewModel>(tag: widget.id);
+    _refreshController.dispose();
+    super.dispose();
+  }
+
   void refreshOrLoad(bool loadMore) {
-    if (loadMore && !model.hasMore) {
+    if (loadMore && !vm.hasMore) {
       _refreshController.loadNoData();
       return;
     }
-    model.getDetailList(widget.id, loadMore).then((value) {
+    vm.getDetailList(widget.id, loadMore).then((value) {
       if (loadMore) {
-        if (model.hasMore) {
+        if (vm.hasMore) {
           _refreshController.loadComplete();
         } else {
           _refreshController.loadNoData();
         }
       } else {
         _refreshController.refreshCompleted();
-        if (!model.hasMore) {
+        if (!vm.hasMore) {
           _refreshController.loadNoData();
         }
       }
@@ -73,23 +65,13 @@ class _DetailListState extends State<DetailList> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    return ChangeNotifierProvider(
-      create: (context) {
-        return model;
-      },
-      child: Scaffold(
-          backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
-          body: Consumer<KnowledgeDetailsViewModel>(builder: (context, value, child) {
-            return _buildRefreshList(value);
-          })),
+    return Scaffold(
+      backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
+      body: Obx(() => _buildRefreshList()),
     );
   }
 
-  /// 构建带刷新功能的列表
-  ///
-  /// 包含下拉刷新 Header 和上拉加载 Footer
-  /// 支持国际化文本显示
-  Widget _buildRefreshList(KnowledgeDetailsViewModel value) {
+  Widget _buildRefreshList() {
     final primaryColor = Theme.of(context).primaryColor;
     return SmartRefresher(
       controller: _refreshController,
@@ -127,16 +109,16 @@ class _DetailListState extends State<DetailList> {
       },
       child: ListView.builder(
         padding: EdgeInsets.all(24.w),
-        itemCount: value.detailList.length,
+        itemCount: vm.detailList.length,
         itemBuilder: (context, index) {
           return _buildListItem(
-            value.detailList[index],
+            vm.detailList[index],
             onTap: () {
               Get.to(
                 WebViewPage(
-                    loadResource: value.detailList[index].link ?? "",
+                    loadResource: vm.detailList[index].link ?? "",
                     webViewType: WebViewType.URL,
-                    title: value.detailList[index].title),
+                    title: vm.detailList[index].title),
               );
             },
           );
@@ -145,11 +127,6 @@ class _DetailListState extends State<DetailList> {
     );
   }
 
-  /// 构建文章列表项
-  ///
-  /// [item] 文章数据模型
-  /// [onTap] 点击回调，跳转到文章详情页
-  /// 显示文章标题、作者和发布时间
   Widget _buildListItem(KnowledgeDetailItem item, {GestureTapCallback? onTap}) {
     final isDark = context.isDark;
     return GestureDetector(
@@ -179,7 +156,6 @@ class _DetailListState extends State<DetailList> {
     );
   }
 
-  /// 构建文章标题
   Widget _buildItemTitle(KnowledgeDetailItem item) {
     final isDark = context.isDark;
     return Padding(
@@ -198,7 +174,6 @@ class _DetailListState extends State<DetailList> {
     );
   }
 
-  /// 构建文章底部信息（作者和发布时间）
   Widget _buildItemFooter(KnowledgeDetailItem item) {
     final isDark = context.isDark;
     final primaryColor = Theme.of(context).primaryColor;

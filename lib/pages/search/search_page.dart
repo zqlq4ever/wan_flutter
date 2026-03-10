@@ -79,14 +79,7 @@ class SearchPage extends GetView<SearchViewModel> {
             fontSize: 40.sp,
             fontWeight: FontWeight.w300,
           ),
-          onChanged: (value) {
-            if (value.isEmpty) {
-              controller.hasText.value = false;
-              controller.searchList();
-            } else if (!controller.hasText.value) {
-              controller.hasText.value = true;
-            }
-          },
+          onChanged: controller.onInputChanged,
           decoration: InputDecoration(
             isCollapsed: true,
             contentPadding: EdgeInsets.symmetric(
@@ -109,11 +102,7 @@ class SearchPage extends GetView<SearchViewModel> {
               child: Obx(() => Visibility(
                     visible: controller.hasText.value,
                     child: GestureDetector(
-                      onTap: () {
-                        controller.editController.text = "";
-                        controller.hasText.value = false;
-                        controller.searchList();
-                      },
+                      onTap: controller.clearInput,
                       child: Icon(Icons.clear, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
                     ),
                   )),

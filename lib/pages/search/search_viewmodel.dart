@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:wan_android_flutter/repository/api/wan_api.dart';
@@ -9,63 +6,81 @@ import '../../repository/model/search_list_model.dart';
 
 class SearchViewModel extends GetxController {
   late TextEditingController editController;
-  var dataList = <SearchListItemModel>[].obs;
-  var hasText = false.obs;
+  Worker? _debounceWorker;
+
+  final _dataList = <SearchListItemModel>[].obs;
+  List<SearchListItemModel> get dataList => _dataList;
+
+  final _hasText = false.obs;
+  RxBool get hasText => _hasText;
+
+  final _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
+
+  final _hasError = false.obs;
+  bool get hasError => _hasError.value;
 
   @override
   void onInit() {
     super.onInit();
-    //  外部传入的参数
     final args = Get.arguments as Map<String, dynamic>?;
-    var k = args?["keyword"] ?? "";
-    log("SearchViewModel $k");
+    final keyword = args?["keyword"] ?? "";
 
-    editController = TextEditingController(text: k);
-    editController.debounce(const Duration(milliseconds: 500), _listener);
+    editController = TextEditingController(text: keyword);
+    _hasText.value = keyword.isNotEmpty;
 
-    // 初始化时延迟 1 秒
-    Future.delayed(const Duration(milliseconds: 500), () {
-      //  TextEditingController 只响应用户输入
-      //  初始化时,手动触发一次搜索
-      searchList(k);
-    });
+    _debounceWorker = debounce(
+      _hasText,
+      (_) => _onSearchChanged(),
+      time: const Duration(milliseconds: 500),
+    );
+
+    if (keyword.isNotEmpty) {
+      searchList(keyword);
+    } else {
+      searchList();
+    }
   }
 
   @override
   void onClose() {
-    editController.removeListener(_listener);
+    _debounceWorker?.dispose();
     editController.dispose();
+    super.onClose();
   }
 
-  void _listener() {
-    var input = editController.text;
-    hasText.value = input.isNotEmpty;
-    log("SearchViewModel _listener input = $input");
-    if (!input.trim().isNotEmpty) {
-      return;
-    }
-    searchList(input);
-  }
-
-  Future searchList([String? keyWord = ""]) async {
-    List<SearchListItemModel> list = await WanApi.instance.search(keyWord ?? "");
-    if (list.isNotEmpty) {
-      dataList.value = list;
+  void onInputChanged(String value) {
+    _hasText.value = value.isNotEmpty;
+    if (value.isEmpty) {
+      searchList();
     }
   }
 
-  void clearList() {
-    dataList.clear();
+  void _onSearchChanged() {
+    final input = editController.text.trim();
+    if (input.isNotEmpty) {
+      searchList(input);
+    }
   }
-}
 
-// 为 TextEditingController 添加防抖扩展
-extension DebounceExtension on TextEditingController {
-  void debounce(Duration duration, VoidCallback callback) {
-    Timer? timer;
-    addListener(() {
-      timer?.cancel();
-      timer = Timer(duration, callback);
-    });
+  Future<void> searchList([String? keyword]) async {
+    _isLoading.value = true;
+    _hasError.value = false;
+
+    try {
+      final list = await WanApi.instance.search(keyword?.trim() ?? "");
+      _dataList.assignAll(list);
+    } catch (e) {
+      _hasError.value = true;
+      _dataList.clear();
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  void clearInput() {
+    editController.clear();
+    _hasText.value = false;
+    searchList();
   }
 }

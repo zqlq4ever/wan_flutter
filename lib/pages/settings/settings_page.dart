@@ -1,20 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/res/theme_color.dart';
 import 'package:wan_android_flutter/utils/theme_controller.dart';
 import 'package:wan_android_flutter/utils/locale_controller.dart';
 import 'package:wan_android_flutter/utils/theme_util.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/pages/settings/settings_viewmodel.dart';
 
 import '../../widgets/my_app_bar.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends GetView<SettingsViewModel> {
   const SettingsPage({super.key});
 
   @override
@@ -63,25 +61,7 @@ class SettingsPage extends StatelessWidget {
                 _buildSectionTitle(AppStrings.getString('other'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
-                  FutureBuilder<PackageInfo>(
-                    future: PackageInfo.fromPlatform(),
-                    builder: (context, snapshot) {
-                      final version = snapshot.data?.version ?? "...";
-                      return _buildSettingsItem(
-                        context: context,
-                        icon: Icons.info_outline,
-                        title: AppStrings.getString('version_info'),
-                        isDark: isDark,
-                        trailing: Text(
-                          "v$version",
-                          style: TextStyle(
-                            color: isDark ? Colours.dark_text_gray : Colors.grey[500],
-                            fontSize: 40.sp,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  _buildVersionItem(context, isDark),
                 ], isDark),
                 SizedBox(height: 60.h),
                 Center(
@@ -102,74 +82,70 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildVersionItem(BuildContext context, bool isDark) {
+    return Obx(() => _buildSettingsItem(
+          context: context,
+          icon: Icons.info_outline,
+          title: AppStrings.getString('version_info'),
+          isDark: isDark,
+          trailing: Text(
+            "v${controller.version}",
+            style: TextStyle(
+              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+              fontSize: 40.sp,
+            ),
+          ),
+        ));
+  }
+
   Widget _buildThemeModeItem(BuildContext context, bool isDark) {
     return Obx(() {
-      final controller = ThemeController.to;
+      final themeController = ThemeController.to;
       return _buildSettingsItem(
         context: context,
         icon: Icons.dark_mode_outlined,
         title: AppStrings.getString('dark_mode'),
         isDark: isDark,
-        trailing: GestureDetector(
-          onTap: () => _showThemeModeDialog(context, controller, isDark),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                controller.getThemeModeText(),
-                style: TextStyle(
-                  color: isDark ? Colours.dark_text_gray : Colors.grey[500],
-                  fontSize: 40.sp,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 30.r,
-                color: isDark ? Colours.dark_text_gray : Colors.grey[300],
-              ),
-            ],
-          ),
+        trailing: _buildTrailingArrow(
+          text: themeController.getThemeModeText(),
+          isDark: isDark,
         ),
-        onTap: () => _showThemeModeDialog(context, controller, isDark),
+        onTap: () => _showThemeModeDialog(context, themeController, isDark),
       );
     });
   }
 
   Widget _buildThemeColorItem(BuildContext context, bool isDark) {
     return Obx(() {
-      final controller = ThemeController.to;
-      final themeColor = controller.themeColor;
+      final themeController = ThemeController.to;
+      final themeColor = themeController.themeColor;
       return _buildSettingsItem(
         context: context,
         icon: Icons.palette_outlined,
         title: AppStrings.getString('theme_color'),
         isDark: isDark,
-        trailing: GestureDetector(
-          onTap: () => _showThemeColorPicker(context, isDark),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 50.r,
-                height: 50.r,
-                decoration: BoxDecoration(
-                  color: themeColor.color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isDark ? Colors.white24 : Colors.black12,
-                    width: 1,
-                  ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 50.r,
+              height: 50.r,
+              decoration: BoxDecoration(
+                color: themeColor.color,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark ? Colors.white24 : Colors.black12,
+                  width: 1,
                 ),
               ),
-              SizedBox(width: 8.w),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 30.r,
-                color: isDark ? Colours.dark_text_gray : Colors.grey[300],
-              ),
-            ],
-          ),
+            ),
+            SizedBox(width: 8.w),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 30.r,
+              color: isDark ? Colours.dark_text_gray : Colors.grey[300],
+            ),
+          ],
         ),
         onTap: () => _showThemeColorPicker(context, isDark),
       );
@@ -178,36 +154,57 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildLanguageItem(BuildContext context, bool isDark) {
     return Obx(() {
-      final controller = LocaleController.to;
+      final localeController = LocaleController.to;
       return _buildSettingsItem(
         context: context,
         icon: Icons.language_outlined,
         title: AppStrings.getString('language'),
         isDark: isDark,
-        trailing: GestureDetector(
-          onTap: () => _showLanguageDialog(context, controller, isDark),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                controller.getLocaleText(),
-                style: TextStyle(
-                  color: isDark ? Colours.dark_text_gray : Colors.grey[500],
-                  fontSize: 40.sp,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 30.r,
-                color: isDark ? Colours.dark_text_gray : Colors.grey[300],
-              ),
-            ],
-          ),
+        trailing: _buildTrailingArrow(
+          text: localeController.getLocaleText(),
+          isDark: isDark,
         ),
-        onTap: () => _showLanguageDialog(context, controller, isDark),
+        onTap: () => _showLanguageDialog(context, localeController, isDark),
       );
     });
+  }
+
+  Widget _buildTrailingArrow({required String text, required bool isDark}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          text,
+          style: TextStyle(
+            color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+            fontSize: 40.sp,
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Icon(
+          Icons.arrow_forward_ios,
+          size: 30.r,
+          color: isDark ? Colours.dark_text_gray : Colors.grey[300],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClearCacheItem(BuildContext context, bool isDark) {
+    return Obx(() => _buildSettingsItem(
+          context: context,
+          icon: Icons.storage_outlined,
+          title: AppStrings.getString('clear_cache'),
+          isDark: isDark,
+          trailing: Text(
+            controller.cacheSize,
+            style: TextStyle(
+              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+              fontSize: 40.sp,
+            ),
+          ),
+          onTap: () => _showClearCacheDialog(context, isDark),
+        ));
   }
 
   void _showThemeModeDialog(BuildContext context, ThemeController controller, bool isDark) {
@@ -222,26 +219,32 @@ class SettingsPage extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildThemeModeOption(
+            _buildOptionItem(
               AppStrings.getString('follow_system'),
-              ThemeMode.system,
-              controller.themeMode,
-              primaryColor,
-              () => controller.setThemeMode(ThemeMode.system),
+              isSelected: controller.themeMode == ThemeMode.system,
+              primaryColor: primaryColor,
+              onTap: () {
+                controller.setThemeMode(ThemeMode.system);
+                Get.back();
+              },
             ),
-            _buildThemeModeOption(
+            _buildOptionItem(
               AppStrings.getString('light'),
-              ThemeMode.light,
-              controller.themeMode,
-              primaryColor,
-              () => controller.setThemeMode(ThemeMode.light),
+              isSelected: controller.themeMode == ThemeMode.light,
+              primaryColor: primaryColor,
+              onTap: () {
+                controller.setThemeMode(ThemeMode.light);
+                Get.back();
+              },
             ),
-            _buildThemeModeOption(
+            _buildOptionItem(
               AppStrings.getString('dark'),
-              ThemeMode.dark,
-              controller.themeMode,
-              primaryColor,
-              () => controller.setThemeMode(ThemeMode.dark),
+              isSelected: controller.themeMode == ThemeMode.dark,
+              primaryColor: primaryColor,
+              onTap: () {
+                controller.setThemeMode(ThemeMode.dark);
+                Get.back();
+              },
             ),
           ],
         ),
@@ -297,11 +300,11 @@ class SettingsPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final color = ThemeColor.presetColors[index];
                   return Obx(() => _buildColorItem(
-                    color,
-                    controller.themeColor.key == color.key,
-                    isDark,
-                    () => controller.setThemeColor(color),
-                  ));
+                        color,
+                        controller.themeColor.key == color.key,
+                        isDark,
+                        () => controller.setThemeColor(color),
+                      ));
                 },
               ),
               SizedBox(height: 48.h),
@@ -382,19 +385,23 @@ class SettingsPage extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLanguageOption(
+            _buildOptionItem(
               AppStrings.getString('chinese'),
-              const Locale('zh', 'CN'),
-              controller.locale,
-              primaryColor,
-              () => controller.setLocale(const Locale('zh', 'CN')),
+              isSelected: controller.locale.languageCode == 'zh',
+              primaryColor: primaryColor,
+              onTap: () {
+                controller.setLocale(const Locale('zh', 'CN'));
+                Get.back();
+              },
             ),
-            _buildLanguageOption(
+            _buildOptionItem(
               AppStrings.getString('english'),
-              const Locale('en', 'US'),
-              controller.locale,
-              primaryColor,
-              () => controller.setLocale(const Locale('en', 'US')),
+              isSelected: controller.locale.languageCode == 'en',
+              primaryColor: primaryColor,
+              onTap: () {
+                controller.setLocale(const Locale('en', 'US'));
+                Get.back();
+              },
             ),
           ],
         ),
@@ -402,28 +409,21 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildThemeModeOption(
-    String text,
-    ThemeMode mode,
-    ThemeMode currentMode,
-    Color primaryColor,
-    VoidCallback onTap,
-  ) {
-    final isSelected = mode == currentMode;
+  Widget _buildOptionItem(
+    String text, {
+    required bool isSelected,
+    required Color primaryColor,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
-      onTap: () {
-        onTap();
-        Get.back();
-      },
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 24.h),
         child: Row(
           children: [
             Text(
               text,
-              style: TextStyle(
-                fontSize: 40.sp,
-              ),
+              style: TextStyle(fontSize: 40.sp),
             ),
             const Spacer(),
             if (isSelected)
@@ -436,94 +436,6 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildLanguageOption(
-    String text,
-    Locale locale,
-    Locale currentLocale,
-    Color primaryColor,
-    VoidCallback onTap,
-  ) {
-    final isSelected = locale.languageCode == currentLocale.languageCode;
-    return InkWell(
-      onTap: () {
-        onTap();
-        Get.back();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 24.h),
-        child: Row(
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 40.sp,
-              ),
-            ),
-            const Spacer(),
-            if (isSelected)
-              Icon(
-                Icons.check,
-                color: primaryColor,
-                size: 50.r,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildClearCacheItem(BuildContext context, bool isDark) {
-    return _buildSettingsItem(
-      context: context,
-      icon: Icons.storage_outlined,
-      title: AppStrings.getString('clear_cache'),
-      isDark: isDark,
-      trailing: FutureBuilder<String>(
-        future: _getCacheSize(),
-        builder: (context, snapshot) {
-          return Text(
-            snapshot.data ?? "...",
-            style: TextStyle(
-              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
-              fontSize: 40.sp,
-            ),
-          );
-        },
-      ),
-      onTap: () => _showClearCacheDialog(context, isDark),
-    );
-  }
-
-  Future<String> _getCacheSize() async {
-    try {
-      final directory = Directory('${Directory.current.path}/cache');
-      if (await directory.exists()) {
-        int totalSize = 0;
-        await for (var entity in directory.list(recursive: true)) {
-          if (entity is File) {
-            totalSize += await entity.length();
-          }
-        }
-        return _formatBytes(totalSize);
-      }
-    } catch (e) {
-      // ignore
-    }
-    return "0B";
-  }
-
-  String _formatBytes(int bytes) {
-    if (bytes < 1024) {
-      return "$bytes B";
-    } else if (bytes < 1024 * 1024) {
-      return "${(bytes / 1024).toStringAsFixed(1)} KB";
-    } else if (bytes < 1024 * 1024 * 1024) {
-      return "${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB";
-    } else {
-      return "${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB";
-    }
   }
 
   void _showClearCacheDialog(BuildContext context, bool isDark) {
@@ -548,8 +460,8 @@ class SettingsPage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              await _clearCache();
               Get.back();
+              await controller.clearCache();
               showToast(AppStrings.getString('cache_cleared'));
             },
             child: Text(
@@ -560,21 +472,6 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _clearCache() async {
-    try {
-      final directory = Directory('${Directory.current.path}/cache');
-      if (await directory.exists()) {
-        await for (var entity in directory.list(recursive: true)) {
-          if (entity is File) {
-            await entity.delete();
-          }
-        }
-      }
-    } catch (e) {
-      // ignore
-    }
   }
 
   Widget _buildSectionTitle(String title, bool isDark) {

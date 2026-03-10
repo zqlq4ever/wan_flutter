@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:provider/provider.dart';
 import 'package:wan_android_flutter/pages/mine/mine_viewmodel.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
 import 'package:wan_android_flutter/res/colors.dart';
@@ -12,10 +11,6 @@ import 'package:wan_android_flutter/utils/theme_util.dart';
 import '../../route/route_path_constant.dart';
 import '../../widgets/dialog/update_dialog.dart';
 
-/// 我的页面
-///
-/// 展示用户个人信息和功能菜单
-/// 包含：用户头像、用户名、会员等级、功能菜单列表、退出登录按钮
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
 
@@ -24,46 +19,34 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage> {
-  var vm = MineViewModel();
+  final vm = Get.put(MineViewModel());
   bool _isDialogShowing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    vm.initData();
-  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    return ChangeNotifierProvider(
-      create: (context) => vm,
-      child: Scaffold(
-        backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
-        body: Column(
-          children: [
-            _buildHeaderBackground(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildMenuSection(),
-                    SizedBox(height: 40.h),
-                    _buildLogoutButton(),
-                    SizedBox(height: 100.h),
-                  ],
-                ),
+    return Scaffold(
+      backgroundColor: isDark ? Colours.dark_bg_color : Colours.bg_color,
+      body: Column(
+        children: [
+          _buildHeaderBackground(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildMenuSection(),
+                  SizedBox(height: 40.h),
+                  _buildLogoutButton(),
+                  SizedBox(height: 100.h),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  /// 构建头部背景区域
-  ///
-  /// 包含渐变背景、装饰圆形和用户信息
   Widget _buildHeaderBackground() {
     final isDark = context.isDark;
     return Container(
@@ -110,7 +93,6 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  /// 构建装饰圆形
   Widget _buildDecorCircle({
     double? right,
     double? left,
@@ -135,10 +117,6 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  /// 构建用户信息区域
-  ///
-  /// 包含头像、用户名、会员等级标签
-  /// 未登录时点击头像跳转登录页
   Widget _buildUserInfo() {
     return SizedBox(
       width: double.infinity,
@@ -159,64 +137,55 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  /// 构建用户头像
   Widget _buildUserAvatar() {
-    return Selector<MineViewModel, bool>(
-      selector: (context, vm) => vm.shouldLogin ?? true,
-      builder: (context, shouldLogin, child) {
-        final isDark = context.isDark;
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            if (shouldLogin) {
-              Get.toNamed(RoutePath.login);
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
+    final isDark = context.isDark;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        if (vm.shouldLogin) {
+          Get.toNamed(RoutePath.login);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(8.r),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 20,
+              spreadRadius: 5,
             ),
-            child: ClipOval(
-              child: CachedNetworkImage(
-                width: 160.r,
-                height: 160.r,
-                fit: BoxFit.cover,
-                imageUrl: "https://picsum.photos/100/100",
-                placeholder: (context, url) => Container(
-                  width: 160.r,
-                  height: 160.r,
-                  color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
-                  child: Icon(Icons.person, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  width: 160.r,
-                  height: 160.r,
-                  color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
-                  child: Icon(Icons.person, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
-                ),
-              ),
+          ],
+        ),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            width: 160.r,
+            height: 160.r,
+            fit: BoxFit.cover,
+            imageUrl: "https://picsum.photos/100/100",
+            placeholder: (context, url) => Container(
+              width: 160.r,
+              height: 160.r,
+              color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+              child: Icon(Icons.person, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
+            ),
+            errorWidget: (context, url, error) => Container(
+              width: 160.r,
+              height: 160.r,
+              color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+              child: Icon(Icons.person, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  /// 构建用户名
   Widget _buildUserName() {
-    return Selector<MineViewModel, String?>(
-      builder: (context, value, child) {
-        return Text(
-          value ?? AppStrings.getString('click_login'),
+    return Obx(() => Text(
+          vm.userName ?? AppStrings.getString('click_login'),
           style: TextStyle(
             color: Colors.white,
             fontSize: 44.sp,
@@ -229,15 +198,9 @@ class _MinePageState extends State<MinePage> {
               ),
             ],
           ),
-        );
-      },
-      selector: (context, value) {
-        return value.userName;
-      },
-    );
+        ));
   }
 
-  /// 构建会员等级标签
   Widget _buildMemberBadge() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
@@ -266,9 +229,6 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  /// 构建菜单区域
-  ///
-  /// 包含：我的收藏、检查更新、关于我们、设置
   Widget _buildMenuSection() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -279,7 +239,7 @@ class _MinePageState extends State<MinePage> {
             icon: Icons.favorite_outline,
             title: AppStrings.getString('my_collection'),
             onTap: () {
-              if (vm.shouldLogin == true) {
+              if (vm.shouldLogin) {
                 Get.toNamed(RoutePath.login);
               } else {
                 Get.toNamed(RoutePath.myCollection);
@@ -287,18 +247,14 @@ class _MinePageState extends State<MinePage> {
             },
           ),
           SizedBox(height: 20.h),
-          Selector<MineViewModel, bool>(builder: (context, value, child) {
-            return _buildMenuItem(
-              icon: Icons.system_update_outlined,
-              title: AppStrings.getString('check_update'),
-              showRedDot: value,
-              onTap: () {
-                checkAppUpdate();
-              },
-            );
-          }, selector: (context, vm) {
-            return vm.needUpdate;
-          }),
+          Obx(() => _buildMenuItem(
+                icon: Icons.system_update_outlined,
+                title: AppStrings.getString('check_update'),
+                showRedDot: vm.needUpdate,
+                onTap: () {
+                  checkAppUpdate();
+                },
+              )),
           SizedBox(height: 20.h),
           _buildMenuItem(
             icon: Icons.info_outline,
@@ -320,12 +276,6 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  /// 构建菜单项
-  ///
-  /// [icon] 图标
-  /// [title] 标题
-  /// [onTap] 点击回调
-  /// [showRedDot] 是否显示红点
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
@@ -403,44 +353,37 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  /// 构建退出登录按钮
-  ///
-  /// 仅在已登录状态下显示
   Widget _buildLogoutButton() {
     final isDark = context.isDark;
-    return Selector<MineViewModel, bool>(builder: (context, value, child) {
-      return !value
-          ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: SizedBox(
-                width: double.infinity,
-                height: 100.h,
-                child: ElevatedButton(
-                  onPressed: () {
-                    vm.logout();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
-                    foregroundColor: Colors.red,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.r),
-                    ),
+    return Obx(() => !vm.shouldLogin
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: SizedBox(
+              width: double.infinity,
+              height: 100.h,
+              child: ElevatedButton(
+                onPressed: () {
+                  vm.logout();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isDark ? Colours.dark_card_bg : Colors.white,
+                  foregroundColor: Colors.red,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.r),
                   ),
-                  child: Text(
-                    AppStrings.getString('logout'),
-                    style: TextStyle(
-                      fontSize: 40.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                ),
+                child: Text(
+                  AppStrings.getString('logout'),
+                  style: TextStyle(
+                    fontSize: 40.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-            )
-          : const SizedBox();
-    }, selector: (context, m) {
-      return m.shouldLogin ?? false;
-    });
+            ),
+          )
+        : const SizedBox());
   }
 
   void checkAppUpdate() {
