@@ -3,6 +3,7 @@ import 'package:wan_android_flutter/res/colors.dart';
 import 'package:wan_android_flutter/utils/theme_util.dart';
 import 'package:wan_android_flutter/widgets/loading.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
+
 import 'webview_widget.dart';
 
 /// 显示网页资源的页面
@@ -15,16 +16,16 @@ class WebViewPage extends StatefulWidget {
     this.jsChannelMap,
   });
 
-  //标题内容
+  /// 标题内容
   final String? title;
 
-  //需要加载的内容类型
+  /// 需要加载的内容类型
   final WebViewType webViewType;
 
-  //给 webview 加载的数据,可以是url，也可以是html文本
+  /// 给 webview 加载的数据,可以是url，也可以是html文本
   final String loadResource;
 
-  //与js通信的channel集合
+  /// 与js通信的channel集合
   final Map<String, JsChannelCallback>? jsChannelMap;
 
   @override
@@ -34,19 +35,47 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
+  /// WebView 组件的 key，用于访问其 state
+  final GlobalKey<WebViewWidgetState> _webViewKey = GlobalKey<WebViewWidgetState>();
+
+  /// WebView 是否可以后退
+  bool _canGoBack = false;
+
+  /// 页面标题
+  String? _pageTitle;
+
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    return Scaffold(
-      backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
-      appBar: MyAppBar(
-        centerTitle: widget.title ?? "",
-      ),
-      body: SafeArea(
-        child: WebViewWidget(
-          webViewType: widget.webViewType,
-          loadResource: widget.loadResource,
-          jsChannelMap: widget.jsChannelMap,
+    return PopScope(
+      canPop: !_canGoBack,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          await _webViewKey.currentState?.goBack();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: isDark ? Colours.dark_bg_color : Colors.white,
+        appBar: MyAppBar(
+          centerTitle: _pageTitle ?? widget.title ?? "",
+        ),
+        body: SafeArea(
+          child: WebViewWidget(
+            key: _webViewKey,
+            webViewType: widget.webViewType,
+            loadResource: widget.loadResource,
+            jsChannelMap: widget.jsChannelMap,
+            onCanGoBackChanged: (canGoBack) {
+              setState(() {
+                _canGoBack = canGoBack;
+              });
+            },
+            onTitleChanged: (title) {
+              setState(() {
+                _pageTitle = title;
+              });
+            },
+          ),
         ),
       ),
     );
