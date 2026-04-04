@@ -58,12 +58,12 @@ class _MinePageState extends State<MinePage> {
           end: Alignment.bottomRight,
           colors: isDark
               ? [
-                  Color(0xFF2A2A2A),
-                  Color(0xFF1A1A1A),
+                  Color(0xFF1E3A5F),
+                  Color(0xFF0D1B2A),
                 ]
               : [
-                  Color(0xFF667eea),
-                  Color(0xFF764ba2),
+                  Color(0xFF4FC3F7),
+                  Color(0xFF81C784),
                 ],
         ),
       ),

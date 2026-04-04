@@ -32,12 +32,12 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
   late Animation<double> _iconFloatAnimation;
 
   final List<List<Color>> _colorPairs = [
-    [const Color(0xFF6366F1), const Color(0xFF8B5CF6), const Color(0xFFA855F7), const Color(0xFFD946EF)],
-    [const Color(0xFF3B82F6), const Color(0xFF06B6D4), const Color(0xFF14B8A6), const Color(0xFF22C55E)],
-    [const Color(0xFFEC4899), const Color(0xFFF43F5E), const Color(0xFFEF4444), const Color(0xFFF97316)],
-    [const Color(0xFF8B5CF6), const Color(0xFF7C3AED), const Color(0xFF6D28D9), const Color(0xFF5B21B6)],
-    [const Color(0xFF06B6D4), const Color(0xFF0891B2), const Color(0xFF0E7490), const Color(0xFF155E75)],
-    [const Color(0xFFF472B6), const Color(0xFFE879F9), const Color(0xFFA855F7), const Color(0xFF7C3AED)],
+    [const Color(0xFF4FC3F7), const Color(0xFF29B6F6), const Color(0xFF03A9F4), const Color(0xFF039BE5)],
+    [const Color(0xFF81C784), const Color(0xFF66BB6A), const Color(0xFF4CAF50), const Color(0xFF43A047)],
+    [const Color(0xFFFFD54F), const Color(0xFFFFCA28), const Color(0xFFFFC107), const Color(0xFFFFB300)],
+    [const Color(0xFF4DD0E1), const Color(0xFF26C6DA), const Color(0xFF00BCD4), const Color(0xFF00ACC1)],
+    [const Color(0xFFAED581), const Color(0xFF9CCC65), const Color(0xFF8BC34A), const Color(0xFF7CB342)],
+    [const Color(0xFF80DEEA), const Color(0xFF4DD0E1), const Color(0xFF26C6DA), const Color(0xFF00BCD4)],
   ];
 
   final List<List<Color>> _darkColorPairs = [
@@ -368,7 +368,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                   child: Icon(
                     Icons.system_update_alt_rounded,
                     size: 45.r,
-                    color: isDark ? Colours.dark_text : const Color(0xFF8B5CF6),
+                    color: isDark ? Colours.dark_text : const Color(0xFF039BE5),
                   ),
                 ),
               );
@@ -433,7 +433,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                     end: Alignment.bottomCenter,
                     colors: isDark
                         ? [Colours.dark_text_gray, Colours.dark_text]
-                        : [const Color(0xFF8B5CF6), const Color(0xFFD946EF)],
+                        : [const Color(0xFF4FC3F7), const Color(0xFF81C784)],
                   ),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
@@ -490,7 +490,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               gradient: LinearGradient(
                 colors: isDark
                     ? [Colours.dark_text_gray, Colours.dark_text]
-                    : [const Color(0xFF8B5CF6), const Color(0xFFD946EF)],
+                    : [const Color(0xFF4FC3F7), const Color(0xFF81C784)],
               ),
               shape: BoxShape.circle,
             ),
@@ -562,7 +562,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                   end: Alignment.centerRight,
                   colors: isDark
                       ? [Colours.dark_text_gray, Colours.dark_text]
-                      : [const Color(0xFF8B5CF6), const Color(0xFFD946EF)],
+                      : [const Color(0xFF4FC3F7), const Color(0xFF81C784)],
                 )
               : null,
           color: isPrimary ? null : (isDark ? Colours.dark_bg_color : Colors.grey[50]),
@@ -576,7 +576,7 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
           boxShadow: isPrimary
               ? [
                   BoxShadow(
-                    color: (isDark ? Colours.dark_text : const Color(0xFF8B5CF6)).withValues(alpha: isDark ? 0.3 : 0.4),
+                    color: (isDark ? Colours.dark_text : const Color(0xFF4FC3F7)).withValues(alpha: isDark ? 0.3 : 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),

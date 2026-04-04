@@ -81,18 +81,18 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   }
 
   /// 获取渐变颜色
-  /// 浅色模式：鲜艳的紫蓝渐变
-  /// 深色模式：柔和的青蓝渐变（与黑色背景更协调）
+  /// 浅色模式：温暖的橙黄渐变，活力自然
+  /// 深色模式：沉稳的青绿渐变，科技感但不冰冷
   List<Color> _getGradientColors(bool isDark, {double alpha = 1.0}) {
     if (isDark) {
       return [
-        Color(0xFF00BCD4).withValues(alpha: alpha),
-        Color(0xFF009688).withValues(alpha: alpha),
+        Color(0xFF26A69A).withValues(alpha: alpha),
+        Color(0xFF4DB6AC).withValues(alpha: alpha),
       ];
     }
     return [
-      Color(0xFF667eea).withValues(alpha: alpha),
-      Color(0xFF764ba2).withValues(alpha: alpha),
+      Color(0xFFFF8A65).withValues(alpha: alpha),
+      Color(0xFFFFB74D).withValues(alpha: alpha),
     ];
   }
 
