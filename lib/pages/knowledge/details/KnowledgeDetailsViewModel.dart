@@ -40,7 +40,8 @@ class KnowledgeDetailsViewModel extends GetxController {
 
     _isLoading.value = true;
     try {
-      final model = await WanApi.instance.knowledgeDetailList(id ?? "", _pageCount);
+      final model =
+          await WanApi.instance.knowledgeDetailList(id ?? "", _pageCount);
       if (model?.datas?.isNotEmpty == true) {
         _detailList.addAll(model!.datas!);
         _hasMore.value = !(model.over ?? true);

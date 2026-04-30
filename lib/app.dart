@@ -71,7 +71,9 @@ class _AppWrapperState extends State<_AppWrapper> {
           theme: _buildLightTheme(themeColor.color),
           darkTheme: _buildDarkTheme(themeColor.color),
           initialRoute: RoutePath.tab,
-          defaultTransition: Transition.rightToLeftWithFade,
+          // 全局页面转场：纯淡入淡出（避免右滑 + 淡入的笨重感）
+          defaultTransition: Transition.fadeIn,
+          transitionDuration: const Duration(milliseconds: 250),
           getPages: RoutePageUtil.pages,
         );
       },

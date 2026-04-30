@@ -73,7 +73,10 @@ class CollectionPage extends GetView<CollectionViewModel> {
   /// [item] 收藏文章数据
   /// [onTap] 取消收藏按钮点击回调
   /// [itemClick] 条目点击回调，跳转WebView
-  Widget _collectionItem(MyCollectItemModel? item, {GestureTapCallback? onTap, GestureTapCallback? itemClick, required bool isDark}) {
+  Widget _collectionItem(MyCollectItemModel? item,
+      {GestureTapCallback? onTap,
+      GestureTapCallback? itemClick,
+      required bool isDark}) {
     return GestureDetector(
       onTap: itemClick,
       child: Container(
@@ -106,7 +109,8 @@ class CollectionPage extends GetView<CollectionViewModel> {
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                       decoration: BoxDecoration(
                         color: Colors.blueAccent.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12.r),
@@ -128,9 +132,13 @@ class CollectionPage extends GetView<CollectionViewModel> {
                 Container(
                   padding: EdgeInsets.all(20.w),
                   decoration: BoxDecoration(
-                    color: isDark ? Colours.dark_item_bottom_bg : Colors.grey[50],
+                    color:
+                        isDark ? Colours.dark_item_bottom_bg : Colors.grey[50],
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: isDark ? Colours.dark_divider : Colors.grey[200]!, width: 1),
+                    border: Border.all(
+                        color:
+                            isDark ? Colours.dark_divider : Colors.grey[200]!,
+                        width: 1),
                   ),
                   child: Text(
                     "${item?.desc}",
@@ -170,14 +178,17 @@ class CollectionPage extends GetView<CollectionViewModel> {
                       Icon(
                         Icons.access_time_outlined,
                         size: 32.sp,
-                        color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+                        color:
+                            isDark ? Colours.dark_text_gray : Colors.grey[500],
                       ),
                       SizedBox(width: 8.w),
                       Text(
                         "${item?.niceDate}",
                         style: TextStyle(
                           fontSize: 30.sp,
-                          color: isDark ? Colours.dark_text_gray : Colors.grey[600],
+                          color: isDark
+                              ? Colours.dark_text_gray
+                              : Colors.grey[600],
                         ),
                       ),
                       SizedBox(width: 20.w),

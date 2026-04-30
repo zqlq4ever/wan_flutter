@@ -1,6 +1,5 @@
 /// 知识体系传递给明细页面参数
-class KnowledgeDetailParam{
-
+class KnowledgeDetailParam {
   String? name;
   String? id;
 

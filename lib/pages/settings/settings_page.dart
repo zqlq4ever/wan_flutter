@@ -30,7 +30,8 @@ class SettingsPage extends GetView<SettingsViewModel> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionTitle(AppStrings.getString('general_settings'), isDark),
+                _buildSectionTitle(
+                    AppStrings.getString('general_settings'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
                   _buildThemeModeItem(context, isDark),
@@ -38,7 +39,8 @@ class SettingsPage extends GetView<SettingsViewModel> {
                   _buildLanguageItem(context, isDark),
                 ], isDark),
                 SizedBox(height: 32.h),
-                _buildSectionTitle(AppStrings.getString('privacy_security'), isDark),
+                _buildSectionTitle(
+                    AppStrings.getString('privacy_security'), isDark),
                 SizedBox(height: 16.h),
                 _buildSettingsCard([
                   _buildSettingsItem(
@@ -207,7 +209,8 @@ class SettingsPage extends GetView<SettingsViewModel> {
         ));
   }
 
-  void _showThemeModeDialog(BuildContext context, ThemeController controller, bool isDark) {
+  void _showThemeModeDialog(
+      BuildContext context, ThemeController controller, bool isDark) {
     final primaryColor = Theme.of(context).primaryColor;
     Get.dialog(
       AlertDialog(
@@ -373,7 +376,8 @@ class SettingsPage extends GetView<SettingsViewModel> {
     return luminance > 0.5 ? Colors.black87 : Colors.white;
   }
 
-  void _showLanguageDialog(BuildContext context, LocaleController controller, bool isDark) {
+  void _showLanguageDialog(
+      BuildContext context, LocaleController controller, bool isDark) {
     final primaryColor = Theme.of(context).primaryColor;
     Get.dialog(
       AlertDialog(
@@ -448,14 +452,16 @@ class SettingsPage extends GetView<SettingsViewModel> {
         ),
         content: Text(
           AppStrings.getString('clear_cache_confirm'),
-          style: TextStyle(color: isDark ? Colours.dark_text_gray : Colors.grey[600]),
+          style: TextStyle(
+              color: isDark ? Colours.dark_text_gray : Colors.grey[600]),
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
             child: Text(
               AppStrings.getString('cancel'),
-              style: TextStyle(color: isDark ? Colours.dark_text_gray : Colors.grey[600]),
+              style: TextStyle(
+                  color: isDark ? Colours.dark_text_gray : Colors.grey[600]),
             ),
           ),
           TextButton(

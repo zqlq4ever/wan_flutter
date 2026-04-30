@@ -134,16 +134,18 @@ class _KnowledgePageState extends State<KnowledgePage> {
       controller: _refreshController,
       onRefresh: _onRefresh,
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
-        shrinkWrap: true,
-        itemCount: controller.list.length,
-        itemBuilder: (context, index) {
-          return _buildKnowledgeItem(controller.list[index], context.isDark, primaryColor);
-        }),
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
+          shrinkWrap: true,
+          itemCount: controller.list.length,
+          itemBuilder: (context, index) {
+            return _buildKnowledgeItem(
+                controller.list[index], context.isDark, primaryColor);
+          }),
     );
   }
 
-  Widget _buildKnowledgeItem(KnowledgeModel? item, bool isDark, Color primaryColor) {
+  Widget _buildKnowledgeItem(
+      KnowledgeModel? item, bool isDark, Color primaryColor) {
     return GestureDetector(
       onTap: () {
         Get.toNamed(
@@ -238,7 +240,9 @@ class _KnowledgePageState extends State<KnowledgePage> {
         decoration: BoxDecoration(
           color: isDark ? Colours.dark_item_bottom_bg : Colors.grey[50],
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: isDark ? Colours.dark_divider : Colors.grey[200]!, width: 1),
+          border: Border.all(
+              color: isDark ? Colours.dark_divider : Colors.grey[200]!,
+              width: 1),
         ),
         child: Text(
           value?.name ?? "",

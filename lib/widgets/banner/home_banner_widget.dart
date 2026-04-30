@@ -38,7 +38,8 @@ class _BannerWidgetState extends State<BannerWidget> {
         initialData: widget.controller?.logic.state,
         stream: widget.controller?.logic.getStream(),
         builder: (context, AsyncSnapshot<BannerState> snapshot) {
-          if (snapshot.data?.bannerList == null || snapshot.data?.bannerList?.isEmpty == true) {
+          if (snapshot.data?.bannerList == null ||
+              snapshot.data?.bannerList?.isEmpty == true) {
             return SizedBox(height: 20.h);
           }
 
@@ -70,7 +71,8 @@ class _BannerWidgetState extends State<BannerWidget> {
                         borderRadius: BorderRadius.all(Radius.circular(5.r)),
                         child: CachedNetworkImage(
                           fit: BoxFit.fill,
-                          imageUrl: snapshot.data?.bannerList?[index].imagePath ?? "",
+                          imageUrl:
+                              snapshot.data?.bannerList?[index].imagePath ?? "",
                         ),
                       ),
                     );
@@ -83,7 +85,9 @@ class _BannerWidgetState extends State<BannerWidget> {
                   },
                   onIndexChanged: (index) {
                     widget.controller?.changeIndex(
-                      widget.controller?.logic.state.bannerList?[index].imagePath ?? "https://picsum.photos/400/200",
+                      widget.controller?.logic.state.bannerList?[index]
+                              .imagePath ??
+                          "https://picsum.photos/400/200",
                     );
                   },
                 ),

@@ -4,78 +4,97 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SpUtil {
   SpUtil._();
 
+  static SharedPreferences? _sp;
+  static Future<SharedPreferences>? _initFuture;
+
+  /// 启动期初始化（建议在 `main()` 中 await 一次）
+  static Future<SharedPreferences> init() {
+    final existed = _sp;
+    if (existed != null) return Future.value(existed);
+    return _initFuture ??= SharedPreferences.getInstance().then((value) {
+      _sp = value;
+      return value;
+    });
+  }
+
+  static Future<SharedPreferences> _getSp() async {
+    final existed = _sp;
+    if (existed != null) return existed;
+    return init();
+  }
+
   static Future<bool> saveStringList(String key, List<String> values) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.setStringList(key, values);
   }
 
   static Future<List<String>?> getStringList(String key) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.getStringList(key);
   }
 
   static Future<bool> saveBool(String key, bool value) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.setBool(key, value);
   }
 
   static Future<bool?> getBool(String key) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.getBool(key);
   }
 
   static Future<bool> saveInt(String key, int value) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.setInt(key, value);
   }
 
   static Future<int?> getInt(String key) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.getInt(key);
   }
 
-  static Future saveString(String key, String value) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.setString(key, value);
+  static Future<bool> saveString(String key, String value) async {
+    final sp = await _getSp();
+    return sp.setString(key, value);
   }
 
-  static Future saveDouble(String key, double value) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.setDouble(key, value);
+  static Future<bool> saveDouble(String key, double value) async {
+    final sp = await _getSp();
+    return sp.setDouble(key, value);
   }
 
-  static Future saveList(String key, List<String> value) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.setStringList(key, value);
+  static Future<bool> saveList(String key, List<String> value) async {
+    final sp = await _getSp();
+    return sp.setStringList(key, value);
   }
 
-  static Future getDynamic(String key) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.get(key);
+  static Future<Object?> getDynamic(String key) async {
+    final sp = await _getSp();
+    return sp.get(key);
   }
 
-  static Future getString(String key) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString(key);
+  static Future<String?> getString(String key) async {
+    final sp = await _getSp();
+    return sp.getString(key);
   }
 
-  static Future getDouble(String key) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getDouble(key);
+  static Future<double?> getDouble(String key) async {
+    final sp = await _getSp();
+    return sp.getDouble(key);
   }
 
-  static Future getList(String key) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getStringList(key);
+  static Future<List<String>?> getList(String key) async {
+    final sp = await _getSp();
+    return sp.getStringList(key);
   }
 
   static Future<bool> remove(String key) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.remove(key);
   }
 
   static Future<bool> removeAll(String key) async {
-    final sp = await SharedPreferences.getInstance();
+    final sp = await _getSp();
     return sp.clear();
   }
 }

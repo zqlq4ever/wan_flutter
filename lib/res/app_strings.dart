@@ -36,6 +36,7 @@ class AppStrings {
       'already_latest_version': '已是最新版本',
       'scan_qr_hint': '将二维码放入框内扫描',
       'scan_success': '扫描成功',
+      'scan_manual_input_hint': '当前平台不支持相机扫码，请手动粘贴/输入内容',
       'copied_to_clipboard': '已复制到剪切板',
       'scan': '扫一扫',
       'anonymous': '匿名',
@@ -139,6 +140,8 @@ class AppStrings {
       'already_latest_version': 'Already the latest version',
       'scan_qr_hint': 'Place QR code in the frame',
       'scan_success': 'Scan successful',
+      'scan_manual_input_hint':
+          'Camera scan is not supported on this platform. Paste or type content instead.',
       'copied_to_clipboard': 'Copied to clipboard',
       'scan': 'Scan',
       'anonymous': 'Anonymous',
@@ -161,7 +164,8 @@ class AppStrings {
       'app_description': 'Keep learning · Keep improving',
       'app_features': 'App Features',
       'feature_home_title': 'Home News',
-      'feature_home_desc': 'Get the latest Android development news and articles',
+      'feature_home_desc':
+          'Get the latest Android development news and articles',
       'feature_knowledge_title': 'Knowledge System',
       'feature_knowledge_desc': 'Learn Android development systematically',
       'feature_collection_desc': 'Collect favorite articles for easy access',

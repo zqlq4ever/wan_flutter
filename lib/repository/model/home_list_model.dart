@@ -211,7 +211,7 @@ class HomeListItemData {
     map['superChapterId'] = superChapterId;
     map['superChapterName'] = superChapterName;
     if (tags != null) {
-      map['tags'] = tags?.map((v) => v.toJson()).toList();
+      map['tags'] = tags;
     }
     map['title'] = title;
     map['type'] = type;

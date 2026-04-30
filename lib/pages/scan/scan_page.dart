@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:wan_android_flutter/res/app_strings.dart';
+import 'package:wan_android_flutter/utils/device_util.dart';
 import 'package:wan_android_flutter/utils/theme_util.dart';
 import 'package:wan_android_flutter/widgets/my_app_bar.dart';
 
 /// 扫描页面
-/// 
+///
 /// 页面结构：
 /// - 顶部：透明AppBar
 /// - 中间：相机预览 + 扫描线动画
@@ -19,7 +21,8 @@ class ScanPage extends StatefulWidget {
   State<ScanPage> createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin {
+class _ScanPageState extends State<ScanPage>
+    with SingleTickerProviderStateMixin {
   /// 扫描结果
   Barcode? _barcode;
 
@@ -34,6 +37,8 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
 
   /// 扫描结果是否展开
   bool _isResultExpanded = false;
+
+  final _manualInputController = TextEditingController();
 
   @override
   void initState() {
@@ -77,6 +82,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   void dispose() {
     _scanController.removeStatusListener(_onAnimationStatus);
     _scanController.dispose();
+    _manualInputController.dispose();
     super.dispose();
   }
 
@@ -132,7 +138,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   }
 
   /// 扫描结果组件
-  /// 
+  ///
   /// 功能：
   /// - 点击复制按钮复制到剪切板
   /// - 支持展开/折叠，展开后最多显示5行
@@ -141,7 +147,8 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
       return const SizedBox.shrink();
     }
 
-    final resultText = value.displayValue ?? AppStrings.getString('scan_success');
+    final resultText =
+        value.displayValue ?? AppStrings.getString('scan_success');
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 32.w),
@@ -204,7 +211,8 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
             },
             child: Padding(
               padding: EdgeInsets.all(16.w),
-              child: Icon(Icons.copy, color: Colors.white.withValues(alpha: 0.8), size: 53.r),
+              child: Icon(Icons.copy,
+                  color: Colors.white.withValues(alpha: 0.8), size: 53.r),
             ),
           ),
         ],
@@ -225,6 +233,7 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final isDark = context.isDark;
+    final canUseCamera = !kIsWeb && !Device.isDesktop;
 
     return Scaffold(
       appBar: MyAppBar(
@@ -237,8 +246,11 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          MobileScanner(onDetect: _handleBarcode),
-          _buildScanLine(screenHeight, isDark),
+          if (canUseCamera) ...[
+            MobileScanner(onDetect: _handleBarcode),
+            _buildScanLine(screenHeight, isDark),
+          ] else
+            _manualInput(isDark),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -259,8 +271,65 @@ class _ScanPageState extends State<ScanPage> with SingleTickerProviderStateMixin
     );
   }
 
+  Widget _manualInput(bool isDark) {
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 32.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: 32.h),
+            Text(
+              AppStrings.getString('scan_qr_hint'),
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.9),
+                fontSize: 40.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            TextField(
+              controller: _manualInputController,
+              style: const TextStyle(color: Colors.white),
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: AppStrings.getString('scan_manual_input_hint'),
+                hintStyle:
+                    TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+                filled: true,
+                fillColor: Colors.white.withValues(alpha: 0.08),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                  borderSide:
+                      BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                  borderSide:
+                      BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _barcode =
+                      Barcode(rawValue: value, format: BarcodeFormat.unknown);
+                });
+              },
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              AppStrings.getString('scan_success'),
+              style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6), fontSize: 28.sp),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// 扫描线组件
-  /// 
+  ///
   /// 特点：
   /// - 带渐变效果的扫描线
   /// - 从屏幕1/4处扫描到3/4处

@@ -10,15 +10,15 @@ import 'package:wan_android_flutter/widgets/banner/banner_controller.dart';
 class HomeViewModel extends GetxController {
   final BannerController bannerController = BannerController();
   late final RefreshController refreshController;
-  
+
   final _listData = <HomeListItemData>[].obs;
   List<HomeListItemData> get listData => _listData;
-  
+
   int _pageCount = 0;
-  
+
   final _currentUrl = "https://picsum.photos/400/200".obs;
   String get currentUrl => _currentUrl.value;
-  
+
   final _hasMore = true.obs;
   bool get hasMore => _hasMore.value;
 
@@ -60,7 +60,8 @@ class HomeViewModel extends GetxController {
     });
   }
 
-  Future<void> initDataList(bool loadMore, {ValueChanged<bool>? complete}) async {
+  Future<void> initDataList(bool loadMore,
+      {ValueChanged<bool>? complete}) async {
     if (loadMore) {
       _pageCount++;
     } else {

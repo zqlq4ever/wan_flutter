@@ -61,7 +61,9 @@ class MineViewModel extends GetxController {
     try {
       final packInfo = await PackageInfo.fromPlatform();
       final currentVersion = int.tryParse(packInfo.buildNumber) ?? 0;
-      final newVersion = int.tryParse(await SpUtil.getString(Constants.spNewAppVersion) ?? "0") ?? 0;
+      final newVersion = int.tryParse(
+              await SpUtil.getString(Constants.spNewAppVersion) ?? "0") ??
+          0;
       _needUpdate.value = currentVersion < newVersion;
     } catch (e) {
       _needUpdate.value = false;
@@ -73,10 +75,12 @@ class MineViewModel extends GetxController {
       final packInfo = await PackageInfo.fromPlatform();
       final currentVersion = int.tryParse(packInfo.buildNumber) ?? 0;
       final model = await WanApi.instance.checkUpdate();
-      final onlineVersion = int.tryParse(model?.data?.buildVersionNo ?? "0") ?? 0;
+      final onlineVersion =
+          int.tryParse(model?.data?.buildVersionNo ?? "0") ?? 0;
 
       if (currentVersion < onlineVersion) {
-        await SpUtil.saveString(Constants.spNewAppVersion, model?.data?.buildVersionNo ?? "");
+        await SpUtil.saveString(
+            Constants.spNewAppVersion, model?.data?.buildVersionNo ?? "");
         return model?.data?.downloadURL;
       }
       await SpUtil.saveString(Constants.spNewAppVersion, packInfo.buildNumber);

@@ -45,14 +45,16 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
                   ],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 60.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 30.w, vertical: 60.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -64,7 +66,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                           borderRadius: BorderRadius.circular(36.r),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+                              color: Colors.black
+                                  .withValues(alpha: isDark ? 0.3 : 0.1),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -86,16 +89,21 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                       SizedBox(height: 12.h),
                       Obx(() {
                         return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 8.h),
                           decoration: BoxDecoration(
-                            color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+                            color: isDark
+                                ? Colours.dark_bg_gray
+                                : Colors.grey[200],
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
                             "${AppStrings.getString('version')} ${controller.version}",
                             style: TextStyle(
                               fontSize: 32.sp,
-                              color: isDark ? Colours.dark_text_gray : Colors.grey[600],
+                              color: isDark
+                                  ? Colours.dark_text_gray
+                                  : Colors.grey[600],
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -106,16 +114,16 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                         AppStrings.getString('app_description'),
                         style: TextStyle(
                           fontSize: 32.sp,
-                          color: isDark ? Colours.dark_text_gray : Colors.grey[600],
+                          color: isDark
+                              ? Colours.dark_text_gray
+                              : Colors.grey[600],
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-
               SizedBox(height: 40.h),
-
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
@@ -125,7 +133,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -154,7 +163,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     _buildFeatureItem(
                       icon: Icons.book,
                       title: AppStrings.getString('feature_knowledge_title'),
-                      description: AppStrings.getString('feature_knowledge_desc'),
+                      description:
+                          AppStrings.getString('feature_knowledge_desc'),
                       isDark: isDark,
                       primaryColor: primaryColor,
                     ),
@@ -162,7 +172,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                     _buildFeatureItem(
                       icon: Icons.star,
                       title: AppStrings.getString('my_collection'),
-                      description: AppStrings.getString('feature_collection_desc'),
+                      description:
+                          AppStrings.getString('feature_collection_desc'),
                       isDark: isDark,
                       primaryColor: primaryColor,
                     ),
@@ -177,9 +188,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   ],
                 ),
               ),
-
               SizedBox(height: 32.h),
-
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
@@ -189,7 +198,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -233,7 +243,9 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                                 AppStrings.getString('developer'),
                                 style: TextStyle(
                                   fontSize: 37.sp,
-                                  color: isDark ? Colours.dark_text_gray : Colors.grey[600],
+                                  color: isDark
+                                      ? Colours.dark_text_gray
+                                      : Colors.grey[600],
                                 ),
                               ),
                               SizedBox(height: 4.h),
@@ -242,7 +254,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                                 style: TextStyle(
                                   fontSize: 41.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: isDark ? Colours.dark_text : Colors.black,
+                                  color:
+                                      isDark ? Colours.dark_text : Colors.black,
                                 ),
                               ),
                             ],
@@ -265,9 +278,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   ],
                 ),
               ),
-
               SizedBox(height: 32.h),
-
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
@@ -277,7 +288,8 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -318,9 +330,7 @@ class AboutUsPage extends GetView<AboutUsViewModel> {
                   ],
                 ),
               ),
-
               SizedBox(height: 60.h),
-
               Column(
                 children: [
                   Text(

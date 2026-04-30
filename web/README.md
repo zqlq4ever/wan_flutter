@@ -30,4 +30,4 @@ npm start
 
 ## API 代理
 
-本项目使用代理服务器解决 Web 平台的 CORS 问题。所有 API 请求会被代理到 `https://www.wanandroid.com`。
+本项目使用代理服务器解决 Web 平台的 CORS 问题。所有 API 请求会被代理到 `https://wanandroid.com`。

@@ -20,11 +20,12 @@ class ResponseInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    if (response.statusCode != 200) {
+    final statusCode = response.statusCode ?? 0;
+    if (statusCode < 200 || statusCode >= 300) {
       handler.reject(DioException(
         requestOptions: response.requestOptions,
         type: DioExceptionType.badResponse,
-        message: 'HTTP错误: ${response.statusCode}',
+        message: 'HTTP错误: $statusCode',
       ));
       return;
     }
@@ -34,13 +35,21 @@ class ResponseInterceptor extends Interceptor {
       return;
     }
 
-    final rsp = BaseResponse.fromJson(response.data);
+    final raw = response.data;
+    if (raw is! Map<String, dynamic>) {
+      handler.reject(DioException(
+        requestOptions: response.requestOptions,
+        type: DioExceptionType.unknown,
+        message: '响应格式错误',
+      ));
+      return;
+    }
+
+    final rsp = BaseResponse.fromJson(raw);
 
     if (rsp.isSuccess) {
-      handler.next(Response(
-        requestOptions: response.requestOptions,
-        data: rsp.data ?? true,
-      ));
+      response.data = rsp.data ?? true;
+      handler.next(response);
       return;
     }
 

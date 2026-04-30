@@ -17,7 +17,8 @@ class UpdateDialog extends StatefulWidget {
   State<UpdateDialog> createState() => _UpdateDialogState();
 }
 
-class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMixin {
+class _UpdateDialogState extends State<UpdateDialog>
+    with TickerProviderStateMixin {
   final CancelToken _cancelToken = CancelToken();
   final double _value = 0;
   late AnimationController _waveController;
@@ -32,21 +33,81 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
   late Animation<double> _iconFloatAnimation;
 
   final List<List<Color>> _colorPairs = [
-    [const Color(0xFF4FC3F7), const Color(0xFF29B6F6), const Color(0xFF03A9F4), const Color(0xFF039BE5)],
-    [const Color(0xFF81C784), const Color(0xFF66BB6A), const Color(0xFF4CAF50), const Color(0xFF43A047)],
-    [const Color(0xFFFFD54F), const Color(0xFFFFCA28), const Color(0xFFFFC107), const Color(0xFFFFB300)],
-    [const Color(0xFF4DD0E1), const Color(0xFF26C6DA), const Color(0xFF00BCD4), const Color(0xFF00ACC1)],
-    [const Color(0xFFAED581), const Color(0xFF9CCC65), const Color(0xFF8BC34A), const Color(0xFF7CB342)],
-    [const Color(0xFF80DEEA), const Color(0xFF4DD0E1), const Color(0xFF26C6DA), const Color(0xFF00BCD4)],
+    [
+      const Color(0xFF4FC3F7),
+      const Color(0xFF29B6F6),
+      const Color(0xFF03A9F4),
+      const Color(0xFF039BE5)
+    ],
+    [
+      const Color(0xFF81C784),
+      const Color(0xFF66BB6A),
+      const Color(0xFF4CAF50),
+      const Color(0xFF43A047)
+    ],
+    [
+      const Color(0xFFFFD54F),
+      const Color(0xFFFFCA28),
+      const Color(0xFFFFC107),
+      const Color(0xFFFFB300)
+    ],
+    [
+      const Color(0xFF4DD0E1),
+      const Color(0xFF26C6DA),
+      const Color(0xFF00BCD4),
+      const Color(0xFF00ACC1)
+    ],
+    [
+      const Color(0xFFAED581),
+      const Color(0xFF9CCC65),
+      const Color(0xFF8BC34A),
+      const Color(0xFF7CB342)
+    ],
+    [
+      const Color(0xFF80DEEA),
+      const Color(0xFF4DD0E1),
+      const Color(0xFF26C6DA),
+      const Color(0xFF00BCD4)
+    ],
   ];
 
   final List<List<Color>> _darkColorPairs = [
-    [const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280), const Color(0xFF9CA3AF)],
-    [const Color(0xFF1F2937), const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280)],
-    [const Color(0xFF111827), const Color(0xFF1F2937), const Color(0xFF374151), const Color(0xFF4B5563)],
-    [const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280), const Color(0xFF9CA3AF)],
-    [const Color(0xFF1F2937), const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280)],
-    [const Color(0xFF374151), const Color(0xFF4B5563), const Color(0xFF6B7280), const Color(0xFF9CA3AF)],
+    [
+      const Color(0xFF374151),
+      const Color(0xFF4B5563),
+      const Color(0xFF6B7280),
+      const Color(0xFF9CA3AF)
+    ],
+    [
+      const Color(0xFF1F2937),
+      const Color(0xFF374151),
+      const Color(0xFF4B5563),
+      const Color(0xFF6B7280)
+    ],
+    [
+      const Color(0xFF111827),
+      const Color(0xFF1F2937),
+      const Color(0xFF374151),
+      const Color(0xFF4B5563)
+    ],
+    [
+      const Color(0xFF374151),
+      const Color(0xFF4B5563),
+      const Color(0xFF6B7280),
+      const Color(0xFF9CA3AF)
+    ],
+    [
+      const Color(0xFF1F2937),
+      const Color(0xFF374151),
+      const Color(0xFF4B5563),
+      const Color(0xFF6B7280)
+    ],
+    [
+      const Color(0xFF374151),
+      const Color(0xFF4B5563),
+      const Color(0xFF6B7280),
+      const Color(0xFF9CA3AF)
+    ],
   ];
 
   @override
@@ -246,7 +307,8 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
       animation: Listenable.merge(_pathControllers),
       builder: (context, child) {
         final positions = List.generate(4, (index) {
-          return _getPositionOnPath(_paths[index], _pathAnimations[index].value);
+          return _getPositionOnPath(
+              _paths[index], _pathAnimations[index].value);
         });
 
         return Stack(
@@ -354,12 +416,14 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                     borderRadius: BorderRadius.circular(24.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.2),
+                        color:
+                            Colors.black.withValues(alpha: isDark ? 0.4 : 0.2),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
                       BoxShadow(
-                        color: (isDark ? Colors.white : Colors.white).withValues(alpha: isDark ? 0.1 : 0.3),
+                        color: (isDark ? Colors.white : Colors.white)
+                            .withValues(alpha: isDark ? 0.1 : 0.3),
                         blurRadius: 15,
                         spreadRadius: -5,
                       ),
@@ -461,10 +525,14 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildUpdateItem(AppStrings.getString('update_item_1'), isDark),
-                  _buildUpdateItem(AppStrings.getString('update_item_2'), isDark),
-                  _buildUpdateItem(AppStrings.getString('update_item_3'), isDark),
-                  _buildUpdateItem(AppStrings.getString('update_item_4'), isDark),
+                  _buildUpdateItem(
+                      AppStrings.getString('update_item_1'), isDark),
+                  _buildUpdateItem(
+                      AppStrings.getString('update_item_2'), isDark),
+                  _buildUpdateItem(
+                      AppStrings.getString('update_item_3'), isDark),
+                  _buildUpdateItem(
+                      AppStrings.getString('update_item_4'), isDark),
                 ],
               ),
             ),
@@ -565,7 +633,9 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
                       : [const Color(0xFF4FC3F7), const Color(0xFF81C784)],
                 )
               : null,
-          color: isPrimary ? null : (isDark ? Colours.dark_bg_color : Colors.grey[50]),
+          color: isPrimary
+              ? null
+              : (isDark ? Colours.dark_bg_color : Colors.grey[50]),
           borderRadius: BorderRadius.circular(48.r),
           border: isPrimary
               ? null
@@ -576,7 +646,9 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
           boxShadow: isPrimary
               ? [
                   BoxShadow(
-                    color: (isDark ? Colours.dark_text : const Color(0xFF4FC3F7)).withValues(alpha: isDark ? 0.3 : 0.4),
+                    color:
+                        (isDark ? Colours.dark_text : const Color(0xFF4FC3F7))
+                            .withValues(alpha: isDark ? 0.3 : 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -599,7 +671,9 @@ class _UpdateDialogState extends State<UpdateDialog> with TickerProviderStateMix
               style: TextStyle(
                 fontSize: 38.sp,
                 fontWeight: FontWeight.w600,
-                color: isPrimary ? Colors.white : (isDark ? Colours.dark_text_gray : Colors.grey[600]),
+                color: isPrimary
+                    ? Colors.white
+                    : (isDark ? Colours.dark_text_gray : Colors.grey[600]),
               ),
             ),
           ],
@@ -636,8 +710,10 @@ class _WavePainter extends CustomPainter {
     for (int i = 0; i <= waveCount; i++) {
       final x = i * waveWidth;
       final xOffset = animationValue * 2 * math.pi;
-      final y1 = size.height * 0.3 + math.sin(xOffset + i * math.pi) * waveHeight;
-      final y2 = size.height * 0.6 + math.sin(xOffset + i * math.pi + math.pi / 2) * waveHeight;
+      final y1 =
+          size.height * 0.3 + math.sin(xOffset + i * math.pi) * waveHeight;
+      final y2 = size.height * 0.6 +
+          math.sin(xOffset + i * math.pi + math.pi / 2) * waveHeight;
 
       path.quadraticBezierTo(
         x + waveWidth / 4,

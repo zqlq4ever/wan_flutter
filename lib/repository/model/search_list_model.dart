@@ -63,7 +63,7 @@ class SearchListModel {
 /// host : ""
 /// id : 21826
 /// isAdminAdd : false
-/// link : "https://www.wanandroid.com/wenda/show/21826"
+/// link : "https://wanandroid.com/wenda/show/21826"
 /// niceDate : "2022-03-20 15:38"
 /// niceShareDate : "2022-03-20 15:38"
 /// origin : ""

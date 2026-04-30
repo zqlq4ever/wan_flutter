@@ -2,7 +2,7 @@
 
 [中文版](README.md) | English Version
 
-WanAndroid Flutter version, a Flutter learning project developed based on [WanAndroid Open API](https://www.wanandroid.com/blog/show/2).
+WanAndroid Flutter version, a Flutter learning project developed based on [WanAndroid Open API](https://wanandroid.com/blog/show/2).
 
 ## Project Introduction
 

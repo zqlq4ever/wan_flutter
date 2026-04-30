@@ -36,7 +36,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Color bgColor = backgroundColor ?? context.backgroundColor;
 
     final SystemUiOverlayStyle overlayStyle =
-        ThemeData.estimateBrightnessForColor(bgColor) == Brightness.dark ? ThemeUtils.light : ThemeUtils.dark;
+        ThemeData.estimateBrightnessForColor(bgColor) == Brightness.dark
+            ? ThemeUtils.light
+            : ThemeUtils.dark;
 
     final Widget action = actionName.isNotEmpty
         ? Positioned(
@@ -74,7 +76,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.all(12.0),
             icon: Image.asset(
               backImg,
-              color: backImgColor ?? (context.isDark ? Colors.white.withValues(alpha: 0.7) : ThemeUtils.getIconColor(context)),
+              color: backImgColor ??
+                  (context.isDark
+                      ? Colors.white.withValues(alpha: 0.7)
+                      : ThemeUtils.getIconColor(context)),
             ),
           )
         : Gaps.empty;
@@ -83,7 +88,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       namesRoute: true,
       header: true,
       child: Container(
-        alignment: centerTitle.isEmpty ? Alignment.centerLeft : Alignment.center,
+        alignment:
+            centerTitle.isEmpty ? Alignment.centerLeft : Alignment.center,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 48.0),
         child: Text(

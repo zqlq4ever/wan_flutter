@@ -25,7 +25,9 @@ class NavigationBarWidget extends StatefulWidget {
     this.onItemChange,
     this.bottomBarIconWidth,
     this.bottomBarIconHeight,
-  }) : assert(tabLabels.length == tabIcons.length && tabLabels.length == tabActiveIcons.length,
+  }) : assert(
+            tabLabels.length == tabIcons.length &&
+                tabLabels.length == tabActiveIcons.length,
             'tabLabels、tabIcons、tabActiveIcons 长度必须相同！');
 
   /// 当前页面下标

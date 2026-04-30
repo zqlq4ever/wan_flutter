@@ -48,21 +48,27 @@ class MyButton extends StatelessWidget {
           foregroundColor: WidgetStateProperty.resolveWith(
             (states) {
               if (states.contains(WidgetState.disabled)) {
-                return disabledTextColor ?? (isDark ? Colours.dark_text_disabled : Colours.text_disabled);
+                return disabledTextColor ??
+                    (isDark
+                        ? Colours.dark_text_disabled
+                        : Colours.text_disabled);
               }
-              return textColor ?? (isDark ? Colours.dark_button_text : Colors.white);
+              return textColor ??
+                  (isDark ? Colours.dark_button_text : Colors.white);
             },
           ),
           // 背景颜色
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return disabledBackgroundColor ?? primaryColor.withValues(alpha: 0.5);
+              return disabledBackgroundColor ??
+                  primaryColor.withValues(alpha: 0.5);
             }
             return backgroundColor ?? primaryColor;
           }),
           // 水波纹
           overlayColor: WidgetStateProperty.resolveWith((states) {
-            final color = textColor ?? (isDark ? Colours.dark_button_text : Colors.white);
+            final color =
+                textColor ?? (isDark ? Colours.dark_button_text : Colors.white);
             return color.withValues(alpha: 0.12);
           }),
           // 按钮最小大小

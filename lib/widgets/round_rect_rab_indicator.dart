@@ -75,8 +75,11 @@ class _UnderlinePainter extends BoxPainter {
     assert(configuration.textDirection != null);
     final Rect rect = offset & configuration.size!;
     final TextDirection textDirection = configuration.textDirection!;
-    final Rect indicator = decoration._indicatorRectFor(rect, textDirection).deflate(decoration.borderSide.width / 2.0);
-    final Paint paint = decoration.borderSide.toPaint()..strokeCap = StrokeCap.round;
+    final Rect indicator = decoration
+        ._indicatorRectFor(rect, textDirection)
+        .deflate(decoration.borderSide.width / 2.0);
+    final Paint paint = decoration.borderSide.toPaint()
+      ..strokeCap = StrokeCap.round;
     canvas.drawLine(indicator.bottomLeft, indicator.bottomRight, paint);
   }
 }

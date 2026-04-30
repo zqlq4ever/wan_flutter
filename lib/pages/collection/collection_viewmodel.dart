@@ -10,12 +10,12 @@ import 'package:wan_android_flutter/route/route_path_constant.dart';
 
 class CollectionViewModel extends GetxController {
   late RefreshController refreshController;
-  
+
   final _dataList = <MyCollectItemModel>[].obs;
   List<MyCollectItemModel> get dataList => _dataList;
-  
+
   int _pageCount = 0;
-  
+
   final _hasMore = true.obs;
   bool get hasMore => _hasMore.value;
 
@@ -95,7 +95,8 @@ class CollectionViewModel extends GetxController {
 
   Future<void> cancelCollect(int index, String? id, String? originId) async {
     try {
-      bool success = await WanApi.instance.cancelCollectFromMyList(id ?? "", originId ?? "-1");
+      bool success = await WanApi.instance
+          .cancelCollectFromMyList(id ?? "", originId ?? "-1");
       if (success && index >= 0 && index < _dataList.length) {
         _dataList.removeAt(index);
       }

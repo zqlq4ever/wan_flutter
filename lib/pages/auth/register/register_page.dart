@@ -71,7 +71,6 @@ class RegisterPage extends GetView<RegisterViewModel> {
                     ),
                   ),
                 ),
-                
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(30.w),
@@ -80,7 +79,8 @@ class RegisterPage extends GetView<RegisterViewModel> {
                     borderRadius: BorderRadius.circular(30.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                        color:
+                            Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
                         blurRadius: 20,
                         offset: const Offset(0, 5),
                       ),
@@ -97,9 +97,7 @@ class RegisterPage extends GetView<RegisterViewModel> {
                         keyboardType: TextInputType.text,
                         hintText: AppStrings.getString('input_account_hint'),
                       ),
-                      
                       SizedBox(height: 30.h),
-                      
                       MyTextField(
                         key: const Key('password'),
                         keyName: 'password',
@@ -109,9 +107,7 @@ class RegisterPage extends GetView<RegisterViewModel> {
                         keyboardType: TextInputType.visiblePassword,
                         hintText: AppStrings.getString('input_password_hint'),
                       ),
-                      
                       SizedBox(height: 30.h),
-                      
                       MyTextField(
                         key: const Key('password2'),
                         keyName: 'password2',
@@ -119,33 +115,32 @@ class RegisterPage extends GetView<RegisterViewModel> {
                         isInputPwd: true,
                         controller: controller.password2Controller,
                         keyboardType: TextInputType.visiblePassword,
-                        hintText: AppStrings.getString('input_password_again_hint'),
+                        hintText:
+                            AppStrings.getString('input_password_again_hint'),
                       ),
-                      
                       SizedBox(height: 40.h),
-                      
                       Obx(() => MyButton(
-                        key: const Key('register'),
-                        onPressed: controller.clickable.value && !controller.isLoading.value
-                            ? () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                controller.register();
-                              }
-                            : null,
-                        text: controller.isLoading.value 
-                            ? AppStrings.getString('registering')
-                            : AppStrings.getString('register'),
-                        fontSize: 36.sp,
-                        radius: 24.r,
-                        minHeight: 96.h,
-                        fontWeight: FontWeight.w600,
-                      )),
-                      
+                            key: const Key('register'),
+                            onPressed: controller.clickable.value &&
+                                    !controller.isLoading.value
+                                ? () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    controller.register();
+                                  }
+                                : null,
+                            text: controller.isLoading.value
+                                ? AppStrings.getString('registering')
+                                : AppStrings.getString('register'),
+                            fontSize: 36.sp,
+                            radius: 24.r,
+                            minHeight: 96.h,
+                            fontWeight: FontWeight.w600,
+                          )),
                       SizedBox(height: 60.h),
                     ],
                   ),
                 ),
-                
                 SizedBox(height: 60.h),
               ],
             ),

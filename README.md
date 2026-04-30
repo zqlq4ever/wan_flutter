@@ -2,7 +2,7 @@
 
 [English Version](README_EN.md) | 中文版
 
-wanandroid flutter 版本，基于 [玩Android开放API](https://www.wanandroid.com/blog/show/2) 开发的Flutter学习项目。
+wanandroid flutter 版本，基于 [玩Android开放API](https://wanandroid.com/blog/show/2) 开发的Flutter学习项目。
 
 ## 项目介绍
 

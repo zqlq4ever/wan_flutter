@@ -12,10 +12,10 @@ class RegisterViewModel extends GetxController {
   final FocusNode nodeText1 = FocusNode();
   final FocusNode nodeText2 = FocusNode();
   final FocusNode nodeText3 = FocusNode();
-  
+
   final _clickable = false.obs;
   RxBool get clickable => _clickable;
-  
+
   final _isLoading = false.obs;
   RxBool get isLoading => _isLoading;
 
@@ -48,14 +48,14 @@ class RegisterViewModel extends GetxController {
     final name = nameController.text;
     final password = passwordController.text;
     final password2 = password2Controller.text;
-    
-    final isValid = name.isNotEmpty && 
-                    name.length <= 20 && 
-                    password.isNotEmpty && 
-                    password.length >= 6 &&
-                    password2.isNotEmpty && 
-                    password2.length >= 6;
-    
+
+    final isValid = name.isNotEmpty &&
+        name.length <= 20 &&
+        password.isNotEmpty &&
+        password.length >= 6 &&
+        password2.isNotEmpty &&
+        password2.length >= 6;
+
     if (isValid != _clickable.value) {
       _clickable.value = isValid;
     }
@@ -63,7 +63,7 @@ class RegisterViewModel extends GetxController {
 
   Future<bool> register() async {
     if (_isLoading.value) return false;
-    
+
     _isLoading.value = true;
     try {
       UserInfoModel? userInfo = await WanApi.instance.register(

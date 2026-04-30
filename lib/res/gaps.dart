@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Gaps {
-
   static final Widget hGap4 = SizedBox(width: 4.w);
   static final Widget hGap5 = SizedBox(width: 5.w);
   static final Widget hGap8 = SizedBox(width: 8.w);

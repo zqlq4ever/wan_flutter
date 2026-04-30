@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wan_android_flutter/config/app_config.dart';
 import 'package:wan_android_flutter/network/api_exception.dart';
 import 'package:wan_android_flutter/network/dio_client.dart';
 import 'package:wan_android_flutter/repository/model/app_check_update_model.dart';
@@ -42,7 +43,8 @@ class WanApi {
   /// 获取首页Banner数据
   Future<List<HomeBannerBean>?> getBannerList() async {
     try {
-      final response = await DioClient.instance.get(UrlPathConstants.pathBanner);
+      final response =
+          await DioClient.instance.get(UrlPathConstants.pathBanner);
       final model = HomeBannerListModel.fromJson(response.data);
       return model.list;
     } on DioException catch (e) {
@@ -53,7 +55,8 @@ class WanApi {
   /// 获取搜索热词
   Future<List<SearchHotKeyModel>?> searchHotKeys() async {
     try {
-      final response = await DioClient.instance.get(UrlPathConstants.pathHotkey);
+      final response =
+          await DioClient.instance.get(UrlPathConstants.pathHotkey);
       final model = SearchHotKeyListModel.fromJson(response.data);
       return model.list;
     } on DioException catch (e) {
@@ -64,7 +67,8 @@ class WanApi {
   /// 获取常用网站
   Future<List<CommonWebsiteModel>?> commonWebsiteList() async {
     try {
-      final response = await DioClient.instance.get(UrlPathConstants.pathWebsite);
+      final response =
+          await DioClient.instance.get(UrlPathConstants.pathWebsite);
       final model = CommonWebsiteListModel.fromJson(response.data);
       return model.list;
     } on DioException catch (e) {
@@ -87,7 +91,8 @@ class WanApi {
   ///
   /// [id] 知识体系分类ID
   /// [page] 页码，从0开始
-  Future<KnowledgeDetailListModel?> knowledgeDetailList(String id, int page) async {
+  Future<KnowledgeDetailListModel?> knowledgeDetailList(
+      String id, int page) async {
     try {
       final response = await DioClient.instance.get(
         'article/list/$page/json',
@@ -123,7 +128,8 @@ class WanApi {
   /// [username] 用户名
   /// [password] 密码
   /// [repassword] 确认密码
-  Future<UserInfoModel?> register(String? username, String? password, String? repassword) async {
+  Future<UserInfoModel?> register(
+      String? username, String? password, String? repassword) async {
     try {
       final response = await DioClient.instance.post(
         UrlPathConstants.pathRegister,
@@ -142,7 +148,8 @@ class WanApi {
   /// 用户登出
   Future<bool> logout() async {
     try {
-      final response = await DioClient.instance.get(UrlPathConstants.pathLogout);
+      final response =
+          await DioClient.instance.get(UrlPathConstants.pathLogout);
       return response.data == true;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -166,7 +173,8 @@ class WanApi {
   /// [id] 文章原始ID
   Future<bool> cancelCollect(String id) async {
     try {
-      final response = await DioClient.instance.post('lg/uncollect_originId/$id/json');
+      final response =
+          await DioClient.instance.post('lg/uncollect_originId/$id/json');
       return response.data == true;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -194,7 +202,8 @@ class WanApi {
   /// [page] 页码，从0开始
   Future<MyCollectsModel?> getMyCollects(int page) async {
     try {
-      final response = await DioClient.instance.get('lg/collect/list/$page/json');
+      final response =
+          await DioClient.instance.get('lg/collect/list/$page/json');
       return MyCollectsModel.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);
@@ -219,26 +228,33 @@ class WanApi {
 
   /// 检查APP更新
   Future<AppCheckUpdateModel?> checkUpdate() async {
-    final originalBaseUrl = DioClient.instance.baseUrl;
-
     try {
-      DioClient.instance.changeBaseUrl(UrlPathConstants.hostPgyer);
-      final response = await DioClient.instance.post(
+      // Web 下直接请求三方域名通常会被 CORS 拦截；这里做降级处理。
+      if (kIsWeb) return null;
+
+      if (!AppConfig.hasPgyerKeys) {
+        return null;
+      }
+
+      final dio = Dio(BaseOptions(
+        baseUrl: UrlPathConstants.hostPgyer,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+        responseType: ResponseType.json,
+      ));
+
+      final response = await dio.post(
         UrlPathConstants.pathCheckUpgrade,
         queryParameters: {
-          '_api_key': '57c543d258a34f8565748561de50b6e6',
-          'appKey': '2639f784ce9ee850532074b7b0534e62',
+          '_api_key': AppConfig.pgyerApiKey,
+          'appKey': AppConfig.pgyerAppKey,
         },
       );
-      return AppCheckUpdateModel.fromJson(response.data);
+      return AppCheckUpdateModel.fromJson(
+          response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _handleError(e);
-    } finally {
-      if (kIsWeb) {
-        DioClient.instance.changeBaseUrl('/api/');
-      } else {
-        DioClient.instance.changeBaseUrl(originalBaseUrl);
-      }
     }
   }
 

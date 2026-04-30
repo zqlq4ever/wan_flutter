@@ -91,7 +91,9 @@ class SearchPage extends GetView<SearchViewModel> {
             focusedBorder: InputBorder.none,
             prefixIcon: Container(
               alignment: Alignment.center,
-              child: Icon(Icons.search, color: isDark ? Colours.dark_text_gray : Colors.grey, size: 60.r),
+              child: Icon(Icons.search,
+                  color: isDark ? Colours.dark_text_gray : Colors.grey,
+                  size: 60.r),
             ),
             prefixIconConstraints: BoxConstraints.tightFor(
               width: 60.r,
@@ -103,7 +105,9 @@ class SearchPage extends GetView<SearchViewModel> {
                     visible: controller.hasText.value,
                     child: GestureDetector(
                       onTap: controller.clearInput,
-                      child: Icon(Icons.clear, size: 60.r, color: isDark ? Colours.dark_text_gray : Colors.grey),
+                      child: Icon(Icons.clear,
+                          size: 60.r,
+                          color: isDark ? Colours.dark_text_gray : Colors.grey),
                     ),
                   )),
             ),
@@ -189,7 +193,8 @@ class SearchPage extends GetView<SearchViewModel> {
                       Icon(
                         Icons.arrow_forward_ios,
                         size: 56.sp,
-                        color: isDark ? Colours.dark_text_gray : Colors.grey[300],
+                        color:
+                            isDark ? Colours.dark_text_gray : Colors.grey[300],
                       ),
                     ],
                   ),
@@ -203,28 +208,38 @@ class SearchPage extends GetView<SearchViewModel> {
                           Icon(
                             Icons.article_outlined,
                             size: 48.sp,
-                            color: isDark ? Colours.dark_text_gray : Colors.grey[400],
+                            color: isDark
+                                ? Colours.dark_text_gray
+                                : Colors.grey[400],
                           ),
                           SizedBox(width: 16.w),
                           Text(
-                            item.author ?? item.shareUser ?? AppStrings.getString('anonymous'),
+                            item.author ??
+                                item.shareUser ??
+                                AppStrings.getString('anonymous'),
                             style: TextStyle(
                               fontSize: 30.sp,
-                              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+                              color: isDark
+                                  ? Colours.dark_text_gray
+                                  : Colors.grey[500],
                             ),
                           ),
                           SizedBox(width: 48.w),
                           Icon(
                             Icons.access_time,
                             size: 48.sp,
-                            color: isDark ? Colours.dark_text_gray : Colors.grey[400],
+                            color: isDark
+                                ? Colours.dark_text_gray
+                                : Colors.grey[400],
                           ),
                           SizedBox(width: 16.w),
                           Text(
                             item.niceDate ?? "",
                             style: TextStyle(
                               fontSize: 30.sp,
-                              color: isDark ? Colours.dark_text_gray : Colors.grey[500],
+                              color: isDark
+                                  ? Colours.dark_text_gray
+                                  : Colors.grey[500],
                             ),
                           ),
                         ],

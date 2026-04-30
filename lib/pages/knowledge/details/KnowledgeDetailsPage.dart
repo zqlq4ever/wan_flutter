@@ -95,7 +95,8 @@ class _KnowledgeDetailsPageState extends State<KnowledgeDetailsPage>
                 borderRadius: BorderRadius.circular(20.r),
               ),
               indicatorPadding: EdgeInsets.zero,
-              labelPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+              labelPadding:
+                  EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
               labelStyle: TextStyle(
                 fontSize: 34.sp,
                 fontWeight: FontWeight.w600,

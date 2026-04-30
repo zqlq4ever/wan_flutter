@@ -16,13 +16,13 @@ app.use((req, res, next) => {
 });
 
 const apiProxy = createProxyMiddleware({
-  target: 'https://www.wanandroid.com',
+  target: 'https://wanandroid.com',
   changeOrigin: true,
   pathRewrite: {
     '^/api': '',
   },
   onProxyReq: (proxyReq, req, res) => {
-    proxyReq.setHeader('Host', 'www.wanandroid.com');
+    proxyReq.setHeader('Host', 'wanandroid.com');
   },
 });
 
@@ -36,6 +36,6 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-  console.log(`API proxy is set up for https://www.wanandroid.com`);
+  console.log(`API proxy is set up for https://wanandroid.com`);
   console.log(`Open http://localhost:${PORT} in your browser to use the app`);
 });

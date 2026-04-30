@@ -60,10 +60,10 @@ class _MyTextFieldState extends State<MyTextField> {
 
     /// 监听输入改变
     widget.controller.addListener(isEmpty);
-    
+
     /// 监听焦点变化
     widget.focusNode?.addListener(_onFocusChange);
-    
+
     super.initState();
   }
 
@@ -99,7 +99,9 @@ class _MyTextFieldState extends State<MyTextField> {
         _currentSecond = _second;
         _clickable = false;
       });
-      _subscription = Stream.periodic(const Duration(seconds: 1), (int i) => i).take(_second).listen((int i) {
+      _subscription = Stream.periodic(const Duration(seconds: 1), (int i) => i)
+          .take(_second)
+          .listen((int i) {
         setState(() {
           _currentSecond = _second - i - 1;
           _clickable = _currentSecond < 1;
@@ -123,7 +125,8 @@ class _MyTextFieldState extends State<MyTextField> {
       keyboardType: widget.keyboardType,
       style: TextStyle(fontSize: 36.sp),
       // 数字、手机号限制格式为0到9， 密码限制不包含汉字
-      inputFormatters: (widget.keyboardType == TextInputType.number || widget.keyboardType == TextInputType.phone)
+      inputFormatters: (widget.keyboardType == TextInputType.number ||
+              widget.keyboardType == TextInputType.phone)
           ? [FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
           : [FilteringTextInputFormatter.deny(RegExp('[\u4e00-\u9fa5]'))],
       decoration: InputDecoration(
@@ -199,11 +202,14 @@ class _MyTextFieldState extends State<MyTextField> {
         key: const Key('getVerificationCode'),
         onPressed: _clickable ? _getVCode : null,
         fontSize: 12.sp,
-        text: _clickable ? AppStrings.getString('get_verification_code') : '（$_currentSecond s）',
+        text: _clickable
+            ? AppStrings.getString('get_verification_code')
+            : '（$_currentSecond s）',
         textColor: themeData.primaryColor,
         disabledTextColor: isDark ? Colours.dark_text : Colors.white,
         backgroundColor: Colors.transparent,
-        disabledBackgroundColor: isDark ? Colours.dark_text_gray : Colours.text_gray_c,
+        disabledBackgroundColor:
+            isDark ? Colours.dark_text_gray : Colours.text_gray_c,
         radius: 1.r,
         minHeight: 26.h,
         minWidth: 76.w,

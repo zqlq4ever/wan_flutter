@@ -29,7 +29,9 @@ class RoutePageUtil {
       }),
     ),
     GetPage(name: RoutePath.tab, page: () => const HomeBottomTab()),
-    GetPage(name: RoutePath.knowledgeDetails, page: () => const KnowledgeDetailsPage()),
+    GetPage(
+        name: RoutePath.knowledgeDetails,
+        page: () => const KnowledgeDetailsPage()),
     GetPage(
       name: RoutePath.register,
       page: () => const RegisterPage(),
@@ -46,7 +48,8 @@ class RoutePageUtil {
     ),
     GetPage(
       name: RoutePath.webviewPage,
-      page: () => const WebViewPage(loadResource: "", webViewType: WebViewType.URL),
+      page: () =>
+          const WebViewPage(loadResource: "", webViewType: WebViewType.URL),
     ),
     GetPage(
       name: RoutePath.aboutUs,
@@ -65,9 +68,6 @@ class RoutePageUtil {
     GetPage(
       name: RoutePath.scan,
       page: () => const ScanPage(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut(() => SearchViewModel());
-      }),
     ),
     GetPage(
       name: RoutePath.settings,

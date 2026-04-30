@@ -5,7 +5,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'https://www.wanandroid.com',
+      target: 'https://wanandroid.com',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',

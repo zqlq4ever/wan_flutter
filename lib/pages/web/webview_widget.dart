@@ -116,7 +116,8 @@ class WebViewWidgetState extends State<WebViewWidget> {
           }
 
           widget.jsChannelMap?.forEach((handlerName, callback) {
-            webViewController.addJavaScriptHandler(handlerName: handlerName, callback: callback);
+            webViewController.addJavaScriptHandler(
+                handlerName: handlerName, callback: callback);
           });
         },
         onConsoleMessage: (controller, consoleMessage) {
@@ -125,7 +126,8 @@ class WebViewWidgetState extends State<WebViewWidget> {
         onLoadStart: (InAppWebViewController controller, Uri? url) {
           Loading.showLoading(duration: const Duration(seconds: 10));
         },
-        onReceivedError: (InAppWebViewController controller, WebResourceRequest request, WebResourceError error) {
+        onReceivedError: (InAppWebViewController controller,
+            WebResourceRequest request, WebResourceError error) {
           Loading.dismissAll();
         },
         onLoadStop: (InAppWebViewController controller, Uri? url) async {

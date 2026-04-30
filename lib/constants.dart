@@ -21,5 +21,4 @@ class Constants {
 
   //  主题色
   static const String spThemeColor = "SP_THEME_COLOR";
-
 }

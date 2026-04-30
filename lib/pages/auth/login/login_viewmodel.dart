@@ -14,10 +14,10 @@ class LoginViewModel extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final FocusNode nodeText1 = FocusNode();
   final FocusNode nodeText2 = FocusNode();
-  
+
   final _clickable = false.obs;
   RxBool get clickable => _clickable;
-  
+
   final _isLoading = false.obs;
   RxBool get isLoading => _isLoading;
 
@@ -44,12 +44,12 @@ class LoginViewModel extends GetxController {
   void _verify() {
     final name = nameController.text;
     final password = passwordController.text;
-    
-    final isValid = name.isNotEmpty && 
-                    name.length <= 20 && 
-                    password.isNotEmpty && 
-                    password.length >= 6;
-    
+
+    final isValid = name.isNotEmpty &&
+        name.length <= 20 &&
+        password.isNotEmpty &&
+        password.length >= 6;
+
     if (isValid != _clickable.value) {
       _clickable.value = isValid;
     }
@@ -57,10 +57,11 @@ class LoginViewModel extends GetxController {
 
   Future<bool> login() async {
     if (_isLoading.value) return false;
-    
+
     _isLoading.value = true;
     try {
-      UserInfoModel? userInfo = await WanApi.instance.login(inputUserName, inputPassword);
+      UserInfoModel? userInfo =
+          await WanApi.instance.login(inputUserName, inputPassword);
       if (userInfo?.username != null) {
         SpUtil.saveString(Constants.spUserName, userInfo?.username ?? "");
         Get.offAllNamed(RoutePath.tab);

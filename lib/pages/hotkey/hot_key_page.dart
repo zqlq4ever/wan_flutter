@@ -79,7 +79,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.3 : 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -87,7 +88,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
                     ),
                     child: Column(
                       children: [
-                        _titleWidget(AppStrings.getString('search_hot_key'), isDark, primaryColor),
+                        _titleWidget(AppStrings.getString('search_hot_key'),
+                            isDark, primaryColor),
                         SizedBox(height: 24.h),
                         _searchHotKeyListView(isDark, primaryColor),
                       ],
@@ -102,7 +104,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.3 : 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -110,7 +113,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
                     ),
                     child: Column(
                       children: [
-                        _titleWidget(AppStrings.getString('common_website'), isDark, primaryColor),
+                        _titleWidget(AppStrings.getString('common_website'),
+                            isDark, primaryColor),
                         SizedBox(height: 24.h),
                         _commonWebsiteListView(isDark, primaryColor),
                       ],
@@ -178,7 +182,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
   Widget _commonWebsiteListView(bool isDark, Color primaryColor) {
     return Obx(() => _gridview(
         itemBuilder: (context, index) {
-          return _item(vm.websiteList[index].name, isDark: isDark, primaryColor: primaryColor, onTap: () {
+          return _item(vm.websiteList[index].name,
+              isDark: isDark, primaryColor: primaryColor, onTap: () {
             Get.to(
               WebViewPage(
                   loadResource: vm.websiteList[index].link ?? "",
@@ -190,7 +195,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
         itemCount: vm.websiteList.length));
   }
 
-  Widget _gridview<T>({required NullableIndexedWidgetBuilder itemBuilder, int? itemCount}) {
+  Widget _gridview<T>(
+      {required NullableIndexedWidgetBuilder itemBuilder, int? itemCount}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 0.w),
       child: GridView.builder(
@@ -222,10 +228,13 @@ class _HotKeyPageState extends State<HotKeyPage> {
         borderRadius: BorderRadius.circular(16.r),
         child: Container(
           decoration: BoxDecoration(
-            color: isHot ? primaryColor.withValues(alpha: 0.1) : (isDark ? Colours.dark_bg_gray : Colors.grey[100]),
+            color: isHot
+                ? primaryColor.withValues(alpha: 0.1)
+                : (isDark ? Colours.dark_bg_gray : Colors.grey[100]),
             borderRadius: BorderRadius.circular(16.r),
             border: isHot
-                ? Border.all(color: primaryColor.withValues(alpha: 0.3), width: 1)
+                ? Border.all(
+                    color: primaryColor.withValues(alpha: 0.3), width: 1)
                 : null,
           ),
           alignment: Alignment.center,
@@ -235,7 +244,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 33.sp,
-              color: isHot ? primaryColor : (isDark ? Colours.dark_text : Colors.black87),
+              color: isHot
+                  ? primaryColor
+                  : (isDark ? Colours.dark_text : Colors.black87),
               fontWeight: isHot ? FontWeight.w600 : FontWeight.w500,
             ),
             maxLines: 1,

@@ -12,7 +12,8 @@ class AppCheckUpdateModel {
   AppCheckUpdateModel.fromJson(Map<String, dynamic>? json) {
     code = json?['code'];
     message = json?['message'];
-    data = json?['data'] != null ? UpdateInfoData.fromJson(json?['data']) : null;
+    data =
+        json?['data'] != null ? UpdateInfoData.fromJson(json?['data']) : null;
   }
 
   num? code;

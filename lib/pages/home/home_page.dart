@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:math' hide log;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
@@ -50,7 +49,8 @@ class HomePage extends GetView<HomeViewModel> {
             failedText: AppStrings.getString('refresh_failed'),
             completeDuration: Duration(milliseconds: 100),
             textStyle: TextStyle(color: primaryColor, fontSize: 28.sp),
-            idleIcon: Icon(Icons.arrow_downward, color: primaryColor, size: 40.r),
+            idleIcon:
+                Icon(Icons.arrow_downward, color: primaryColor, size: 40.r),
             refreshingIcon: SizedBox(
               width: 40.r,
               height: 40.r,
@@ -84,46 +84,49 @@ class HomePage extends GetView<HomeViewModel> {
           onRefresh: () {
             controller.refreshOrLoad(false);
           },
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _topSearchBar(isDark),
-                SizedBox(height: 8.h),
-                _banner(isDark, primaryColor),
-                Obx(() {
-                  return ListView.builder(
-                      padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 24.h),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: controller.listData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        HomeListItemData? item = controller.listData[index];
-                        return _listItem(
-                          item: item,
-                          isDark: context.isDark,
-                          primaryColor: Theme.of(context).primaryColor,
-                          onItemClick: () {
-                            Get.to(
-                              WebViewPage(
-                                  loadResource: item.link ?? "",
-                                  webViewType: WebViewType.URL,
-                                  title: item.title),
-                            );
-                          },
-                          imageClick: () {
-                            if (item.collect == true) {
-                              //  取消收藏
-                              controller.cancelCollect(index, "${item.id}");
-                            } else {
-                              //  收藏
-                              controller.collect(index, "${item.id}");
-                            }
-                          },
-                        );
-                      });
-                }),
-              ],
-            ),
+          child: CustomScrollView(
+            physics: const ClampingScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(child: _topSearchBar(isDark)),
+              SliverToBoxAdapter(child: SizedBox(height: 8.h)),
+              SliverToBoxAdapter(child: _banner(isDark, primaryColor)),
+              Obx(() {
+                return SliverPadding(
+                  padding:
+                      EdgeInsets.only(left: 24.w, right: 24.w, bottom: 24.h),
+                  sliver: SliverList.builder(
+                    itemCount: controller.listData.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.listData[index];
+                      return _listItem(
+                        key: ValueKey(item.id ?? index),
+                        item: item,
+                        isDark: context.isDark,
+                        primaryColor: Theme.of(context).primaryColor,
+                        onItemClick: () {
+                          Get.to(
+                            WebViewPage(
+                              loadResource: item.link ?? "",
+                              webViewType: WebViewType.URL,
+                              title: item.title,
+                            ),
+                          );
+                        },
+                        imageClick: () {
+                          if (item.collect == true) {
+                            //  取消收藏
+                            controller.cancelCollect(index, "${item.id}");
+                          } else {
+                            //  收藏
+                            controller.collect(index, "${item.id}");
+                          }
+                        },
+                      );
+                    },
+                  ),
+                );
+              }),
+            ],
           ),
         ),
       ),
@@ -166,7 +169,10 @@ class HomePage extends GetView<HomeViewModel> {
                         borderRadius: BorderRadius.circular(24.r),
                       ),
                       child: Icon(Icons.image,
-                          size: 80.r, color: isDark ? Colours.dark_text_gray : Colors.grey[400]),
+                          size: 80.r,
+                          color: isDark
+                              ? Colours.dark_text_gray
+                              : Colors.grey[400]),
                     ),
                   ),
                 ),
@@ -235,7 +241,7 @@ class HomePage extends GetView<HomeViewModel> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: isDark 
+                    colors: isDark
                         ? [Colours.dark_search_bg, Colours.dark_search_bg]
                         : [Colors.grey[100]!, Colors.grey[50]!],
                     begin: Alignment.topLeft,
@@ -243,9 +249,8 @@ class HomePage extends GetView<HomeViewModel> {
                   ),
                   borderRadius: BorderRadius.circular(40.r),
                   border: Border.all(
-                    color: isDark ? Colours.dark_divider : Colors.grey[200]!, 
-                    width: 1
-                  ),
+                      color: isDark ? Colours.dark_divider : Colors.grey[200]!,
+                      width: 1),
                 ),
                 child: Row(
                   children: [
@@ -259,7 +264,8 @@ class HomePage extends GetView<HomeViewModel> {
                       AppStrings.getString('search_hint'),
                       style: TextStyle(
                         fontSize: 41.sp,
-                        color: isDark ? Colours.dark_text_gray : Colors.grey[400],
+                        color:
+                            isDark ? Colours.dark_text_gray : Colors.grey[400],
                       ),
                     ),
                   ],
@@ -292,18 +298,19 @@ class HomePage extends GetView<HomeViewModel> {
   /// [onItemClick] 条目点击回调，跳转文章详情
   /// [imageClick] 收藏按钮点击回调
   Widget _listItem({
+    Key? key,
     HomeListItemData? item,
     GestureTapCallback? onItemClick,
     GestureTapCallback? imageClick,
     required bool isDark,
     required Color primaryColor,
   }) {
-    int randomNumber =
-        item?.id?.hashCode ?? DateTime.now().millisecondsSinceEpoch;
-    String imageUrl = 'https://picsum.photos/300/400?random=$randomNumber';
+    final randomSeed = item?.id?.hashCode ?? item.hashCode;
+    final imageUrl = 'https://picsum.photos/300/400?random=$randomSeed';
     String? name =
         TextUtil.isEmpty(item?.author) ? item?.shareUser : item?.author;
     return GestureDetector(
+      key: key,
       onTap: onItemClick,
       child: Container(
         margin: EdgeInsets.only(bottom: 24.h),
@@ -343,14 +350,22 @@ class HomePage extends GetView<HomeViewModel> {
                         fit: BoxFit.cover,
                         imageUrl: imageUrl,
                         placeholder: (context, url) => Container(
-                          color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+                          color:
+                              isDark ? Colours.dark_bg_gray : Colors.grey[200],
                           child: Icon(Icons.person,
-                              color: isDark ? Colours.dark_text_gray : Colors.grey[400], size: 40.r),
+                              color: isDark
+                                  ? Colours.dark_text_gray
+                                  : Colors.grey[400],
+                              size: 40.r),
                         ),
                         errorWidget: (context, url, error) => Container(
-                          color: isDark ? Colours.dark_bg_gray : Colors.grey[200],
+                          color:
+                              isDark ? Colours.dark_bg_gray : Colors.grey[200],
                           child: Icon(Icons.person,
-                              color: isDark ? Colours.dark_text_gray : Colors.grey[400], size: 40.r),
+                              color: isDark
+                                  ? Colours.dark_text_gray
+                                  : Colors.grey[400],
+                              size: 40.r),
                         ),
                       ),
                     ),
@@ -364,7 +379,8 @@ class HomePage extends GetView<HomeViewModel> {
                           name ?? "",
                           style: TextStyle(
                             fontSize: 37.sp,
-                            color: isDark ? Colours.dark_text : Colors.grey[700],
+                            color:
+                                isDark ? Colours.dark_text : Colors.grey[700],
                             fontWeight: FontWeight.w600,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -374,7 +390,9 @@ class HomePage extends GetView<HomeViewModel> {
                           item?.niceShareDate ?? "",
                           style: TextStyle(
                             fontSize: 31.sp,
-                            color: isDark ? Colours.dark_text_gray : Colors.grey[400],
+                            color: isDark
+                                ? Colours.dark_text_gray
+                                : Colors.grey[400],
                           ),
                         ),
                       ],

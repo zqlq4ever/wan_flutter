@@ -29,11 +29,15 @@ class Utils {
     }
   }
 
-  static String formatPrice(String price, {MoneyFormat format = MoneyFormat.END_INTEGER}) {
-    return MoneyUtil.changeYWithUnit(NumUtil.getDoubleByValueStr(price) ?? 0, MoneyUnit.YUAN, format: format);
+  static String formatPrice(String price,
+      {MoneyFormat format = MoneyFormat.END_INTEGER}) {
+    return MoneyUtil.changeYWithUnit(
+        NumUtil.getDoubleByValueStr(price) ?? 0, MoneyUnit.YUAN,
+        format: format);
   }
 
-  static KeyboardActionsConfig getKeyboardActionsConfig(BuildContext context, List<FocusNode> list) {
+  static KeyboardActionsConfig getKeyboardActionsConfig(
+      BuildContext context, List<FocusNode> list) {
     return KeyboardActionsConfig(
       keyboardBarColor: ThemeUtils.getKeyboardActionsColor(context),
       actions: List.generate(
@@ -71,7 +75,8 @@ Future<T?> showElasticDialog<T>({
 }) {
   return showGeneralDialog(
     context: context,
-    pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
+    pageBuilder: (BuildContext buildContext, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
       final Widget pageChild = Builder(builder: builder);
       return SafeArea(
         child: pageChild,
@@ -86,14 +91,18 @@ Future<T?> showElasticDialog<T>({
 }
 
 Widget _buildDialogTransitions(
-    BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child) {
   return FadeTransition(
     opacity: CurvedAnimation(
       parent: animation,
       curve: Curves.easeOut,
     ),
     child: SlideTransition(
-      position: Tween<Offset>(begin: const Offset(0.0, 0.3), end: Offset.zero).animate(CurvedAnimation(
+      position: Tween<Offset>(begin: const Offset(0.0, 0.3), end: Offset.zero)
+          .animate(CurvedAnimation(
         parent: animation,
         curve: const ElasticOutCurve(0.85),
         reverseCurve: Curves.easeOutBack,
